@@ -1,6 +1,7 @@
 package com.example.icebutler_server.food.entity;
 
 import com.example.icebutler_server.cart.entity.Cart;
+import com.example.icebutler_server.fridge.entity.FridgeFood;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
@@ -31,6 +32,11 @@ public class Food extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cartIdx")
     private Cart cart;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="fridgeFoodIdx")
+    private FridgeFood fridgeFood;
+
 
 
     private boolean status;

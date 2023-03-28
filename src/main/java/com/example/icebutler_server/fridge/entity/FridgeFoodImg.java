@@ -16,7 +16,11 @@ public class FridgeFoodImg extends BaseEntity {
     @Column(nullable = false)
     private int fridgeFoddImgIdx;
     private String fridgeFoodImg;
-    private int fridgeFoodIdx;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="fridgeFoodIdx")
+    private FridgeFood fridgeFood;
+
     private boolean status;
 
 }

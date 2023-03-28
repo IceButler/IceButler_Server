@@ -1,5 +1,6 @@
-package com.example.icebutler_server.fridge.entity;
+package com.example.icebutler_server.food.entity;
 
+import com.example.icebutler_server.cart.entity.Cart;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
@@ -7,30 +8,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.persistence.CascadeType.ALL;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Fridge extends BaseEntity {
+public class Food extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long fridgeIdx;
+    private int foodIdx;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="foodCategoryIdx")
+    private FoodCategory foodCategory;
+
+    private String foodName;
+    private String foodIconName;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userIdx")
     private User owner;
 
-    private String fridgeName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="cartIdx")
+    private Cart cart;
 
-    private String fridgeComment;
 
-    @OneToMany(mappedBy="fridge", cascade=ALL)
-    private List<FridgeUser> fridgeUsers = new ArrayList<>();
+    private boolean status;
 
 
 }

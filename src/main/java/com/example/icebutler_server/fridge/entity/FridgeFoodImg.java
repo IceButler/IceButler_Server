@@ -10,11 +10,13 @@ import javax.persistence.*;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Cart extends BaseEntity {
-
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+public class FridgeFoodImg extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long cardIdx;
-
+    private int fridgeFoddImgIdx;
+    private String fridgeFoodImg;
+    private int fridgeFoodIdx;
+    private boolean status;
 
 }

@@ -26,7 +26,6 @@ public class FridgeFood extends BaseEntity {
     @Column(nullable = false)
     private int fridgeFoodIdx;
     private int foodIdx;
-    private int userIdx;
     private LocalDateTime shelfLife;
     private TextComponent memo;
     private boolean status;
@@ -34,9 +33,9 @@ public class FridgeFood extends BaseEntity {
     @OneToMany(mappedBy="fridgeFood", cascade=ALL)
     private List<Food> foods=new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userIdx")
-    private User user;
+    private User owner;
 
     @OneToMany(mappedBy="fridgeFood", cascade=ALL)
     private List<FridgeFoodImg> fridgeFoodImgs=new ArrayList<>();

@@ -22,6 +22,7 @@ public class BaseEntity implements Serializable {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
+
     @Setter
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean isEnable = true;

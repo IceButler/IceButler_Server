@@ -2,9 +2,7 @@ package com.example.icebutler_server.fridge.entity;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,9 +10,11 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Fridge extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

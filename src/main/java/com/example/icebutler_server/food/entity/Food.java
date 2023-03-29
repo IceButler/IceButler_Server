@@ -14,17 +14,20 @@ import javax.persistence.*;
 @Getter
 @Entity
 public class Food extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private int foodIdx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="foodCategoryIdx")
-    private FoodCategory foodCategory;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="foodCategoryIdx")
+//    private FoodCategory foodCategory;
 
     private String foodName;
     private String foodIconName;
+    private String foodCategory;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userIdx")
     private User owner;
@@ -37,9 +40,6 @@ public class Food extends BaseEntity {
     @JoinColumn(name="fridgeFoodIdx")
     private FridgeFood fridgeFood;
 
-
-
-    private boolean status;
 
 
 }

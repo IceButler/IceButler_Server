@@ -23,15 +23,10 @@ public class Cart extends BaseEntity {
     @Column(nullable = false)
     private Long cardIdx;
 
-    @OneToMany(mappedBy="cart",cascade = ALL)
+    @OneToMany(mappedBy="cart", cascade = ALL)
     private List<Food> foods=new ArrayList<>();
 
     @OneToOne(cascade = ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="userIdx")
     private User owner;
-
-    private String cartStatus;
-    private boolean status;
-
-
 }

@@ -11,10 +11,12 @@ import javax.persistence.*;
 @Getter
 @Entity
 public class FridgeFoodImg extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private int fridgeFoddImgIdx;
+
     private String fridgeFoodImg;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -22,5 +24,4 @@ public class FridgeFoodImg extends BaseEntity {
     private FridgeFood fridgeFood;
 
     private boolean status;
-
 }

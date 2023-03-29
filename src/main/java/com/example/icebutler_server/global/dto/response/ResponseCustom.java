@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Builder
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class ResponseCustom<T>{
 

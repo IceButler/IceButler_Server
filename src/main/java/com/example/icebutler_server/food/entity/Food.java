@@ -4,15 +4,14 @@ import com.example.icebutler_server.cart.entity.Cart;
 import com.example.icebutler_server.fridge.entity.FridgeFood;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor
 public class Food extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,4 +41,7 @@ public class Food extends BaseEntity {
     private boolean status;
 
 
+    public Food() {
+
+    }
 }

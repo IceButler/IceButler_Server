@@ -1,7 +1,6 @@
 package com.example.icebutler_server.fridge.entity;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
-import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,15 +14,11 @@ import static javax.persistence.CascadeType.ALL;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Cart extends BaseEntity {
-
+public class FoodCategory extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long cardIdx;
-    @OneToMany(mappedBy="cart", cascade=ALL)
-    private List<CartFood> cartFoods = new ArrayList<>();
-    @OneToOne(cascade = ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "userIdx")
-    private User owner;
-    private String cartStatus;
+    private int foodCategoryIdx;
+    private String foodCategory;
+    @OneToMany(mappedBy = "foodCategory",cascade = ALL)
+    private List<Food> foods=new ArrayList<>();
 }

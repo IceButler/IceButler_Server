@@ -20,8 +20,8 @@ public class FoodCategory extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private int foodCategoryIdx;
+
     private String foodCategory;
-    private boolean status;
 
     @OneToMany(mappedBy = "foodCategory",cascade = ALL)
     private List<Food> foods=new ArrayList<>();

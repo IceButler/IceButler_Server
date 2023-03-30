@@ -1,9 +1,6 @@
 package com.example.icebutler_server.global.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Builder
+@AllArgsConstructor
 public class ResponseCustom<T>{
 
     private T data;
@@ -20,6 +18,7 @@ public class ResponseCustom<T>{
     private HttpStatus status;
     private String description;
     private int statusCode;
+
 
     // OK
     public static <T> ResponseCustom<T> CREATED(@Nullable T data) {

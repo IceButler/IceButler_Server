@@ -25,17 +25,17 @@ public class FridgeFood extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private int fridgeFoodIdx;
-    private int foodIdx;
-    private LocalDateTime shelfLife;
-    private TextComponent memo;
-    private boolean status;
 
-    @OneToMany(mappedBy="fridgeFood", cascade=ALL)
-    private List<Food> foods=new ArrayList<>();
+    private LocalDateTime shelfLife;
+
+    private TextComponent memo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userIdx")
     private User owner;
+
+    @OneToMany(mappedBy="fridgeFood", cascade=ALL)
+    private List<Food> foods=new ArrayList<>();
 
     @OneToMany(mappedBy="fridgeFood", cascade=ALL)
     private List<FridgeFoodImg> fridgeFoodImgs=new ArrayList<>();

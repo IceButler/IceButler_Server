@@ -23,5 +23,4 @@ public class FridgeUser extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="fridgeIdx")
     private Fridge fridge;
-
 }

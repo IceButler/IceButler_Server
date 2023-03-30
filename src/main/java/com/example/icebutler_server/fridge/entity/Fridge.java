@@ -32,5 +32,19 @@ public class Fridge extends BaseEntity {
     @OneToMany(mappedBy="fridge", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
 
+    public void changeFridgeName(String fridgeName) {
+        this.fridgeName = fridgeName;
+    }
 
+    public void changeFridgeComment(String fridgeComment) {
+        this.fridgeComment = fridgeComment;
+    }
+
+    public void changOwner(User newOwner) {
+        this.owner = newOwner;
+    }
+
+    public void changeFridgeUsers(List<FridgeUser> newFridgeUsers) {
+        this.fridgeUsers = newFridgeUsers;
+    }
 }

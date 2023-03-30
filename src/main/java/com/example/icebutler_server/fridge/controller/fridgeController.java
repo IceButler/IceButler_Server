@@ -1,6 +1,7 @@
 package com.example.icebutler_server.fridge.controller;
 
-import com.example.icebutler_server.fridge.dto.request.AddFridgeReq;
+import com.example.icebutler_server.fridge.dto.request.CreateFridgeReq;
+import com.example.icebutler_server.fridge.dto.request.UpdateFridgeReq;
 import com.example.icebutler_server.fridge.service.FridgeService;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.exception.BaseException;
@@ -15,12 +16,19 @@ public class fridgeController {
   private final FridgeService fridgeService;
 
   // 냉장고 추가
-  @GetMapping("/add/{owner}")
-  public ResponseCustom<?> addFridge(
-          @PathVariable(name = "owner") Long owner,
-          @RequestBody AddFridgeReq addFridgeReq) {
+  @GetMapping("create/")
+  public ResponseCustom<?> createFridge(@RequestBody CreateFridgeReq createFridgeReq) {
     try {
-      return ResponseCustom.OK(fridgeService.addFridge(owner, addFridgeReq));
+      return ResponseCustom.OK(fridgeService.createFridge(createFridgeReq));
+    } catch (BaseException e) {
+      return ResponseCustom.BAD_REQUEST(e.getStatus());
+    }
+  }
+
+  @PostMapping("update/")
+  public ResponseCustom<?> updateFridge(@RequestBody UpdateFridgeReq updateFridgeReq) {
+    try {
+      return ResponseCustom.OK(fridgeService.updateFridge(updateFridgeReq));
     } catch (BaseException e) {
       return ResponseCustom.BAD_REQUEST(e.getStatus());
     }
@@ -28,9 +36,9 @@ public class fridgeController {
 
   // 냉장고 삭제
   @GetMapping("remove/{fridgeId}")
-  public ResponseCustom<?> removeFridge(@PathVariable(name = "fridgeId") Long fridgeId) {
+  public ResponseCustom<?> deleteFridge(@PathVariable(name = "fridgeId") Long fridgeId) {
     try {
-      return ResponseCustom.OK(fridgeService.removeFridge(fridgeId));
+      return ResponseCustom.OK(fridgeService.deleteFridge(fridgeId));
     } catch (BaseException e) {
       return ResponseCustom.BAD_REQUEST(e.getStatus());
     }

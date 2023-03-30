@@ -5,7 +5,6 @@ import com.example.icebutler_server.fridge.dto.request.CreateFridgeReq;
 import com.example.icebutler_server.fridge.dto.request.UpdateFridgeReq;
 import com.example.icebutler_server.fridge.dto.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.response.FridgeRes;
-import com.example.icebutler_server.fridge.dto.updateFridgeRes;
 import com.example.icebutler_server.fridge.entity.Fridge;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
 import com.example.icebutler_server.fridge.repository.FridgeRepository;

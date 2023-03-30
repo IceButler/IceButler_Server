@@ -12,4 +12,6 @@ public class CancelFoodCartResponse {
     private Long cartIdx;
     private int foodIdx;
     private String message;
+
+
 }

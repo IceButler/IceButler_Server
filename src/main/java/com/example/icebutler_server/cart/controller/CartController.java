@@ -1,21 +1,13 @@
 package com.example.icebutler_server.cart.controller;
 
-import com.example.icebutler_server.cart.dto.request.CancelFoodCartRequest;
 import com.example.icebutler_server.cart.dto.request.PostFoodCartRequest;
-import com.example.icebutler_server.cart.dto.response.CancelFoodCartResponse;
-import com.example.icebutler_server.cart.dto.response.PostFoodCartResponse;
 import com.example.icebutler_server.cart.service.CartService;
-import com.example.icebutler_server.global.BaseResponse;
+import com.example.icebutler_server.global.dto.response.ResponseCustom;
+
+import com.example.icebutler_server.global.exception.BaseException;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(tags="1. cart API")
 @RequestMapping("/cart")
@@ -27,21 +19,36 @@ public class CartController {
 
 
 
-    @ApiOperation(value="장바구니 담기")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "OK", response = PostFoodCartResponse.class)
-    })
-    @PostMapping(value="/add")
-    public ResponseEntity<?> cartAdd(@RequestBody PostFoodCartRequest postFoodCartRequest) {
-        return ResponseEntity.ok(new BaseResponse(cartService.foodAdd(postFoodCartRequest)));
+    //장바구니 추가
+    @GetMapping("/add/{owner}")
+    public ResponseCustom<?> foodAdd(
+            @PathVariable(name = "owner") Long owner,
+            @RequestBody PostFoodCartRequest postFoodCartRequest) {
+        return ResponseCustom.OK(cartService.foodAdd(owner,postFoodCartRequest));
     }
 
-    @ApiOperation(value="장바구니 삭제")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "OK", response = CancelFoodCartResponse.class)
-    })
-    @PostMapping(value="/delete")
-    public ResponseEntity<?> cartDelete(@RequestBody CancelFoodCartRequest cancelFoodCartRequest) {
-        return ResponseEntity.ok(new BaseResponse(cartService.foodDelete(cancelFoodCartRequest)));
+    // 장바구니 삭제
+    @GetMapping("remove/{cartIdx}")
+    public ResponseCustom<?> removeFridge(@PathVariable(name = "cartIdx") Long cartIdx) {
+        return ResponseCustom.OK(cartService.foodDelete(cartIdx));
     }
+
+
+//    @ApiOperation(value="장바구니 담기")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "OK", response = PostFoodCartResponse.class)
+//    })
+//    @PostMapping(value="/add")
+//    public ResponseEntity<?> cartAdd(@RequestBody PostFoodCartRequest postFoodCartRequest) {
+//        return ResponseEntity.ok(new BaseResponse(cartService.foodAdd(postFoodCartRequest)));
+//    }
+
+//    @ApiOperation(value="장바구니 삭제")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "OK", response = CancelFoodCartResponse.class)
+//    })
+//    @PostMapping(value="/delete")
+//    public ResponseEntity<?> cartDelete(@RequestBody CancelFoodCartRequest cancelFoodCartRequest) {
+//        return ResponseEntity.ok(new BaseResponse(cartService.foodDelete(cancelFoodCartRequest)));
+//    }
 }

@@ -5,6 +5,7 @@ import com.example.icebutler_server.fridge.entity.FridgeFood;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,6 +40,21 @@ public class Food extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="fridgeFoodIdx")
     private FridgeFood fridgeFood;
+
+
+
+    @Builder
+    public Food(
+            int foodIdx,String foodCategory,String foodIconName,String foodName,User owner
+            ,FridgeFood fridgeFood,Cart cart)
+
+    {
+
+    }
+
+    public Food(){
+
+    }
 
 
 

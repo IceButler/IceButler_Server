@@ -1,4 +1,4 @@
-package com.example.icebutler_server.fridge.dto;
+package com.example.icebutler_server.fridge.dto.request;
 
 import com.example.icebutler_server.fridge.entity.FridgeUser;
 import com.example.icebutler_server.user.entity.User;
@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddFridgeReq {
-  private Integer onwer;
+  private Integer owner;
   private String fridgeName;
   private String description;
   List<FridgeUser> users;

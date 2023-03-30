@@ -1,11 +1,9 @@
 package com.example.icebutler_server.fridge.controller;
 
-import com.example.icebutler_server.fridge.dto.AddFridgeReq;
+import com.example.icebutler_server.fridge.dto.request.AddFridgeReq;
 import com.example.icebutler_server.fridge.service.FridgeService;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
-import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.exception.BaseException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

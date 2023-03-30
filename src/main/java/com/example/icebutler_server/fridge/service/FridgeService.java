@@ -1,11 +1,13 @@
 package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.fridge.dto.AddFridgeReq;
-import com.example.icebutler_server.fridge.dto.FridgeFoodsRes;
+import com.example.icebutler_server.fridge.dto.request.AddFridgeReq;
+import com.example.icebutler_server.fridge.dto.response.FridgeFoodsRes;
+import com.example.icebutler_server.fridge.dto.response.FridgeRes;
 import com.example.icebutler_server.fridge.entity.Fridge;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
 import com.example.icebutler_server.fridge.repository.FridgeRepository;
+import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.repository.UserRepository;
@@ -26,23 +28,21 @@ public class FridgeService {
   private final UserRepository userRepository;
 
   @Transactional
-  public String addFridge(Long ownerId, AddFridgeReq addFridgeReq) throws BaseException {
+  public ResponseCustom<FridgeRes> addFridge(Long ownerId, AddFridgeReq addFridgeReq) throws BaseException {
 
     User user = userRepository.findById(ownerId).orElseThrow(() -> new BaseException(NULL_FRIDGE_IDX));
 
-    if (addFridgeReq.getFridgeName().equals("")) {
-      throw new BaseException(NULL_FRIDGE_NAME);
-    } else {
-      Fridge fridge = Fridge.builder()
+    /* 아래 addFridgeReq.getFridgeName().equals("") 보다는 isEmpty 사용하기 */
+    if (addFridgeReq.getFridgeName().isEmpty()) throw new BaseException(NULL_FRIDGE_NAME);
+    /* 여기에 else문 있었는데 불필요해서 제거 */
+    Fridge fridge = Fridge.builder()
               .owner(user)
               .fridgeName(addFridgeReq.getFridgeName())
               .fridgeComment(addFridgeReq.getDescription())
               .fridgeUsers(addFridgeReq.getUsers())
               .build();
-
-      fridgeRepository.save(fridge);
-    }
-    return "addSuccess";
+    fridgeRepository.save(fridge);
+    return ResponseCustom.CREATED(FridgeRes.toDto(fridge)); /* addFridge의 반환타입을 지정해주지 않아서 그전에 에어 났던듯..? */
   }
 
   @Transactional

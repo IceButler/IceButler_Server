@@ -1,6 +1,5 @@
 package com.example.icebutler_server.user.entity;
 
-import com.example.icebutler_server.fridge.entity.Fridge;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -22,9 +21,9 @@ public class User extends BaseEntity {
     private Long userIdx;
     private String email;
     private String nickname;
-    private String provider;
+    private String oauthProvider;
     private String profileImage;
     private Boolean loginStatus;
-    @OneToMany(mappedBy="owner", cascade=ALL)
+    @OneToMany(mappedBy="user", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
 }

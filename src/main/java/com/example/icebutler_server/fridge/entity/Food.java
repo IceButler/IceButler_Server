@@ -14,19 +14,27 @@ import static javax.persistence.CascadeType.ALL;
 @Getter
 @Entity
 public class Food {
+
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private int foodIdx;
-    private String foodName;
-    private String foodIconName;
-    private String foodCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userIdx")
+    private User user;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cartIdx")
     private Cart cart;
+
     @OneToMany(mappedBy="food", cascade=ALL)
     private List<CartFood> cartFoods = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="fridgeFoodIdx")
     private FridgeFood fridgeFood;
+
+    private String foodName;
+    private String foodIconName;
+    private String foodCategory;
 }

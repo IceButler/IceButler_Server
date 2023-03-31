@@ -2,9 +2,7 @@ package com.example.icebutler_server.fridge.entity;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,17 +11,40 @@ import java.util.List;
 import static javax.persistence.CascadeType.ALL;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 @Entity
+@Builder
 public class Fridge extends BaseEntity {
+
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Long fridgeIdx;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userIdx")
     private User owner;
-    private String fridgeName;
-    private String fridgeComment;
+
     @OneToMany(mappedBy="fridge", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
+
+    private String fridgeName;
+    private String fridgeComment;
+
+    public void updateOwner(User updateFridgeOwner) {
+        this.owner = updateFridgeOwner;
+    }
+
+    public void updateMembers(List<FridgeUser> updateMembers) {
+        this.fridgeUsers = updateMembers;
+    }
+
+    public void updateNameAndComment(Fridge toUpdateEntity) {
+        this.fridgeName = toUpdateEntity.getFridgeName();
+        this.fridgeComment = toUpdateEntity.getFridgeComment();
+    }
+
+    public void updateIsEnable(boolean b) {
+        this.setIsEnable(b);
+    }
 }

@@ -29,4 +29,8 @@ public class Food {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="fridgeFoodIdx")
     private FridgeFood fridgeFood;
+
+    public void addCartFood(CartFood cartFood) {
+        this.cartFoods.add(cartFood);
+    }
 }

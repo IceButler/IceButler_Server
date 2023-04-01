@@ -26,4 +26,8 @@ public class Cart extends BaseEntity {
     @JoinColumn(name = "userIdx")
     private User owner;
     private String cartStatus;
+
+    public void addCartFood(CartFood cartFood) {
+        this.cartFoods.add(cartFood);
+    }
 }

@@ -7,6 +7,7 @@ import com.example.icebutler_server.fridge.entity.Cart;
 import com.example.icebutler_server.fridge.entity.CartFood;
 import com.example.icebutler_server.fridge.entity.Food;
 import com.example.icebutler_server.fridge.exception.CartNotFoundException;
+import com.example.icebutler_server.fridge.repository.CartFoodRepository;
 import com.example.icebutler_server.fridge.repository.CartRepository;
 import com.example.icebutler_server.fridge.repository.FoodRepository;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -22,6 +23,8 @@ import java.util.stream.Stream;
 @Transactional(readOnly = true)
 @Service
 public class CartServiceImpl implements CartService{
+
+    private final CartFoodRepository cartFoodRepository;
     private final CartRepository cartRepository;
     private final FoodRepository foodRepository;
     private final CartFoodAssembler cartFoodAssembler;
@@ -47,6 +50,9 @@ public class CartServiceImpl implements CartService{
                 food.addCartFood(cartFood);
             });
         }));
+
+        cartFoodRepository.saveAll(cartFoods);
+
         return ResponseCustom.OK();
     }
 }

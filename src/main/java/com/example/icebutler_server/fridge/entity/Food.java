@@ -1,6 +1,5 @@
 package com.example.icebutler_server.fridge.entity;
 
-import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,21 +15,22 @@ import static javax.persistence.CascadeType.ALL;
 public class Food {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private int foodIdx;
+    private Long foodIdx;
     private String foodName;
     private String foodIconName;
-    private String foodCategory;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="cartIdx")
-    private Cart cart;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="foodCategoryIdx")
+    private FoodCategory foodCategory;
     @OneToMany(mappedBy="food", cascade=ALL)
     private List<CartFood> cartFoods = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="fridgeFoodIdx")
-    private FridgeFood fridgeFood;
+    @OneToMany(mappedBy="food", cascade=ALL)
+    private List<FridgeFood> fridgeFoods = new ArrayList<>();
 
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
+    }
+
+    public void removeCartFood(CartFood cartFood) {
+        this.cartFoods.removeIf((cf)->cf.getCardFoodIdx().equals(cartFood.getCardFoodIdx()));
     }
 }

@@ -7,6 +7,6 @@ import java.util.List;
 
 @NoArgsConstructor
 @Data
-public class DeleteFoodFromCartRequest {
-    private List<Long> addFoodIdxes;
+public class RemoveFoodFromCartRequest {
+    private List<Long> removeFoodIdxes;
 }

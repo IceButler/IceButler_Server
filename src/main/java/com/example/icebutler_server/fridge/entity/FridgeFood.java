@@ -1,6 +1,5 @@
 package com.example.icebutler_server.fridge.entity;
 
-import com.example.icebutler_server.global.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +24,12 @@ public class FridgeFood extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userIdx")
     private User foodOwner;
-    @OneToMany(mappedBy="fridgeFood", cascade=ALL)
-    private List<Food> foods = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="fridgeIdx")
+    private Fridge fridge;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="foodIdx")
+    private Food food;
     @OneToMany(mappedBy="fridgeFood", cascade=ALL)
     private List<FridgeFoodImg> fridgeFoodImgs=new ArrayList<>();
 }

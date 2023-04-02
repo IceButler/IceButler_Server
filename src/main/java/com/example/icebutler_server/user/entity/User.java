@@ -1,7 +1,8 @@
 package com.example.icebutler_server.user.entity;
 
+import com.example.icebutler_server.fridge.entity.Cart;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
-import com.example.icebutler_server.global.entity.BaseEntity;
+import com.example.icebutler_server.fridge.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,11 @@ public class User extends BaseEntity {
     private Boolean loginStatus;
     @OneToMany(mappedBy="user", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
+    @OneToOne(cascade = ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cartIdx")
+    private Cart cart;
+
+    public void addCart(Cart cart) {
+        this.cart = cart;
+    }
 }

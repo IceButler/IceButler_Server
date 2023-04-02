@@ -61,6 +61,14 @@ public class ResponseCustom<T>{
                 .build();
     }
 
+    public static <T> ResponseCustom<T> NOT_FOUND(@Nullable T data){
+        return (ResponseCustom<T>) ResponseCustom.builder()
+                .transaction_time(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND)
+                .data(data)
+                .build();
+    }
+
     public static <T> ResponseCustom<T> FORBIDDEN(){
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())

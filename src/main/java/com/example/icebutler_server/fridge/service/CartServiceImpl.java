@@ -44,7 +44,7 @@ public class CartServiceImpl implements CartService{
 
     @Transactional
     @Override
-    public ResponseCustom<Void> addFoodsToCart(
+    public ResponseCustom<CartResponse> addFoodsToCart(
             Long cartIdx,
             AddFoodToCartRequest request,
             Long userIdx
@@ -53,11 +53,16 @@ public class CartServiceImpl implements CartService{
         User user = userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
         Cart cart = cartRepository.findById(cartIdx).orElseThrow(CartNotFoundException::new);
         List<Food> foods = foodRepository.findAllByFoodIdxIn(request.getAddFoodIdxes());
-        for (Food food : foods) {
-            System.out.println(food.getFoodIdx()+" : "+food.getFoodName());
-        }
+
+        List<Long> foodsInNowCart = cart.getCartFoods().stream()
+                .map((cr) -> cr.getFood().getFoodIdx()).collect(Collectors.toList());
+
         // cart와 food의 연관관계를 맺어주는 cartFood 객체 생성
         List<CartFood> cartFoods = foods.stream()
+                .filter((f)->{ // 이미 장바구니에 존재하는 음식은 거르기
+                    for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getFoodIdx())) return false;
+                    return true;
+                })
                 .map((food) -> cartFoodAssembler.toEntity(cart, food))
                 .collect(Collectors.toList());
 
@@ -71,11 +76,11 @@ public class CartServiceImpl implements CartService{
 
         cartFoodRepository.saveAll(cartFoods);
 
-        return ResponseCustom.OK();
+        return ResponseCustom.OK(CartResponse.toDto(cart));
     }
     @Transactional
     @Override
-    public ResponseCustom<Void> removeFoodsFromCart(
+    public ResponseCustom<CartResponse> removeFoodsFromCart(
             Long cartIdx,
             RemoveFoodFromCartRequest request,
             Long userIdx
@@ -92,6 +97,6 @@ public class CartServiceImpl implements CartService{
 
         cartFoodRepository.deleteAll(removeCartFoods);
 
-        return ResponseCustom.OK();
+        return ResponseCustom.OK(CartResponse.toDto(cart));
     }
 }

@@ -11,13 +11,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Data
 public class CartResponse {
-
-    private Long cartIdx;
     private List<FoodResponse> foods = new ArrayList<>();
 
     public static CartResponse toDto(Cart cart) {
         CartResponse cartResponse = new CartResponse();
-        cartResponse.cartIdx = cart.getCardIdx();
         cartResponse.foods = cart.getCartFoods().stream()
                 .map((cr) -> FoodResponse.toDto(cr.getFood())).collect(Collectors.toList());
         return cartResponse;

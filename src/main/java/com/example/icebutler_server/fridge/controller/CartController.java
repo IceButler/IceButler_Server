@@ -32,7 +32,7 @@ public class CartController {
 
     @Auth
     @PostMapping("/{cartId}/foods")
-    public ResponseCustom<Void> addFoodsToCart(
+    public ResponseCustom<CartResponse> addFoodsToCart(
             @PathVariable Long cartId,
             @RequestBody AddFoodToCartRequest request,
             @IsLogin LoginStatus loginStatus
@@ -43,7 +43,7 @@ public class CartController {
 
     @Auth
     @PutMapping("/{cartId}/foods")
-    public ResponseCustom<Void> removeFoodsFromCart(
+    public ResponseCustom<CartResponse> removeFoodsFromCart(
             @PathVariable Long cartId,
             @RequestBody RemoveFoodFromCartRequest request,
             @IsLogin LoginStatus loginStatus

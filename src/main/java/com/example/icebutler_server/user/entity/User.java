@@ -3,6 +3,7 @@ package com.example.icebutler_server.user.entity;
 import com.example.icebutler_server.fridge.entity.Cart;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
 import com.example.icebutler_server.fridge.entity.BaseEntity;
+import com.example.icebutler_server.user.entity.vo.UserType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,12 @@ public class User extends BaseEntity {
     @JoinColumn(name = "cartIdx")
     private Cart cart;
 
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
     public void addCart(Cart cart) {
         this.cart = cart;
     }
+
+    public void setUserType(UserType userType){this.userType = userType;}
 }

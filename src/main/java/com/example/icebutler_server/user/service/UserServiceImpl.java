@@ -35,4 +35,11 @@ public class UserServiceImpl implements UserService{
 
 
     }
+
+    @Override
+    public Boolean logout(Long userId) {
+        userRepository.findByUserIdx(userId).orElseThrow(UserNotFoundException::new);
+        redisTemplateService.deleteUserRefreshToken(userId);
+        return null;
+    }
 }

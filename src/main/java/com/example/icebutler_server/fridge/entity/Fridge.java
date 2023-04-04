@@ -22,16 +22,17 @@ public class Fridge extends BaseEntity {
     private Long fridgeIdx;
 
     @OneToOne
+    @JoinColumn(name = "cartIdx")
     private Cart cart;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userIdx")
     private User owner;
 
-    @OneToMany(mappedBy="fridge", cascade=ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="fridge", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy="fridge", cascade=ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="fridge", cascade=ALL)
     private List<FridgeFood> fridgeFoods = new ArrayList<>();
 
     private String fridgeName;

@@ -17,19 +17,20 @@ public class MultiCart extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
-  private Long multiCartIdx;
+  private int multiCartIdx;
 
-  @OneToMany(mappedBy="multiCart", cascade=ALL)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy="multiCart", cascade=ALL)
   private List<MultiCartFood> multiCartFoods = new ArrayList<>();
 
-  @OneToMany(mappedBy = "multiCart", cascade = ALL)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "multiCart", cascade = ALL)
   private List<MultiFridge> multiFridges = new ArrayList<>();
 
-  @OneToOne(cascade = ALL, fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY, cascade = ALL)
   @JoinColumn(name = "userIdx")
   private User owner;
 
   @OneToOne
+  @JoinColumn(name = "multiFridgeIdx")
   private MultiFridge multiFridge;
 
   private String cartStatus;

@@ -20,19 +20,19 @@ public class Food {
     private String foodName;
     private String foodIconName;
 
-    @OneToMany(mappedBy="food", cascade=ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<CartFood> cartFoods = new ArrayList<>();
 
-    @OneToMany(mappedBy="food", cascade=ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<FridgeFood> fridgeFoods = new ArrayList<>();
 
-    @OneToMany(mappedBy = "food", cascade=ALL)
-    private List<FoodCategory> foodCategory;
+//    @OneToMany(mappedBy = "food", cascade=ALL)
+//    private List<FoodCategory> foodCategory;
 
-    @OneToMany(mappedBy="food", cascade=ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<MultiCartFood> multiCartFoods = new ArrayList<>();
 
-    @OneToMany(mappedBy = "food", cascade = ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "food", cascade = ALL)
     private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
 
 

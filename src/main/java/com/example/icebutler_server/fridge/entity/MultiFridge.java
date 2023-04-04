@@ -29,10 +29,10 @@ public class MultiFridge extends BaseEntity {
   @JoinColumn(name="userIdx")
   private User owner;
 
-  @OneToMany(mappedBy="multiFridge", cascade=ALL)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
   private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
 
-  @OneToMany(mappedBy="multiFridge", cascade=ALL)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
   private List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
 
   private String fridgeName;

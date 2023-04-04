@@ -37,6 +37,6 @@ public class MultiFridgeFood extends BaseEntity {
   @JoinColumn(name = "multiFridgeIdx")
   private MultiFridge multiFridge;
 
-  @OneToMany(mappedBy = "multiFridgeFood", cascade = ALL)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "multiFridgeFood", cascade = ALL)
   private List<MultiFridgeFoodImg> multiFridgeFoodImgs = new ArrayList<>();
 }

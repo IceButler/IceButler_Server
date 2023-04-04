@@ -2,6 +2,7 @@ package com.example.icebutler_server.fridge.entity;
 
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,14 +21,15 @@ public class Food {
     private String foodName;
     private String foodIconName;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FoodCategory foodCategory;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<CartFood> cartFoods = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<FridgeFood> fridgeFoods = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "food", cascade=ALL)
-//    private List<FoodCategory> foodCategory;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<MultiCartFood> multiCartFoods = new ArrayList<>();
@@ -35,8 +37,14 @@ public class Food {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "food", cascade = ALL)
     private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
 
-
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
+    }
+
+    @Builder
+    public Food(String foodName, String foodIconName, FoodCategory foodCategory) {
+        this.foodName = foodName;
+        this.foodIconName = foodIconName;
+        this.foodCategory = foodCategory;
     }
 }

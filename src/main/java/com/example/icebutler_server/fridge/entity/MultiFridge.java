@@ -3,6 +3,7 @@ package com.example.icebutler_server.fridge.entity;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,13 +22,8 @@ public class MultiFridge extends BaseEntity {
   @Column(nullable = false)
   private Long multiFridgeIdx;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="mutiCartIdx")
-  private MultiCart multiCart;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="userIdx")
-  private User owner;
+  private String fridgeName;
+  private String fridgeComment;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
   private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
@@ -35,10 +31,13 @@ public class MultiFridge extends BaseEntity {
   @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
   private List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
 
-  private String fridgeName;
-  private String fridgeComment;
+  @Builder
+  public MultiFridge(String fridgeName, String fridgeComment) {
+    this.fridgeName = fridgeName;
+    this.fridgeComment = fridgeComment;
+  }
 
-//  public void updateOwner(User updateFridgeOwner) {
+  //  public void updateOwner(User updateFridgeOwner) {
 //    this.owner = updateFridgeOwner;
 //  }
 //

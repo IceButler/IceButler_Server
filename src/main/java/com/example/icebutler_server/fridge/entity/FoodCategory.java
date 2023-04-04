@@ -6,18 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
-@Entity
-public class FoodCategory extends BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    private int foodCategoryIdx;
-
-//    @ManyToOne
-//    @JoinColumn(name = "foodIdx")
-//    private Food food;
-
-    private String foodCategory;
+public enum FoodCategory{
 
 }

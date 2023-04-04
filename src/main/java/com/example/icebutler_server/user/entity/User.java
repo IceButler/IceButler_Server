@@ -26,6 +26,11 @@ public class User extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Long userIdx;
+    private String email;
+    private String nickname;
+    private String oauthProvider;
+    private String profileImage;
+    private Boolean loginStatus;
 
     @OneToMany(mappedBy="user", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
@@ -41,10 +46,4 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy="user", cascade=ALL)
     private List<RecipeReport> recipeReports = new ArrayList<>();
-
-    private String email;
-    private String nickname;
-    private String oauthProvider;
-    private String profileImage;
-    private Boolean loginStatus;
 }

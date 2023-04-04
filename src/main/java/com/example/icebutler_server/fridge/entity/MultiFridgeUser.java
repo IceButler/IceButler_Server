@@ -24,4 +24,10 @@ public class MultiFridgeUser extends BaseEntity {
   private MultiFridge multiFridge;
   @Enumerated(EnumType.STRING)
   private FridgeRole role;
+
+  public MultiFridgeUser(User user, MultiFridge multiFridge, FridgeRole role) {
+    this.user = user;
+    this.multiFridge = multiFridge;
+    this.role = role;
+  }
 }

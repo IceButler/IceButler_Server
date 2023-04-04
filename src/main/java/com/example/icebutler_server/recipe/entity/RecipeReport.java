@@ -25,5 +25,6 @@ public class RecipeReport extends BaseEntity {
   @JoinColumn(name = "userIdx")
   private User user;
 
-  private String reason;
+  @Enumerated(EnumType.STRING)
+  private RecipeReportReason reason;
 }

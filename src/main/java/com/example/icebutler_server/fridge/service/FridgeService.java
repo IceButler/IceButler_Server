@@ -14,12 +14,12 @@ public interface FridgeService {
 
   public ResponseCustom<FridgeRes> registerFridge(FridgeRegisterReq createFridgeReq)throws BaseException;
 
-  public ResponseCustom<?> modifyFridge(FridgeModifyReq updateFridgeReq, Long userId) throws BaseException;
+  public ResponseCustom<?> modifyFridge(Long fridgeIdx, FridgeModifyReq updateFridgeReq, Long userIdx) throws BaseException;
 
-  public ResponseCustom<Long> removeFridge(Long fridgeId, Long userId) throws BaseException;
+  public ResponseCustom<Long> removeFridge(Long fridgeIdx, Long userIdx) throws BaseException;
 
-  public FridgeFoodsRes getFoods(Long fridgeId, Long userId) throws BaseException;
+  public FridgeFoodsRes getFoods(Long fridgeIdx, Long userIdx) throws BaseException;
 
-  public List<Food> findFoodByName(Long fridgeId, Long ownerId, String foodName) throws BaseException;
+  public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName) throws BaseException;
 
   }

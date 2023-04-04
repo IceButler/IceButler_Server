@@ -6,7 +6,6 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8??
     url: jdbc:mysql://icebutler.cwkkfphsqxw5.ap-northeast-2.rds.amazonaws.com:3306/icebutler?serverTimezone=Asia/Seoul

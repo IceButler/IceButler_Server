@@ -49,9 +49,9 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   @Transactional
-  public ResponseCustom<?> modifyFridge(FridgeModifyReq updateFridgeReq, Long userId) {
-    Fridge fridge = fridgeRepository.findById(updateFridgeReq.getFridgeId()).orElseThrow(FridgeNotFoundException::new);
-    User originOwner = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+  public ResponseCustom<?> modifyFridge(Long fridgeIdx, FridgeModifyReq updateFridgeReq, Long userIdx) {
+    Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+    User originOwner = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
     User newOwner = userRepository.findByNickname(updateFridgeReq.getNewOwnerName());
 
     List<FridgeUser> fridgeUsers = new ArrayList<>();
@@ -67,9 +67,9 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   @Transactional
-  public ResponseCustom<Long> removeFridge(Long fridgeId, Long userId) {
+  public ResponseCustom<Long> removeFridge(Long fridgeIdx, Long userId) {
     User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-    Fridge fridge = fridgeRepository.findByFridgeIdxAndOwner(fridgeId, user);
+    Fridge fridge = fridgeRepository.findByFridgeIdxAndOwner(fridgeIdx, user);
 
     if(fridge == null) throw new FridgeNotFoundException();
     fridge.updateIsEnable(false);
@@ -77,18 +77,18 @@ public class FridgeServiceImpl implements FridgeService {
     return ResponseCustom.OK(fridge.getFridgeIdx());
   }
 
-  public FridgeFoodsRes getFoods(Long fridgeId, Long ownerId) {
-    User owner = userRepository.findById(ownerId).orElseThrow(UserNotFoundException::new);
-    Fridge fridge = fridgeRepository.findById(fridgeId).orElseThrow(FridgeNotFoundException::new);
+  public FridgeFoodsRes getFoods(Long fridgeIdx, Long ownerIdx) {
+    User owner = userRepository.findById(ownerIdx).orElseThrow(UserNotFoundException::new);
+    Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
 
     return fridgeAssembler.getFridgeFoods(owner, fridge);
 
   }
 
   @Transactional
-  public List<Food> findFoodByName(Long fridgeId, Long ownerId, String foodName) {
-    User owner = userRepository.findById(ownerId).orElseThrow(UserNotFoundException::new);
-    Fridge fridge = fridgeRepository.findById(fridgeId).orElseThrow(FridgeNotFoundException::new);
+  public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName) {
+    User owner = userRepository.findById(ownerIdx).orElseThrow(UserNotFoundException::new);
+    Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
 
     return fridgeAssembler.findFoodByFoodName(owner, fridge, foodName);
   }

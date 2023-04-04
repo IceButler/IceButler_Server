@@ -19,19 +19,14 @@ public class Cart extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private int cartIdx;
+    private Long cartIdx;
+    private Boolean cartStatus;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="cart", cascade=ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="cart", cascade = ALL)
     private List<CartFood> cartFoods = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = ALL)
-    @JoinColumn(name = "userIdx")
-    private User owner;
-
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "cart", cascade = ALL)
     private Fridge fridge;
-
-    private String cartStatus;
 
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);

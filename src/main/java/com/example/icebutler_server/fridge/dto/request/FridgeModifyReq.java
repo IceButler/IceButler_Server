@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FridgeModifyReq {
-  private Long fridgeId;
   private String fridgeName;
   private String fridgeComment;
   private List<String> usersName;

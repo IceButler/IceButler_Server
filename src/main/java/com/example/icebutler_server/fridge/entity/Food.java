@@ -16,9 +16,13 @@ import static javax.persistence.CascadeType.ALL;
 public class Food {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private int foodIdx;
+    private Long foodIdx;
     private String foodName;
     private String foodIconName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FoodCategory foodCategory;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<CartFood> cartFoods = new ArrayList<>();
@@ -26,15 +30,11 @@ public class Food {
     @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<FridgeFood> fridgeFoods = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "food", cascade=ALL)
-//    private List<FoodCategory> foodCategory;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<MultiCartFood> multiCartFoods = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "food", cascade = ALL)
     private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
-
 
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);

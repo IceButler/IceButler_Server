@@ -9,7 +9,7 @@ import com.example.icebutler_server.global.resolver.LoginStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/fridge")
+@RequestMapping("/fridges")
 @RestController
 @RequiredArgsConstructor
 public class fridgeController {
@@ -23,31 +23,32 @@ public class fridgeController {
   }
 
   // 냉장고 업데이트
-  @PatchMapping("/modify")
-  public ResponseCustom<?> modifyFridge(@RequestBody FridgeModifyReq fridgeModifyReq,
+  @PatchMapping("/{fridgeIdx}")
+  public ResponseCustom<?> modifyFridge(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
+                                        @RequestBody FridgeModifyReq fridgeModifyReq,
                                         @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.modifyFridge(fridgeModifyReq, loginStatus.getUserIdx()));
+    return ResponseCustom.OK(fridgeService.modifyFridge(fridgeIdx, fridgeModifyReq, loginStatus.getUserIdx()));
   }
 
   // 냉장고 삭제
-  @PatchMapping("/remove/{fridgeId}")
-  public ResponseCustom<?> removeFridge(@PathVariable(name = "fridgeId") Long fridgeId,
+  @PatchMapping("/{fridgeIdx}/remove")
+  public ResponseCustom<?> removeFridge(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
                                         @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.removeFridge(fridgeId, loginStatus.getUserIdx()));
+    return ResponseCustom.OK(fridgeService.removeFridge(fridgeIdx, loginStatus.getUserIdx()));
   }
 
   // 냉장고 식품 전체 조회
-  @GetMapping("/foods/{fridgeId}")
-  public ResponseCustom<?> getFoods(@PathVariable(name = "fridgeId") Long fridgeId,
+  @GetMapping("/{fridgeIdx}/foods")
+  public ResponseCustom<?> getFoods(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
                                     @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.getFoods(fridgeId, loginStatus.getUserIdx()));
+    return ResponseCustom.OK(fridgeService.getFoods(fridgeIdx, loginStatus.getUserIdx()));
   }
 
   // 냉장고 내 식품 검색 조회
-  @GetMapping("/search/{fridgeId}")
-  public ResponseCustom<?> findFoodByName(@PathVariable(name = "fridgeId") Long fridgeId,
+  @GetMapping("/{fridgeIdx}/search")
+  public ResponseCustom<?> findFoodByName(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
                                           @RequestParam(value = "foodName") String foodName,
                                           @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.findFoodByName(fridgeId, loginStatus.getUserIdx(), foodName));
+    return ResponseCustom.OK(fridgeService.findFoodByName(fridgeIdx, loginStatus.getUserIdx(), foodName));
   }
 }

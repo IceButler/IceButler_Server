@@ -1,7 +1,7 @@
 package com.example.icebutler_server.fridge.service;
 
-import com.example.icebutler_server.fridge.dto.request.CreateFridgeReq;
-import com.example.icebutler_server.fridge.dto.request.UpdateFridgeReq;
+import com.example.icebutler_server.fridge.dto.request.FridgeRegisterReq;
+import com.example.icebutler_server.fridge.dto.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.response.FridgeRes;
 import com.example.icebutler_server.fridge.entity.Food;
@@ -12,14 +12,14 @@ import java.util.List;
 
 public interface FridgeService {
 
-  public ResponseCustom<FridgeRes> createFridge(CreateFridgeReq createFridgeReq)throws BaseException;
+  public ResponseCustom<FridgeRes> registerFridge(FridgeRegisterReq createFridgeReq)throws BaseException;
 
-  public ResponseCustom<?> updateFridge(UpdateFridgeReq updateFridgeReq, Long userId) throws BaseException;
+  public ResponseCustom<?> modifyFridge(FridgeModifyReq updateFridgeReq, Long userId) throws BaseException;
 
-  public ResponseCustom<Long> deleteFridge(Long fridgeId) throws BaseException;
+  public ResponseCustom<Long> removeFridge(Long fridgeId, Long userId) throws BaseException;
 
-//  public FridgeFoodsRes getFoods(Long ownerId, Long fridgeId) throws BaseException;
-//
-//  public List<Food> findFoodByName(Long fridgeId, Long ownerId, String foodName) throws BaseException;
+  public FridgeFoodsRes getFoods(Long fridgeId, Long userId) throws BaseException;
+
+  public List<Food> findFoodByName(Long fridgeId, Long ownerId, String foodName) throws BaseException;
 
   }

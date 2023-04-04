@@ -10,9 +10,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateFridgeReq {
+public class FridgeRegisterReq {
   private Long owner;
   private String fridgeName;
   private String fridgeComment;
-  List<FridgeUser> users;
+  private List<FridgeUser> users;
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateFridgeReq {
+public class FridgeModifyReq {
   private Long fridgeId;
   private String fridgeName;
   private String fridgeComment;

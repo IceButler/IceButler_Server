@@ -1,10 +1,11 @@
 package com.example.icebutler_server.fridge.controller;
 
-import com.example.icebutler_server.fridge.dto.request.CreateFridgeReq;
-import com.example.icebutler_server.fridge.dto.request.UpdateFridgeReq;
+import com.example.icebutler_server.fridge.dto.request.FridgeRegisterReq;
+import com.example.icebutler_server.fridge.dto.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
-import com.example.icebutler_server.global.exception.BaseException;
+import com.example.icebutler_server.global.resolver.IsLogin;
+import com.example.icebutler_server.global.resolver.LoginStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,54 +17,37 @@ public class fridgeController {
   private final FridgeServiceImpl fridgeService;
 
   // 냉장고 추가
-  @GetMapping("create/")
-  public ResponseCustom<?> createFridge(@RequestBody CreateFridgeReq createFridgeReq) {
-    try {
-      return ResponseCustom.OK(fridgeService.createFridge(createFridgeReq));
-    } catch (BaseException e) {
-      return ResponseCustom.BAD_REQUEST(e.getStatus());
-    }
+  @PostMapping("/register")
+  public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq) {
+    return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq));
   }
 
-  @PostMapping("update/")
-  public ResponseCustom<?> updateFridge(@RequestBody UpdateFridgeReq updateFridgeReq, Long  userId) {
-    try {
-      return ResponseCustom.OK(fridgeService.updateFridge(updateFridgeReq, userId));
-    } catch (BaseException e) {
-      return ResponseCustom.BAD_REQUEST(e.getStatus());
-    }
+  // 냉장고 업데이트
+  @PatchMapping("/modify")
+  public ResponseCustom<?> modifyFridge(@RequestBody FridgeModifyReq fridgeModifyReq,
+                                        @IsLogin LoginStatus loginStatus) {
+    return ResponseCustom.OK(fridgeService.modifyFridge(fridgeModifyReq, loginStatus.getUserIdx()));
   }
 
   // 냉장고 삭제
-  @GetMapping("remove/{fridgeId}")
-  public ResponseCustom<?> deleteFridge(@PathVariable(name = "fridgeId") Long fridgeId) {
-    try {
-      return ResponseCustom.OK(fridgeService.deleteFridge(fridgeId));
-    } catch (BaseException e) {
-      return ResponseCustom.BAD_REQUEST(e.getStatus());
-    }
+  @PatchMapping("/remove/{fridgeId}")
+  public ResponseCustom<?> removeFridge(@PathVariable(name = "fridgeId") Long fridgeId,
+                                        @IsLogin LoginStatus loginStatus) {
+    return ResponseCustom.OK(fridgeService.removeFridge(fridgeId, loginStatus.getUserIdx()));
   }
 
   // 냉장고 식품 전체 조회
-  @GetMapping("foods/{fridgeId}/{owner}")
+  @GetMapping("/foods/{fridgeId}")
   public ResponseCustom<?> getFoods(@PathVariable(name = "fridgeId") Long fridgeId,
-                                    @PathVariable(name = "owner") Long owner) {
-    try {
-      return ResponseCustom.OK(fridgeService.getFoods(owner, fridgeId));
-    } catch (BaseException e) {
-      return ResponseCustom.BAD_REQUEST(e.getStatus());
-    }
+                                    @IsLogin LoginStatus loginStatus) {
+    return ResponseCustom.OK(fridgeService.getFoods(fridgeId, loginStatus.getUserIdx()));
   }
 
   // 냉장고 내 식품 검색 조회
-  @GetMapping("search/{fridgeId}/{ownerId}")
+  @GetMapping("/search/{fridgeId}")
   public ResponseCustom<?> findFoodByName(@PathVariable(name = "fridgeId") Long fridgeId,
-                                          @PathVariable(name = "ownerId") Long ownerId,
-                                          @RequestParam(value = "foodName") String foodName) {
-    try {
-      return ResponseCustom.OK(fridgeService.findFoodByName(fridgeId, ownerId, foodName));
-    } catch (BaseException e) {
-      return ResponseCustom.BAD_REQUEST(e.getStatus());
-    }
+                                          @RequestParam(value = "foodName") String foodName,
+                                          @IsLogin LoginStatus loginStatus) {
+    return ResponseCustom.OK(fridgeService.findFoodByName(fridgeId, loginStatus.getUserIdx(), foodName));
   }
 }

@@ -25,9 +25,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy="user", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Food> foods = new ArrayList<>();
-
     private String email;
     private String nickname;
     private String oauthProvider;

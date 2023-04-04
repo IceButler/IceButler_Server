@@ -1,4 +1,4 @@
-package com.example.icebutler_server.fridge.Repository;
+package com.example.icebutler_server.fridge.repository;
 
 import com.example.icebutler_server.fridge.entity.FridgeUser;
 import com.example.icebutler_server.user.entity.User;

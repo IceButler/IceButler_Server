@@ -28,5 +28,5 @@ public class FridgeFood extends BaseEntity {
     @OneToMany(mappedBy="fridgeFood", cascade=ALL)
     private List<Food> foods = new ArrayList<>();
     @OneToMany(mappedBy="fridgeFood", cascade=ALL)
-    private List<FridgeFoodImg> fridgeFoodImgs=new ArrayList<>();
+    private List<FridgeFoodImg> fridgeFoodImgs =new ArrayList<>();
 }

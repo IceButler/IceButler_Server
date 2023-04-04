@@ -1,6 +1,7 @@
 package com.example.icebutler_server.fridge.entity;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
+import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,16 +14,14 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 
-import com.example.icebutler_server.user.entity.User;
-
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class FridgeFood extends BaseEntity {
+public class MultiFridgeFood extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
-  private int fridgeFoodIdx;
+  private int multiFridgeFoodIdx;
   private LocalDateTime shelfLife;
   private TextComponent memo;
 
@@ -35,9 +34,9 @@ public class FridgeFood extends BaseEntity {
   private Food food;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "fridgeIdx")
-  private Fridge fridge;
+  @JoinColumn(name = "multiFridgeIdx")
+  private MultiFridge multiFridge;
 
-  @OneToMany(mappedBy = "fridgeFood", cascade = ALL)
-  private List<FridgeFoodImg> fridgeFoodImgs = new ArrayList<>();
+  @OneToMany(mappedBy = "multiFridgeFood", cascade = ALL)
+  private List<MultiFridgeFoodImg> multiFridgeFoodImgs = new ArrayList<>();
 }

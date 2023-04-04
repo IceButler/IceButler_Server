@@ -19,16 +19,22 @@ public class Food {
     private int foodIdx;
     private String foodName;
     private String foodIconName;
-    private String foodCategory;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="cartIdx")
-    private Cart cart;
+
     @OneToMany(mappedBy="food", cascade=ALL)
     private List<CartFood> cartFoods = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="fridgeFoodIdx")
-    private FridgeFood fridgeFood;
+    @OneToMany(mappedBy="food", cascade=ALL)
+    private List<FridgeFood> fridgeFoods = new ArrayList<>();
+
+    @OneToMany(mappedBy = "food", cascade=ALL)
+    private List<FoodCategory> foodCategory;
+
+    @OneToMany(mappedBy="food", cascade=ALL)
+    private List<MultiCartFood> multiCartFoods = new ArrayList<>();
+
+    @OneToMany(mappedBy = "food", cascade = ALL)
+    private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
+
 
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);

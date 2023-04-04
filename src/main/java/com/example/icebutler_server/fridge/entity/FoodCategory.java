@@ -19,6 +19,8 @@ public class FoodCategory extends BaseEntity {
     @Column(nullable = false)
     private int foodCategoryIdx;
     private String foodCategory;
-    @OneToMany(mappedBy = "foodCategory",cascade = ALL)
-    private List<Food> foods=new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "foodIdx")
+    private Food food;
 }

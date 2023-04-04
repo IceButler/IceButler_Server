@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class CartFood extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long cardFoodIdx;
+    private Long cartFoodIdx;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="foodIdx")
     private Food food;

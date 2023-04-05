@@ -1,6 +1,5 @@
 package com.example.icebutler_server.fridge.entity;
 
-import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +39,10 @@ public class Food {
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
     }
+    
+     public void removeCartFood(CartFood cartFood) {
+        this.cartFoods.removeIf((cf)->cf.getCardFoodIdx().equals(cartFood.getCardFoodIdx()));
+    }
 
     @Builder
     public Food(String foodName, String foodIconName, FoodCategory foodCategory) {
@@ -47,4 +50,6 @@ public class Food {
         this.foodIconName = foodIconName;
         this.foodCategory = foodCategory;
     }
+  
 }
+

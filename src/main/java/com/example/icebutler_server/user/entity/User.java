@@ -46,4 +46,5 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy="user", cascade=ALL)
     private List<RecipeReport> recipeReports = new ArrayList<>();
+
 }

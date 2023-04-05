@@ -1,8 +1,8 @@
 package com.example.icebutler_server.fridge.entity;
 
-import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,7 +28,17 @@ public class Cart extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "cart", cascade = ALL)
     private Fridge fridge;
 
+    @Builder
+    public Cart(User owner) {
+        this.owner = owner;
+        owner.addCart(this);
+    }
+
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
+    }
+
+    public void removeCartFood(CartFood cartFood) {
+        this.cartFoods.removeIf((cf) -> cf.getCardFoodIdx().equals(cartFood.getCardFoodIdx()));
     }
 }

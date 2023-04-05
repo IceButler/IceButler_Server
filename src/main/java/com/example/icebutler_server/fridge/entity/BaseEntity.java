@@ -1,4 +1,4 @@
-package com.example.icebutler_server.global.entity;
+package com.example.icebutler_server.fridge.entity;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -17,16 +17,17 @@ public class MultiFridgeUser extends BaseEntity {
   private Long multiFridgeUserIdx;
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="userIdx")
-  private User user;
+  private User owner;
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="multiFridgeIdx")
   private MultiFridge multiFridge;
   @Enumerated(EnumType.STRING)
   private FridgeRole role;
 
-  public MultiFridgeUser(User user, MultiFridge multiFridge, FridgeRole role) {
-    this.user = user;
+  public MultiFridgeUser(User owner, MultiFridge multiFridge, FridgeRole role) {
+    this.owner = owner;
     this.multiFridge = multiFridge;
     this.role = role;
+//    this.multiFridgeFood = multiFridgeFood;
   }
 }

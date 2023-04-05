@@ -30,9 +30,6 @@ public class MultiFridge extends BaseEntity {
   private User owner;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
-  private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
-
-  @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
   private List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
 
   @Builder

@@ -41,7 +41,7 @@ public class FridgeAssembler {
     fridgeRes.setFridgeName(fridge.getFridgeName());
     fridgeRes.setComment(fridge.getFridgeComment());
     fridgeRes.setUsers(fridge.getFridgeUsers().stream()
-            .map((fu) -> FridgeUserRes.toDto(fu.getUser()))
+            .map((fu) -> FridgeUserRes.toDto(fu.getOwner()))
             .collect(Collectors.toList()));
     return fridgeRes;
   }

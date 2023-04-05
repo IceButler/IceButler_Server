@@ -33,9 +33,6 @@ public class Food {
     @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<MultiCartFood> multiCartFoods = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "food", cascade = ALL)
-    private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
-
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
     }

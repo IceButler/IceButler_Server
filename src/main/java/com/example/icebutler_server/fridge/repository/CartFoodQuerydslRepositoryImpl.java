@@ -22,7 +22,7 @@ public class CartFoodQuerydslRepositoryImpl implements CartFoodQuerydslRepositor
         return queryFactory
                 .selectFrom(cartFood)
                 .where(
-                        cartFood.cart.cardIdx.eq(cartIdx),
+                        cartFood.cart.cartIdx.eq(cartIdx),
                         cartFood.food.foodIdx.in(foodIdxes)
                 )
                 .fetch();

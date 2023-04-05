@@ -16,6 +16,7 @@ public class RecipeIngredient extends BaseEntity {
   @Column(nullable = false)
   private Long recipeIngredientIdx;
   private String ingredient;
+  private String ingredientDetails;
 
   @ManyToOne
   @JoinColumn(name = "recipeIdx")

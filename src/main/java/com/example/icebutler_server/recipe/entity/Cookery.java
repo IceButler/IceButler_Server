@@ -15,7 +15,7 @@ public class Cookery extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
   private Long cookeryIdx;
-  private String cookeryImg;
+  private String cookeryImgKey;
   private String description;
   private int nextIdx;
 

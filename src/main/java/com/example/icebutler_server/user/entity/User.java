@@ -28,7 +28,7 @@ public class User extends BaseEntity {
     private String profileImage;
     private Boolean loginStatus;
 
-    @OneToMany(mappedBy="user", cascade=ALL)
+    @OneToMany(mappedBy="owner", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
 
     @OneToMany(mappedBy="owner", cascade=ALL)

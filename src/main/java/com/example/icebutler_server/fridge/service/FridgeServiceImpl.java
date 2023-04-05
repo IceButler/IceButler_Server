@@ -56,7 +56,7 @@ public class FridgeServiceImpl implements FridgeService {
 
     List<FridgeUser> fridgeUsers = new ArrayList<>();
     for (String name : updateFridgeReq.getUsersName()) {
-      fridgeUsers.add(fridgeUserRepository.findByUser(userRepository.findByNickname(name)));
+      fridgeUsers.add(fridgeUserRepository.findByOwner(userRepository.findByNickname(name)));
     }
 
     fridge.updateOwner(fridgeAssembler.updateFridgeOwner(originOwner, newOwner));

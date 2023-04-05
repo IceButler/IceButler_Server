@@ -17,7 +17,7 @@ public class FridgeUser extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="userIdx")
-    private User user;
+    private User owner;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="fridgeIdx")

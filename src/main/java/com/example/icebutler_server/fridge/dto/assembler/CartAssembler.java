@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CartAssembler {
-    public Cart toEntity(User owner) {
-        return Cart.builder().owner(owner).build();
-    }
+//    public Cart toEntity(User owner) {
+//        return Cart.builder().owner(owner).build();
+//    }
 }

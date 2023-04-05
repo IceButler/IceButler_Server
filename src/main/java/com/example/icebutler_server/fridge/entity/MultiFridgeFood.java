@@ -1,6 +1,5 @@
 package com.example.icebutler_server.fridge.entity;
 
-import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,10 +20,11 @@ public class MultiFridgeFood extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
-  private int multiFridgeFoodIdx;
+  private Long multiFridgeFoodIdx;
   private String fridgeFoodImg;
   private LocalDateTime shelfLife;
-  private TextComponent memo;
+  private String foodComment;
+  private String foodDetailName;
 
   /**
    * TODO: 이 부분도 마찬가지임. MultiFridgeUser를 할지 아님 아래 두 컬럼을 사용할지?
@@ -41,10 +41,11 @@ public class MultiFridgeFood extends BaseEntity {
   @JoinColumn(name = "multiFridgeIdx")
   private MultiFridge multiFridge;
 
-  public MultiFridgeFood(String fridgeFoodImg, LocalDateTime shelfLife, TextComponent memo, User userIdx, Food food, MultiFridge multiFridge) {
+  public MultiFridgeFood(String fridgeFoodImg, LocalDateTime shelfLife, String foodComment, User userIdx, Food food, MultiFridge multiFridge, String foodDetailName) {
     this.fridgeFoodImg = fridgeFoodImg;
     this.shelfLife = shelfLife;
-    this.memo = memo;
+    this.foodComment = foodComment;
+    this.foodDetailName = foodDetailName;
     this.userIdx = userIdx;
     this.food = food;
     this.multiFridge = multiFridge;

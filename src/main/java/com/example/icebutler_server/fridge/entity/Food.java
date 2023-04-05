@@ -39,9 +39,9 @@ public class Food {
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
     }
-    
+
      public void removeCartFood(CartFood cartFood) {
-        this.cartFoods.removeIf((cf)->cf.getCardFoodIdx().equals(cartFood.getCardFoodIdx()));
+        this.cartFoods.removeIf((cf)->cf.getCartFoodIdx().equals(cartFood.getCartFoodIdx()));
     }
 
     @Builder
@@ -50,6 +50,6 @@ public class Food {
         this.foodIconName = foodIconName;
         this.foodCategory = foodCategory;
     }
-  
+
 }
 

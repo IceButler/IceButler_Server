@@ -1,6 +1,5 @@
 package com.example.icebutler_server.fridge.entity;
 
-import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,6 +23,11 @@ public class MultiFridge extends BaseEntity {
 
   private String fridgeName;
   private String fridgeComment;
+
+  // todo User와 직접적인 연관관계 필요한지 확인 필요, FridgeUser role으로 대체 가능한지?
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name="userIdx")
+  private User owner;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
   private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();

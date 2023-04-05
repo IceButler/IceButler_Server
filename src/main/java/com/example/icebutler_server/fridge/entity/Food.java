@@ -2,6 +2,7 @@ package com.example.icebutler_server.fridge.entity;
 
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,5 +39,12 @@ public class Food {
 
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
+    }
+
+    @Builder
+    public Food(String foodName, String foodIconName, FoodCategory foodCategory) {
+        this.foodName = foodName;
+        this.foodIconName = foodIconName;
+        this.foodCategory = foodCategory;
     }
 }

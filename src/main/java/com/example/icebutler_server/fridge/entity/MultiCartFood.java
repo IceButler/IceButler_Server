@@ -22,12 +22,10 @@ public class MultiCartFood extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="multiCartIdx")
   private MultiCart multiCart;
-  private String cartStatus;
 
   @Builder
-  public MultiCartFood(Food food, MultiCart multiCart, String cartStatus) {
+  public MultiCartFood(Food food, MultiCart multiCart) {
     this.food = food;
     this.multiCart = multiCart;
-    this.cartStatus = cartStatus;
   }
 }

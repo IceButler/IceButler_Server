@@ -22,12 +22,16 @@ public class MultiFridgeFood extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
   private int multiFridgeFoodIdx;
+  private String fridgeFoodImg;
   private LocalDateTime shelfLife;
   private TextComponent memo;
 
+  /**
+   * TODO: 이 부분도 마찬가지임. MultiFridgeUser를 할지 아님 아래 두 컬럼을 사용할지?
+   */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userIdx")
-  private User foodOwner;
+  private User userIdx;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "foodIdx")
@@ -37,6 +41,12 @@ public class MultiFridgeFood extends BaseEntity {
   @JoinColumn(name = "multiFridgeIdx")
   private MultiFridge multiFridge;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "multiFridgeFood", cascade = ALL)
-  private List<MultiFridgeFoodImg> multiFridgeFoodImgs = new ArrayList<>();
+  public MultiFridgeFood(String fridgeFoodImg, LocalDateTime shelfLife, TextComponent memo, User userIdx, Food food, MultiFridge multiFridge) {
+    this.fridgeFoodImg = fridgeFoodImg;
+    this.shelfLife = shelfLife;
+    this.memo = memo;
+    this.userIdx = userIdx;
+    this.food = food;
+    this.multiFridge = multiFridge;
+  }
 }

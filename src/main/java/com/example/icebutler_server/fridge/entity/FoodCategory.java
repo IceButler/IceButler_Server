@@ -4,6 +4,6 @@ import com.example.icebutler_server.global.entity.BaseEntity;
 import lombok.Getter;
 
 @Getter
-public enum FoodCategory {
+public enum FoodCategory{
 
 }

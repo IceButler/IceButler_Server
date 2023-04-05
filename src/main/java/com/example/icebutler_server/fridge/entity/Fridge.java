@@ -20,11 +20,14 @@ public class Fridge extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Long fridgeIdx;
+    private String fridgeName;
+    private String fridgeComment;
 
     @OneToOne
     @JoinColumn(name = "cartIdx")
     private Cart cart;
 
+    // todo User와 직접적인 연관관계 필요한지 확인 필요, FridgeUser role으로 대체 가능한지?
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userIdx")
     private User owner;
@@ -34,9 +37,6 @@ public class Fridge extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy="fridge", cascade=ALL)
     private List<FridgeFood> fridgeFoods = new ArrayList<>();
-
-    private String fridgeName;
-    private String fridgeComment;
 
     public void updateOwner(User updateFridgeOwner) {
         this.owner = updateFridgeOwner;

@@ -17,7 +17,7 @@ import static javax.persistence.CascadeType.ALL;
 public class Food {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private int foodIdx;
+    private Long foodIdx;
     private String foodName;
     private String foodIconName;
 

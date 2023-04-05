@@ -15,12 +15,11 @@ public class Cookery extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
   private Long cookeryIdx;
+  private String cookeryImg;
+  private String description;
+  private int nextIdx;
 
   @ManyToOne
   @JoinColumn(name = "recipeIdx")
   private Recipe recipe;
-
-  private String cookeryImg;
-  private String description;
-
 }

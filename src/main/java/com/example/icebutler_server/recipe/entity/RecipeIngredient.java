@@ -14,11 +14,9 @@ public class RecipeIngredient {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
   private Long recipeIngredientIdx;
+  private String ingredient;
 
   @ManyToOne
   @JoinColumn(name = "recipeIdx")
   private Recipe recipe;
-
-  private String ingredient;
-
 }

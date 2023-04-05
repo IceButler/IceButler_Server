@@ -22,9 +22,10 @@ public class FridgeFood extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
-  private int fridgeFoodIdx;
+  private Long fridgeFoodIdx;
   private LocalDateTime shelfLife;
-  private TextComponent memo;
+  private String description;
+  private String fridgeFoodImg;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userIdx")
@@ -38,6 +39,6 @@ public class FridgeFood extends BaseEntity {
   @JoinColumn(name = "fridgeIdx")
   private Fridge fridge;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "fridgeFood", cascade = ALL)
-  private List<FridgeFoodImg> fridgeFoodImgs = new ArrayList<>();
+//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "fridgeFood", cascade = ALL)
+//  private List<FridgeFoodImg> fridgeFoodImgs = new ArrayList<>();
 }

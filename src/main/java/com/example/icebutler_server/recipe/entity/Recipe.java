@@ -21,6 +21,10 @@ public class Recipe extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
   private Long recipeIdx;
+  private String recipeName;
+  private String recipeImg;
+  private int quantity;
+  private Date leadTime;
 
   @ManyToOne
   @JoinColumn(name = "userIdx")
@@ -37,12 +41,5 @@ public class Recipe extends BaseEntity {
 
   @OneToMany(mappedBy="recipe", cascade=ALL)
   private List<RecipeReport> recipeReports = new ArrayList<>();
-
-  private String recipeName;
-  private String recipeImg;
-  private int quantity;
-  private Date leadTime;
-  private Date shelfLife;
-
 
 }

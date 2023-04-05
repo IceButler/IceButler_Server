@@ -16,7 +16,6 @@ public class FoodResponse {
         FoodResponse foodResponse = new FoodResponse();
         foodResponse.foodIdx = food.getFoodIdx();
         foodResponse.foodName = food.getFoodName();
-        foodResponse.foodCategory = food.getFoodCategory().getFoodCategory();
         return foodResponse;
     }
 }

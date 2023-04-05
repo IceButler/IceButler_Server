@@ -1,10 +1,6 @@
 package com.example.icebutler_server.user.entity;
 
-import com.example.icebutler_server.fridge.entity.Food;
-import com.example.icebutler_server.fridge.entity.Fridge;
-import com.example.icebutler_server.fridge.entity.FridgeUser;
-import com.example.icebutler_server.fridge.entity.MultiFridge;
-import com.example.icebutler_server.global.entity.BaseEntity;
+import com.example.icebutler_server.fridge.entity.*;
 import com.example.icebutler_server.recipe.entity.Recipe;
 import com.example.icebutler_server.recipe.entity.RecipeLike;
 import com.example.icebutler_server.recipe.entity.RecipeReport;

@@ -88,7 +88,7 @@ public class CartServiceImpl implements CartService{
     {
         Cart cart = cartRepository.findById(cartIdx).orElseThrow(CartNotFoundException::new);
         List<Food> removeFoods = foodRepository.findAllByFoodIdxIn(request.getRemoveFoodIdxes());
-        List<CartFood> removeCartFoods = cartFoodRepository.findByCardIdxAndFoodIdxIn(cart.getCardIdx(), request.getRemoveFoodIdxes());
+        List<CartFood> removeCartFoods = cartFoodRepository.findByCardIdxAndFoodIdxIn(cart.getCartIdx(), request.getRemoveFoodIdxes());
 
         removeCartFoods.forEach(cart::removeCartFood); //cart와의 연관관계 삭제
         removeCartFoods.forEach((rcf)->{ // food와의 연관관계 삭제

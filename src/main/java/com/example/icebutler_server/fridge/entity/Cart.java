@@ -28,17 +28,17 @@ public class Cart extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "cart", cascade = ALL)
     private Fridge fridge;
 
-    @Builder
-    public Cart(User owner) {
-        this.owner = owner;
-        owner.addCart(this);
-    }
+//    @Builder
+//    public Cart(User owner) {
+//        this.owner = owner;
+//        owner.addCart(this);
+//    }
 
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
     }
 
     public void removeCartFood(CartFood cartFood) {
-        this.cartFoods.removeIf((cf) -> cf.getCardFoodIdx().equals(cartFood.getCardFoodIdx()));
+        this.cartFoods.removeIf((cf) -> cf.getCartFoodIdx().equals(cartFood.getCartFoodIdx()));
     }
 }

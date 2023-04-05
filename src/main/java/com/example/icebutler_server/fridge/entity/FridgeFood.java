@@ -20,12 +20,13 @@ public class FridgeFood extends BaseEntity {
   @Column(nullable = false)
   private Long fridgeFoodIdx;
   private LocalDateTime shelfLife;
-  private String description;
   private String fridgeFoodImg;
+  private String foodComment;
+  private String foodDetailName;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userIdx")
-  private User useridx;
+  private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "foodIdx")

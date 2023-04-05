@@ -11,19 +11,22 @@ import javax.persistence.*;
 @Getter
 @Entity
 public class CartFood extends BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long cardFoodIdx;
+    private Long cartFoodIdx;
+    private Boolean cartStatus;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="foodIdx")
     private Food food;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="cartIdx")
     private Cart cart;
-    private String cartStatus;
 
     @Builder
-    public CartFood(Food food, Cart cart, String cartStatus) {
+    public CartFood(Food food, Cart cart, Boolean cartStatus) {
         this.food = food;
         this.cart = cart;
         this.cartStatus = cartStatus;

@@ -1,6 +1,7 @@
 package com.example.icebutler_server.fridge.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,19 +19,37 @@ public class Food {
     private Long foodIdx;
     private String foodName;
     private String foodIconName;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="foodCategoryIdx")
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private FoodCategory foodCategory;
-    @OneToMany(mappedBy="food", cascade=ALL)
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<CartFood> cartFoods = new ArrayList<>();
-    @OneToMany(mappedBy="food", cascade=ALL)
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
     private List<FridgeFood> fridgeFoods = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="food", cascade=ALL)
+    private List<MultiCartFood> multiCartFoods = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "food", cascade = ALL)
+    private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
 
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
     }
-
-    public void removeCartFood(CartFood cartFood) {
+    
+     public void removeCartFood(CartFood cartFood) {
         this.cartFoods.removeIf((cf)->cf.getCardFoodIdx().equals(cartFood.getCardFoodIdx()));
     }
+
+    @Builder
+    public Food(String foodName, String foodIconName, FoodCategory foodCategory) {
+        this.foodName = foodName;
+        this.foodIconName = foodIconName;
+        this.foodCategory = foodCategory;
+    }
+  
 }
+

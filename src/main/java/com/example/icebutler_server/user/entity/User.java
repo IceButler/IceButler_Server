@@ -4,6 +4,11 @@ import com.example.icebutler_server.fridge.entity.Cart;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
 import com.example.icebutler_server.fridge.entity.BaseEntity;
 import com.example.icebutler_server.user.entity.vo.UserType;
+
+import com.example.icebutler_server.fridge.entity.*;
+import com.example.icebutler_server.recipe.entity.Recipe;
+import com.example.icebutler_server.recipe.entity.RecipeLike;
+import com.example.icebutler_server.recipe.entity.RecipeReport;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +23,7 @@ import static javax.persistence.CascadeType.ALL;
 @Getter
 @Entity
 public class User extends BaseEntity {
+
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Long userIdx;
@@ -26,18 +32,27 @@ public class User extends BaseEntity {
     private String oauthProvider;
     private String profileImage;
     private Boolean loginStatus;
-    @OneToMany(mappedBy="user", cascade=ALL)
+
+    @OneToMany(mappedBy="owner", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
-    @OneToOne(cascade = ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "cartIdx")
-    private Cart cart;
+
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    public void addCart(Cart cart) {
-        this.cart = cart;
-    }
 
     public void setUserType(UserType userType){this.userType = userType;}
+
+    @OneToMany(mappedBy="owner", cascade=ALL)
+    private List<MultiFridge> multiFridges = new ArrayList<>();
+
+    @OneToMany(mappedBy="user", cascade=ALL)
+    private List<Recipe> recipes = new ArrayList<>();
+
+    @OneToMany(mappedBy="user", cascade=ALL)
+    private List<RecipeLike> recipeLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy="user", cascade=ALL)
+    private List<RecipeReport> recipeReports = new ArrayList<>();
+
 }

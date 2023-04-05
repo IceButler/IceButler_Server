@@ -14,12 +14,15 @@ public class FridgeUser extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Long fridgeUserIdx;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="userIdx")
-    private User user;
+    private User owner;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="fridgeIdx")
     private Fridge fridge;
+
     @Enumerated(EnumType.STRING)
     private FridgeRole role;
 }

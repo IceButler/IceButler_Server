@@ -18,16 +18,16 @@ import java.util.List;
 @RestController
 public class FoodController {
 
-    private final FoodService foodService;
+//    private final FoodService foodService;
+////    @GetMapping
+////    public ResponseCustom<List<FoodResponse>> getAllFood() {
+////        return foodService.getAllFood();
+////    }
+//
 //    @GetMapping
-//    public ResponseCustom<List<FoodResponse>> getAllFood() {
-//        return foodService.getAllFood();
+//    public ResponseCustom<List<FoodResponse>> getAllFood(
+//            @RequestParam(defaultValue = "") String category)
+//    {
+//        return foodService.getAllFoodByCategory(category);
 //    }
-
-    @GetMapping
-    public ResponseCustom<List<FoodResponse>> getAllFood(
-            @RequestParam(defaultValue = "") String category)
-    {
-        return foodService.getAllFoodByCategory(category);
-    }
 }

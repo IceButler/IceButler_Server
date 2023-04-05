@@ -19,25 +19,26 @@ public class Cart extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long cardIdx;
-    @OneToMany(mappedBy="cart", cascade=ALL)
-    private List<CartFood> cartFoods = new ArrayList<>();
-    @OneToOne(cascade = ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "userIdx")
-    private User owner;
-    private String cartStatus;
+    private Long cartIdx;
+    private Boolean cartStatus;
 
-    @Builder
-    public Cart(User owner) {
-        this.owner = owner;
-        owner.addCart(this);
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="cart", cascade = ALL)
+    private List<CartFood> cartFoods = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "cart", cascade = ALL)
+    private Fridge fridge;
+
+//    @Builder
+//    public Cart(User owner) {
+//        this.owner = owner;
+//        owner.addCart(this);
+//    }
 
     public void addCartFood(CartFood cartFood) {
         this.cartFoods.add(cartFood);
     }
 
     public void removeCartFood(CartFood cartFood) {
-        this.cartFoods.removeIf((cf) -> cf.getCardFoodIdx().equals(cartFood.getCardFoodIdx()));
+        this.cartFoods.removeIf((cf) -> cf.getCartFoodIdx().equals(cartFood.getCartFoodIdx()));
     }
 }

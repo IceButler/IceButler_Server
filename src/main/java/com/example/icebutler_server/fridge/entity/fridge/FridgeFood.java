@@ -21,7 +21,6 @@ public class FridgeFood extends BaseEntity {
   private String fridgeFoodImgKey;
   private String memo;
   private String foodDetailName;
-  private FoodDeleteStatus foodDeleteStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "foodIdx")

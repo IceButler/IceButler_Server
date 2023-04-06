@@ -1,10 +1,10 @@
 package com.example.icebutler_server.fridge.service;
 
-import com.example.icebutler_server.fridge.dto.request.FridgeRegisterReq;
-import com.example.icebutler_server.fridge.dto.request.FridgeModifyReq;
-import com.example.icebutler_server.fridge.dto.response.FridgeFoodsRes;
-import com.example.icebutler_server.fridge.dto.response.FridgeRes;
-import com.example.icebutler_server.fridge.entity.Food;
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeRes;
+import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.exception.BaseException;
 

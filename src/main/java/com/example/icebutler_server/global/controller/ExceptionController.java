@@ -1,9 +1,9 @@
 package com.example.icebutler_server.global.controller;
 
-import com.example.icebutler_server.fridge.exception.CartNotFoundException;
+import com.example.icebutler_server.cart.exception.CartNotFoundException;
 import com.example.icebutler_server.fridge.exception.FridgeNameEmptyException;
 import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
-import com.example.icebutler_server.fridge.exception.UserNotFoundException;
+import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;

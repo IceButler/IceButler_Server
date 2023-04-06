@@ -1,18 +1,18 @@
 package com.example.icebutler_server.fridge.service;
 
-import com.example.icebutler_server.fridge.dto.response.FridgeFoodsRes;
-import com.example.icebutler_server.fridge.entity.Food;
-import com.example.icebutler_server.fridge.entity.FridgeUser;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
+import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.exception.FridgeNameEmptyException;
 import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
-import com.example.icebutler_server.fridge.exception.UserNotFoundException;
-import com.example.icebutler_server.fridge.repository.FridgeRepository;
-import com.example.icebutler_server.fridge.dto.assembler.FridgeAssembler;
-import com.example.icebutler_server.fridge.dto.request.FridgeRegisterReq;
-import com.example.icebutler_server.fridge.dto.request.FridgeModifyReq;
-import com.example.icebutler_server.fridge.dto.response.FridgeRes;
-import com.example.icebutler_server.fridge.entity.Fridge;
-import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
+import com.example.icebutler_server.user.exception.UserNotFoundException;
+import com.example.icebutler_server.fridge.repository.fridge.FridgeRepository;
+import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeAssembler;
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeRes;
+import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepository;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.repository.UserRepository;
@@ -59,7 +59,7 @@ public class FridgeServiceImpl implements FridgeService {
       fridgeUsers.add(fridgeUserRepository.findByOwner(userRepository.findByNickname(name)));
     }
 
-    fridge.updateOwner(fridgeAssembler.updateFridgeOwner(originOwner, newOwner));
+//    fridge.updateOwner(fridgeAssembler.updateFridgeOwner(originOwner, newOwner));
     fridge.updateMembers(fridgeUsers);
     fridge.updateNameAndComment(fridgeAssembler.toUpdateEntity(updateFridgeReq));
 

@@ -1,13 +1,12 @@
 package com.example.icebutler_server.fridge.entity;
 
-import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
@@ -18,28 +17,25 @@ public class MultiFridgeFood extends BaseEntity {
   @Column(nullable = false)
   private Long multiFridgeFoodIdx;
   private String fridgeFoodImgKey;
-  private LocalDateTime shelfLife;
-  private String foodComment;
+  private LocalDate shelfLife;
+  private String memo;
   private String foodDetailName;
 
-  /**
-   * TODO: 이 부분도 마찬가지임. MultiFridgeUser를 할지 아님 아래 두 컬럼을 사용할지? -> MultiFridgeUser를 사용하는것으로 해결
-   */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userIdx")
-  private User userIdx;
+  @JoinColumn(name = "foodIdx")
+  private Food food;
 
   @OneToOne
   @JoinColumn(name = "multiFridgeUserIdx")
   private MultiFridgeUser multiFridgeUser;
 
   @Builder
-  public MultiFridgeFood(String fridgeFoodImgKey, LocalDateTime shelfLife, String foodComment, User userIdx, String foodDetailName, MultiFridgeUser multiFridgeUser) {
+  public MultiFridgeFood(String fridgeFoodImgKey, LocalDate shelfLife, String memo, Food food, String foodDetailName, MultiFridgeUser multiFridgeUser) {
     this.fridgeFoodImgKey = fridgeFoodImgKey;
     this.shelfLife = shelfLife;
-    this.foodComment = foodComment;
+    this.memo = memo;
     this.foodDetailName = foodDetailName;
-    this.userIdx = userIdx;
+    this.food = food;
     this.multiFridgeUser = multiFridgeUser;
   }
 }

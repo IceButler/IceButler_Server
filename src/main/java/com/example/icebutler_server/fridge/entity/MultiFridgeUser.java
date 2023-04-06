@@ -15,17 +15,20 @@ public class MultiFridgeUser extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
   private Long multiFridgeUserIdx;
+
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="userIdx")
-  private User owner;
+  private User user;
+
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="multiFridgeIdx")
   private MultiFridge multiFridge;
+
   @Enumerated(EnumType.STRING)
   private FridgeRole role;
 
-  public MultiFridgeUser(User owner, MultiFridge multiFridge, FridgeRole role) {
-    this.owner = owner;
+  public MultiFridgeUser(User user, MultiFridge multiFridge, FridgeRole role) {
+    this.user = user;
     this.multiFridge = multiFridge;
     this.role = role;
 //    this.multiFridgeFood = multiFridgeFood;

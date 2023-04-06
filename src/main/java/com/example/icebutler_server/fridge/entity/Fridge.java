@@ -26,20 +26,11 @@ public class Fridge extends BaseEntity {
     @JoinColumn(name = "cartIdx")
     private Cart cart;
 
-    // todo User와 직접적인 연관관계 필요한지 확인 필요, FridgeUser role으로 대체 가능한지?
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="userIdx")
-    private User owner;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy="fridge", cascade=ALL)
     private List<FridgeUser> fridgeUsers = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy="fridge", cascade=ALL)
     private List<FridgeFood> fridgeFoods = new ArrayList<>();
-
-    public void updateOwner(User updateFridgeOwner) {
-        this.owner = updateFridgeOwner;
-    }
 
     public void updateMembers(List<FridgeUser> updateMembers) {
         this.fridgeUsers = updateMembers;

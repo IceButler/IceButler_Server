@@ -15,7 +15,6 @@ public class CartFood extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Long cartFoodIdx;
-    private Boolean cartStatus;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="foodIdx")
@@ -26,9 +25,8 @@ public class CartFood extends BaseEntity {
     private Cart cart;
 
     @Builder
-    public CartFood(Food food, Cart cart, Boolean cartStatus) {
+    public CartFood(Food food, Cart cart) {
         this.food = food;
         this.cart = cart;
-        this.cartStatus = cartStatus;
     }
 }

@@ -29,12 +29,13 @@ public class FridgeAssembler {
 
   public FridgeRes toDto(Fridge fridge) {
     FridgeRes fridgeRes = new FridgeRes();
+    // TODO 에러로 주석 처리
 //    fridgeRes.setOwnerNickname(fridge.getOwner().getNickname());
-    fridgeRes.setFridgeName(fridge.getFridgeName());
-    fridgeRes.setComment(fridge.getFridgeComment());
-    fridgeRes.setUsers(fridge.getFridgeUsers().stream()
-            .map((fu) -> FridgeUserRes.toDto(fu.getOwner()))
-            .collect(Collectors.toList()));
+//    fridgeRes.setFridgeName(fridge.getFridgeName());
+//    fridgeRes.setComment(fridge.getFridgeComment());
+//    fridgeRes.setUsers(fridge.getFridgeUsers().stream()
+//            .map((fu) -> FridgeUserRes.toDto(fu.getOwner()))
+//            .collect(Collectors.toList()));
     return fridgeRes;
   }
 

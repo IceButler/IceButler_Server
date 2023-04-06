@@ -1,5 +1,6 @@
-package com.example.icebutler_server.fridge.entity;
+package com.example.icebutler_server.fridge.entity.multiFridge;
 
+import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.user.entity.User;
@@ -35,16 +36,6 @@ public class MultiFridgeFood extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "multiFridgeIdx")
-  private com.example.icebutler_server.fridge.entity.MultiFridge multiFridge;
+  private MultiFridge multiFridge;
 
-  @Builder
-  public MultiFridgeFood(String fridgeFoodImgKey, LocalDate shelfLife, String memo, Food food, String foodDetailName, MultiFridge multiFridge, User owner) {
-    this.fridgeFoodImgKey = fridgeFoodImgKey;
-    this.shelfLife = shelfLife;
-    this.memo = memo;
-    this.foodDetailName = foodDetailName;
-    this.food = food;
-    this.owner = owner;
-    this.multiFridge = multiFridge;
-  }
 }

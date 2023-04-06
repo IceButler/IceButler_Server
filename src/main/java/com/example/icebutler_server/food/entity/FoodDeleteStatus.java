@@ -1,4 +1,4 @@
-package com.example.icebutler_server.fridge.entity;
+package com.example.icebutler_server.food.entity;
 
 import lombok.Getter;
 

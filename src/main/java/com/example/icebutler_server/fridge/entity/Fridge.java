@@ -41,7 +41,4 @@ public class Fridge extends BaseEntity {
         this.fridgeComment = toUpdateEntity.getFridgeComment();
     }
 
-    public void updateIsEnable(boolean b) {
-        this.setIsEnable(b);
-    }
 }

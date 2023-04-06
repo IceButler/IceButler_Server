@@ -31,6 +31,5 @@ public class MultiFridgeUser extends BaseEntity {
     this.user = user;
     this.multiFridge = multiFridge;
     this.role = role;
-//    this.multiFridgeFood = multiFridgeFood;
   }
 }

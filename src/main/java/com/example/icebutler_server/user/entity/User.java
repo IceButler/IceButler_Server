@@ -11,10 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.persistence.CascadeType.ALL;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
@@ -29,20 +25,5 @@ public class User extends BaseEntity {
     private String oauthProvider;
     private String profileImage;
     private Boolean loginStatus;
-
-    @OneToMany(mappedBy="owner", cascade=ALL)
-    private List<FridgeUser> fridgeUsers = new ArrayList<>();
-
-    @OneToMany(mappedBy="owner", cascade=ALL)
-    private List<MultiFridge> multiFridges = new ArrayList<>();
-
-    @OneToMany(mappedBy="user", cascade=ALL)
-    private List<Recipe> recipes = new ArrayList<>();
-
-    @OneToMany(mappedBy="user", cascade=ALL)
-    private List<RecipeLike> recipeLikes = new ArrayList<>();
-
-    @OneToMany(mappedBy="user", cascade=ALL)
-    private List<RecipeReport> recipeReports = new ArrayList<>();
 
 }

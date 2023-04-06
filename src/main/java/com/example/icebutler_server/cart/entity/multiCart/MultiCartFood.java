@@ -17,9 +17,11 @@ public class MultiCartFood extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
   private Long multiCartFoodIdx;
+
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="foodIdx")
   private Food food;
+
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="multiCartIdx")
   private MultiCart multiCart;

@@ -21,6 +21,7 @@ public class FridgeFood extends BaseEntity {
   private String fridgeFoodImgKey;
   private String memo;
   private String foodDetailName;
+  private FoodDeleteStatus foodDeleteStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "foodIdx")
@@ -28,7 +29,7 @@ public class FridgeFood extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userIdx")
-  private User user;
+  private User owner;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "fridgeIdx")

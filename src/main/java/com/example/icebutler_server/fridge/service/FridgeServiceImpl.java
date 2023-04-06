@@ -58,7 +58,7 @@ public class FridgeServiceImpl implements FridgeService {
     for (String name : updateFridgeReq.getUsersName()) {
       fridgeUsers.add(fridgeUserRepository.findByOwner(userRepository.findByNickname(name)));
     }
-
+// TODO 엔티티 수정으로 인한 오류 해결 필요
 //    fridge.updateOwner(fridgeAssembler.updateFridgeOwner(originOwner, newOwner));
     fridge.updateMembers(fridgeUsers);
     fridge.updateNameAndComment(fridgeAssembler.toUpdateEntity(updateFridgeReq));
@@ -72,7 +72,7 @@ public class FridgeServiceImpl implements FridgeService {
     Fridge fridge = fridgeRepository.findByFridgeIdxAndOwner(fridgeIdx, user);
 
     if(fridge == null) throw new FridgeNotFoundException();
-    fridge.updateIsEnable(false);
+    fridge.setIsEnable(false);
 
     return ResponseCustom.OK(fridge.getFridgeIdx());
   }

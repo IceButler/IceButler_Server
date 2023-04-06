@@ -2,6 +2,7 @@ package com.example.icebutler_server.fridge.entity;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +35,7 @@ public class MultiFridgeFood extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "multiFridgeIdx")
-  private MultiFridge multiFridge;
+  private com.example.icebutler_server.fridge.entity.MultiFridge multiFridge;
 
   @Builder
   public MultiFridgeFood(String fridgeFoodImgKey, LocalDate shelfLife, String memo, Food food, String foodDetailName, MultiFridge multiFridge, User owner) {

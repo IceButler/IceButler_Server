@@ -1,5 +1,6 @@
 package com.example.icebutler_server.fridge.entity.multiFridge;
 
+import com.example.icebutler_server.fridge.entity.MultiFridge;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;

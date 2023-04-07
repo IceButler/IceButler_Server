@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CartFoodAssembler {
 
-    public CartFood toEntity(Cart cart, Food food) {
+    public CartFood toEntity(Food food, Cart cart) {
         return CartFood.builder()
                 .cart(cart)
                 .food(food).build();

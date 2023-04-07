@@ -1,5 +1,6 @@
 package com.example.icebutler_server.food.entity;
 
+import com.example.icebutler_server.food.exception.FoodCategoryNotFoundException;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public enum FoodCategory{
   public static FoodCategory getFoodCategoryByName(String name){
     return Arrays.stream(FoodCategory.values())
             .filter(r -> r.getName().equals(name))
-            .findAny().orElse(null);
+            .findAny().orElseThrow(FoodCategoryNotFoundException::new);
   }
 }
 

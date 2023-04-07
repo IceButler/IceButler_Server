@@ -1,6 +1,7 @@
 package com.example.icebutler_server.global.controller;
 
 import com.example.icebutler_server.cart.exception.CartNotFoundException;
+import com.example.icebutler_server.food.exception.FoodCategoryNotFoundException;
 import com.example.icebutler_server.fridge.exception.FridgeNameEmptyException;
 import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
@@ -34,5 +35,11 @@ public class ExceptionController {
     public ResponseCustom<Void> catchFridgeNameEmptyException(FridgeNameEmptyException e) {
         log.error(e.getMessage());
         return ResponseCustom.NOT_FOUND(null);
+    }
+
+    @ExceptionHandler(FoodCategoryNotFoundException.class)
+    public ResponseCustom<Void> catchFridgeNotFoundException(FoodCategoryNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.BAD_REQUEST(e.getMessage());
     }
 }

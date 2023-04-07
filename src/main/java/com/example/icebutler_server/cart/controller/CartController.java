@@ -1,5 +1,11 @@
 package com.example.icebutler_server.cart.controller;
 
+import com.example.icebutler_server.cart.dto.cart.response.CartResponse;
+import com.example.icebutler_server.cart.service.CartServiceImpl;
+import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.resolver.Auth;
+import com.example.icebutler_server.global.resolver.IsLogin;
+import com.example.icebutler_server.global.resolver.LoginStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -10,17 +16,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class CartController {
 
-//    private final CartService cartService;
-//
-//    @Auth
-//    @GetMapping("/{cartId}/foods")
-//    public ResponseCustom<CartResponse> getFoodsFromCart(
-//            @PathVariable Long cartId,
-//            @IsLogin LoginStatus loginStatus
-//    )
-//    {
-//        return cartService.getFoodsFromCart(cartId, loginStatus.getUserIdx());
-//    }
+    private final CartServiceImpl cartService;
+
+    // 장바구니 식품 조회
+    @Auth
+    @GetMapping("/{fridgeIdx}/foods")
+    public ResponseCustom<CartResponse> getFoodsFromCart(
+            @PathVariable Long fridgeIdx,
+            @IsLogin LoginStatus loginStatus
+    )
+    {
+        return cartService.getFoodsFromCart(fridgeIdx, loginStatus.getUserIdx());
+    }
 //
 //    @Auth
 //    @PostMapping("/{cartId}/foods")

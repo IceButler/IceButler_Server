@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,9 +25,11 @@ public class MultiFridge extends BaseEntity {
   private String fridgeName;
   private String fridgeComment;
 
+  @Where(clause = "is_enable = 1")
   @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
   private List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
 
+  @Where(clause = "is_enable = 1")
   @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
   private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
 

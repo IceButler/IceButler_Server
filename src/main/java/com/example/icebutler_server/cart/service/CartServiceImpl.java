@@ -9,6 +9,7 @@ import com.example.icebutler_server.cart.entity.cart.Cart;
 import com.example.icebutler_server.cart.entity.cart.CartFood;
 import com.example.icebutler_server.cart.repository.cart.CartFoodRepository;
 import com.example.icebutler_server.cart.repository.cart.CartRepository;
+import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -53,40 +55,33 @@ public class CartServiceImpl implements CartService {
 
     @Transactional
     @Override
-    public ResponseCustom<CartResponse> addFoodsToCart(
-            Long cartIdx,
+    public ResponseCustom<?> addFoodsToCart(
+            Long fridgeIdx,
             AddFoodToCartRequest request,
             Long userIdx
     )
     {
-//        User user = userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
-//        Cart cart = cartRepository.findById(cartIdx).orElseThrow(CartNotFoundException::new);
-//        List<Food> foods = foodRepository.findAllByFoodIdxIn(request.getAddFoodIdxes());
-//
-//        List<Long> foodsInNowCart = cart.getCartFoods().stream()
-//                .map((cr) -> cr.getFood().getFoodIdx()).collect(Collectors.toList());
-//
-//        // cart와 food의 연관관계를 맺어주는 cartFood 객체 생성
-//        List<CartFood> cartFoods = foods.stream()
-//                .filter((f)->{ // 이미 장바구니에 존재하는 음식은 거르기
-//                    for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getFoodIdx())) return false;
-//                    return true;
-//                })
-//                .map((food) -> cartFoodAssembler.toEntity(cart, food))
-//                .collect(Collectors.toList());
-//
-//        // cart와 food가 위에서 만든 cartFood 객체와 연관관계를 맺을 수 있도록 해줌 //TODO 복잡한 연관관계 맺기 로직 없애 보기
-//        cartFoods.forEach((cartFood -> {
-//            cart.addCartFood(cartFood);
-//            foods.forEach((food)-> {
-//                food.addCartFood(cartFood);
-//            });
-//        }));
-//
-//        cartFoodRepository.saveAll(cartFoods);
-//
-//        return ResponseCustom.OK(CartResponse.toDto(cart));
-        return null;
+        User user = userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
+        Fridge fridge = fridgeRepository.findByFridgeIdx(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+        fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
+        Cart cart = fridge.getCart();
+
+        List<Food> foods = foodRepository.findAllByFoodIdxIn(request.getFoodIdxes());
+
+        List<Long> foodsInNowCart = cart.getCartFoods().stream()
+                .map((cf) -> cf.getFood().getFoodIdx()).collect(Collectors.toList());
+
+        List<CartFood> cartFoods = foods.stream()
+                .filter((f)->{
+                    for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getFoodIdx())) return false;
+                    return true;
+                })
+                .map((food) -> cartFoodAssembler.toEntity(cart, food))
+                .collect(Collectors.toList());
+
+        cartFoodRepository.saveAll(cartFoods);
+
+        return ResponseCustom.OK();
     }
     @Transactional
     @Override

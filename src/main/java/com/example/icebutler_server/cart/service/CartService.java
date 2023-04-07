@@ -8,6 +8,6 @@ import com.example.icebutler_server.global.dto.response.ResponseCustom;
 public interface CartService {
 
     ResponseCustom<CartResponse> getFoodsFromCart(Long fridgeIdx, Long userIdx);
-    ResponseCustom<CartResponse> addFoodsToCart(Long cartIdx, AddFoodToCartRequest request, Long userIdx);
+    ResponseCustom<?> addFoodsToCart(Long cartIdx, AddFoodToCartRequest request, Long userIdx);
     ResponseCustom<CartResponse> removeFoodsFromCart(Long cartIdx, RemoveFoodFromCartRequest request, Long userIdx);
 }

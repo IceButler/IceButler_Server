@@ -8,5 +8,5 @@ import java.util.List;
 public interface FoodService {
     ResponseCustom<List<FoodResponse>> getAllFood();
 
-    ResponseCustom<List<FoodResponse>> getAllFoodByCategory(String category);
+//    ResponseCustom<List<FoodResponse>> getAllFoodByCategory(String category);
 }

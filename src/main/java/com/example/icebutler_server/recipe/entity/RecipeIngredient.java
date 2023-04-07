@@ -1,6 +1,6 @@
 package com.example.icebutler_server.recipe.entity;
 
-import com.example.icebutler_server.fridge.entity.BaseEntity;
+import com.example.icebutler_server.global.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

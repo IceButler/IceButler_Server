@@ -27,7 +27,8 @@ public class FridgeController {
   public ResponseCustom<?> modifyFridge(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
                                         @RequestBody FridgeModifyReq fridgeModifyReq,
                                         @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.modifyFridge(fridgeIdx, fridgeModifyReq, loginStatus.getUserIdx()));
+    fridgeService.modifyFridge(fridgeIdx, fridgeModifyReq, loginStatus.getUserIdx());
+    return ResponseCustom.OK();
   }
 
   // 냉장고 삭제

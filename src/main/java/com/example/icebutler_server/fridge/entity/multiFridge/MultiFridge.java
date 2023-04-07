@@ -28,7 +28,7 @@ public class MultiFridge extends BaseEntity {
   private List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
-  private List<MultiFridgeFood> multifridgeFoods = new ArrayList<>();
+  private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
 
   @Builder
   public MultiFridge(String fridgeName, String fridgeComment) {
@@ -36,20 +36,8 @@ public class MultiFridge extends BaseEntity {
     this.fridgeComment = fridgeComment;
   }
 
-  //  public void updateOwner(User updateFridgeOwner) {
-//    this.owner = updateFridgeOwner;
-//  }
-//
-//  public void updateMembers(List<FridgeUser> updateMembers) {
-//    this.fridgeUsers = updateMembers;
-//  }
-//
-//  public void updateNameAndComment(Fridge toUpdateEntity) {
-//    this.fridgeName = toUpdateEntity.getFridgeName();
-//    this.fridgeComment = toUpdateEntity.getFridgeComment();
-//  }
-//
-//  public void updateIsEnable(boolean b) {
-//    this.setIsEnable(b);
-//  }
+    public void updateBasicFridgeInfo(String fridgeName, String fridgeComment) {
+        this.fridgeName = fridgeName;
+        this.fridgeComment = fridgeComment;
+    }
 }

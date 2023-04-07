@@ -11,15 +11,12 @@ import com.example.icebutler_server.global.exception.BaseException;
 import java.util.List;
 
 public interface FridgeService {
+  public void modifyFridge(Long fridgeIdx, FridgeModifyReq updateFridgeReq, Long userIdx);
 
-  public ResponseCustom<FridgeRes> registerFridge(FridgeRegisterReq createFridgeReq)throws BaseException;
+  public ResponseCustom<Long> removeFridge(Long fridgeIdx, Long userIdx);
 
-  public ResponseCustom<?> modifyFridge(Long fridgeIdx, FridgeModifyReq updateFridgeReq, Long userIdx) throws BaseException;
+  public FridgeFoodsRes getFoods(Long fridgeIdx, Long userIdx);
 
-  public ResponseCustom<Long> removeFridge(Long fridgeIdx, Long userIdx) throws BaseException;
-
-  public FridgeFoodsRes getFoods(Long fridgeIdx, Long userIdx) throws BaseException;
-
-  public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName) throws BaseException;
+  public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName);
 
   }

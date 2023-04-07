@@ -49,7 +49,7 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   @Transactional
-  public ResponseCustom<?> modifyFridge(Long fridgeIdx, FridgeModifyReq updateFridgeReq, Long userIdx) {
+  public void modifyFridge(Long fridgeIdx, FridgeModifyReq updateFridgeReq, Long userIdx) {
 //    Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
 //    User originOwner = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
 //    User newOwner = userRepository.findByNickname(updateFridgeReq.getNewOwnerName());
@@ -64,7 +64,6 @@ public class FridgeServiceImpl implements FridgeService {
 //    fridge.updateNameAndComment(fridgeAssembler.toUpdateEntity(updateFridgeReq));
 //
 //    return ResponseCustom.OK(SUCCESS);
-    return null;
   }
 
   @Transactional

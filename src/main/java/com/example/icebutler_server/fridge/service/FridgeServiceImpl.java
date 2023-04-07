@@ -1,10 +1,14 @@
 package com.example.icebutler_server.fridge.service;
 
+import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeFoodAssembler;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
 import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.exception.FridgeNameEmptyException;
 import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
+import com.example.icebutler_server.fridge.repository.fridge.FridgeFoodRepository;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.fridge.repository.fridge.FridgeRepository;
 import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeAssembler;
@@ -20,11 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.icebutler_server.global.BaseResponseStatus.*;
 
 @Transactional(readOnly = true)
 @Service
@@ -34,8 +34,10 @@ public class FridgeServiceImpl implements FridgeService {
   private final FridgeRepository fridgeRepository;
   private final FridgeUserRepository fridgeUserRepository;
   private final UserRepository userRepository;
+  private final FridgeFoodRepository fridgeFoodRepository;
 
   private final FridgeAssembler fridgeAssembler;
+  private final FridgeFoodAssembler fridgeFoodAssembler;
 
   @Transactional
   public ResponseCustom<FridgeRes> registerFridge(FridgeRegisterReq registerFridgeReq) {
@@ -93,5 +95,12 @@ public class FridgeServiceImpl implements FridgeService {
     Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
 
     return fridgeAssembler.findFoodByFoodName(owner, fridge, foodName);
+  }
+
+  public FridgeFoodRes getFood(Long fridgeFoodIdx, Long userIdx) {
+    userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+    FridgeFood fridgeFood = fridgeFoodRepository.findById(fridgeFoodIdx).orElseThrow(FridgeNotFoundException::new);
+
+    return fridgeFoodAssembler.getFridgeFood(fridgeFood);
   }
 }

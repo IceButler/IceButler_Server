@@ -1,5 +1,6 @@
 package com.example.icebutler_server.cart.controller;
 
+import com.example.icebutler_server.cart.dto.cart.request.AddFoodToCartRequest;
 import com.example.icebutler_server.cart.dto.cart.response.CartResponse;
 import com.example.icebutler_server.cart.service.CartServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -28,17 +29,18 @@ public class CartController {
     {
         return cartService.getFoodsFromCart(fridgeIdx, loginStatus.getUserIdx());
     }
-//
-//    @Auth
-//    @PostMapping("/{cartId}/foods")
-//    public ResponseCustom<CartResponse> addFoodsToCart(
-//            @PathVariable Long cartId,
-//            @RequestBody AddFoodToCartRequest request,
-//            @IsLogin LoginStatus loginStatus
-//    )
-//    {
-//        return cartService.addFoodsToCart(cartId, request, loginStatus.getUserIdx());
-//    }
+
+    // 장바구니 식품 추가
+    @Auth
+    @PostMapping("/{fridgeIdx}/foods")
+    public ResponseCustom<?> addFoodsToCart(
+            @PathVariable Long fridgeIdx,
+            @RequestBody AddFoodToCartRequest request,
+            @IsLogin LoginStatus loginStatus
+    )
+    {
+        return cartService.addFoodsToCart(fridgeIdx, request, loginStatus.getUserIdx());
+    }
 //
 //    @Auth
 //    @PutMapping("/{cartId}/foods")

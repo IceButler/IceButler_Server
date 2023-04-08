@@ -8,5 +8,5 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class AddFoodToCartRequest {
-    private List<Long> addFoodIdxes;
+    private List<Long> foodIdxes;
 }

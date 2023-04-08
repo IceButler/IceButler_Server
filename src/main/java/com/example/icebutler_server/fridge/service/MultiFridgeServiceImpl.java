@@ -42,7 +42,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
         MultiFridgeUser owner = this.multiFridgeUserRepository.findByMultiFridgeAndUserAndRoleAndIsEnable(fridge, user, FridgeRole.OWNER, true).orElseThrow(InvalidFridgeUserRoleException::new);
 
         if(owner.getUser().getUserIdx()!=updateFridgeReq.getNewOwnerIdx()){
-            MultiFridgeUser newOwner = this.multiFridgeUserRepository.findByMultiFridgeAndUser_UserIdxAndRoleAndIsEnableAndUser_IsEnable(fridge, updateFridgeReq.getNewOwnerIdx(), FridgeRole.MEMBER, true, true).orElseThrow(InvalidFridgeUserException::new);
+            MultiFridgeUser newOwner = this.multiFridgeUserRepository.findByMultiFridgeAndUser_UserIdxAndRoleAndIsEnableAndUser_IsEnable(fridge, updateFridgeReq.getNewOwnerIdx(), FridgeRole.MEMBER, true, true).orElseThrow(FridgeUserNotFoundException::new);
             this.multiFridgeAssembler.toUpdateFridgeOwner(owner, newOwner);
         }
 

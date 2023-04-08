@@ -3,9 +3,8 @@ package com.example.icebutler_server.global.controller;
 import com.example.icebutler_server.cart.exception.CartNotFoundException;
 import com.example.icebutler_server.food.exception.FoodCategoryNotFoundException;
 import com.example.icebutler_server.fridge.exception.FridgeFoodNotFoundException;
-import com.example.icebutler_server.fridge.exception.FridgeNameEmptyException;
 import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
-import com.example.icebutler_server.fridge.exception.InvalidFridgeUserException;
+import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
 import com.example.icebutler_server.fridge.exception.InvalidFridgeUserRoleException;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -37,8 +36,8 @@ public class ExceptionController {
         return ResponseCustom.NOT_FOUND(e.getMessage());
     }
 
-    @ExceptionHandler(InvalidFridgeUserException.class)
-    public ResponseCustom<?> catchInvalidFridgeUserException(InvalidFridgeUserException e) {
+    @ExceptionHandler(FridgeUserNotFoundException.class)
+    public ResponseCustom<?> catchInvalidFridgeUserException(FridgeUserNotFoundException e) {
         log.error(e.getMessage());
         return ResponseCustom.FORBIDDEN(e.getMessage());
     }

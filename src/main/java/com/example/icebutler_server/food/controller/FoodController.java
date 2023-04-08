@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/foods")
@@ -21,5 +23,10 @@ public class FoodController {
     public ResponseCustom<?> getAllFood(@RequestParam(required = false) String category) {
         if(category==null) return ResponseCustom.OK(foodService.getAllFood());
         else return ResponseCustom.OK(foodService.getAllFoodByCategory(category));
+    }
+
+    @GetMapping("/barcode")
+    public ResponseCustom<?> searchByBarcode(@RequestParam String code_num) throws IOException, org.json.simple.parser.ParseException {
+        return ResponseCustom.OK(foodService.searchByBarcode(code_num));
     }
 }

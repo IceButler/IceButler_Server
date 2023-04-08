@@ -5,13 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FridgeFoodsRes {
-  private Long fridgeFoodIdx;
-  private String foodName;
-  private String foodIconName;
-  private String shelfLife;
+public class FridgeMainRes {
+  List<FridgeFoodsRes> foodList;
 }

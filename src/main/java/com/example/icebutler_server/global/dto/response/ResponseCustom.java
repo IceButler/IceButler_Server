@@ -66,6 +66,7 @@ public class ResponseCustom<T>{
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND)
                 .data(data)
+                .statusCode(HttpStatus.NOT_FOUND.value())
                 .build();
     }
 
@@ -90,8 +91,10 @@ public class ResponseCustom<T>{
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.FORBIDDEN)
                 .description(description)
+                .statusCode(HttpStatus.FORBIDDEN.value())
                 .build();
     }
+
 
 
     public static <T> ResponseCustom<T> UNAUTHORIZED(){

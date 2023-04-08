@@ -19,7 +19,7 @@ public class MultiCartServiceImpl implements CartService {
     }
 
     @Override
-    public ResponseCustom<CartResponse> addFoodsToCart(Long cartIdx, AddFoodToCartRequest request, Long userIdx) {
+    public ResponseCustom<?> addFoodsToCart(Long cartIdx, AddFoodToCartRequest request, Long userIdx) {
         return null;
     }
 

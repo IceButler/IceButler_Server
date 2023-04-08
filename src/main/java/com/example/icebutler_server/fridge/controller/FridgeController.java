@@ -52,4 +52,12 @@ public class FridgeController {
                                           @IsLogin LoginStatus loginStatus) {
     return ResponseCustom.OK(fridgeService.findFoodByName(fridgeIdx, loginStatus.getUserIdx(), foodName));
   }
+
+  // 냉장고 내 식품 상세 조회
+  @GetMapping("/{fridgeIdx}/foods/{fridgeFoodIdx}")
+  public ResponseCustom<?> getFood(@PathVariable Long fridgeIdx,
+                                   @PathVariable Long fridgeFoodIdx,
+                                   @IsLogin LoginStatus loginStatus){
+    return ResponseCustom.OK(fridgeService.getFood(fridgeIdx, fridgeFoodIdx, loginStatus.getUserIdx()));
+  }
 }

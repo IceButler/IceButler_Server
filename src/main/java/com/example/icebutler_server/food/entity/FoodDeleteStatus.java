@@ -7,7 +7,7 @@ import java.util.Arrays;
 @Getter
 public enum FoodDeleteStatus {
     DISCARD("폐기"),
-    ingestion("섭취");
+    INGESTION("섭취");
 
     private final String name;
 

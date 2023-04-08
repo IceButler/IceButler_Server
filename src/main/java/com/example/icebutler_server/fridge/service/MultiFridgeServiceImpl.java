@@ -2,7 +2,6 @@ package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
@@ -67,10 +66,6 @@ public class MultiFridgeServiceImpl implements FridgeService {
         return null;
     }
 
-    @Override
-    public FridgeFoodsRes getFoods(Long fridgeIdx, Long userIdx){
-        return null;
-    }
 
     @Override
     public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName){

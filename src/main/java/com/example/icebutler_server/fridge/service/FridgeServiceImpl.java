@@ -1,5 +1,7 @@
 package com.example.icebutler_server.fridge.service;
 
+import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
+import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.dto.fridge.assembler.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
@@ -28,9 +30,11 @@ public class FridgeServiceImpl implements FridgeService {
   private final FridgeUserRepository fridgeUserRepository;
   private final UserRepository userRepository;
   private final FridgeFoodRepository fridgeFoodRepository;
+  private final FoodRepository foodRepository;
 
   private final FridgeAssembler fridgeAssembler;
   private final FridgeFoodAssembler fridgeFoodAssembler;
+  private final FoodAssembler foodAssembler;
 
   @Transactional
   public ResponseCustom<FridgeRes> registerFridge(FridgeRegisterReq registerFridgeReq) {
@@ -99,7 +103,8 @@ public class FridgeServiceImpl implements FridgeService {
     return fridgeAssembler.findFoodByFoodName(owner, fridge, foodName);
   }
 
-  public FridgeFoodRes getFood(Long fridgeIdx, Long fridgeFoodIdx, Long userIdx) {
+  @Override
+  public FridgeFoodRes getFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, Long userIdx) {
     userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
     fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
     FridgeFood fridgeFood = fridgeFoodRepository.findById(fridgeFoodIdx).orElseThrow(FridgeFoodNotFoundException::new);
@@ -107,6 +112,18 @@ public class FridgeServiceImpl implements FridgeService {
     return fridgeFoodAssembler.getFridgeFood(fridgeFood);
   }
 
+  @Override
+  @Transactional
+  public void addFridgeFood(FridgeFoodReq fridgeFoodReq, Long fridgeIdx, Long userIdx) {
+    User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+    Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+    fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
 
+    User owner = userRepository.findById(fridgeFoodReq.getOwnerIdx()).orElseThrow(UserNotFoundException::new);
+    fridgeUserRepository.findByUserAndFridge(owner, fridge).orElseThrow(FridgeUserNotFoundException::new);
+    Food food = foodRepository.findByFoodName(fridgeFoodReq.getFoodName());
 
+    if(food == null) food = foodRepository.save(foodAssembler.toEntity(fridgeFoodReq));
+    fridgeFoodRepository.save(fridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
+  }
 }

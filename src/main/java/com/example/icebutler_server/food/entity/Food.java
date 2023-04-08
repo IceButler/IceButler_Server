@@ -1,11 +1,15 @@
 package com.example.icebutler_server.food.entity;
 
+import com.example.icebutler_server.cart.entity.cart.CartFood;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
@@ -27,6 +31,8 @@ public class Food {
         this.foodIconName = foodIconName;
         this.foodCategory = foodCategory;
     }
+
+
 
 }
 

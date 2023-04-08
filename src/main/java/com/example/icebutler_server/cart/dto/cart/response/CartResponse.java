@@ -1,7 +1,7 @@
 package com.example.icebutler_server.cart.dto.cart.response;
 
-import com.example.icebutler_server.cart.entity.cart.Cart;
-import com.example.icebutler_server.food.dto.response.FoodRes;
+import com.example.icebutler_server.cart.entity.cart.CartFood;
+import com.example.icebutler_server.food.dto.response.FoodResponse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Data
 public class CartResponse {
-    private List<FoodRes> foods = new ArrayList<>();
+    private List<FoodResponse> cartFoods = new ArrayList<>();
 
-    public static CartResponse toDto(Cart cart) {
+    public static CartResponse toDto(List<CartFood> cartFood) {
         CartResponse cartResponse = new CartResponse();
-        cartResponse.foods = cart.getCartFoods().stream()
-                .map((cr) -> FoodRes.toDto(cr.getFood())).collect(Collectors.toList());
+        cartResponse.cartFoods = cartFood.stream()
+                .map((cf) -> FoodResponse.toDto(cf.getFood())).collect(Collectors.toList());
         return cartResponse;
     }
 }

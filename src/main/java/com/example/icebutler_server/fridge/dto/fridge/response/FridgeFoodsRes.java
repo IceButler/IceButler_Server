@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FridgeFoodsRes {
   private Long fridgeFoodIdx;
-  private String foodDetailName;
+  private String foodName;
   private String foodIconName;
   private String shelfLife;
 }

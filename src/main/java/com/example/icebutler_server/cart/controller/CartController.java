@@ -1,6 +1,7 @@
 package com.example.icebutler_server.cart.controller;
 
 import com.example.icebutler_server.cart.dto.cart.request.AddFoodToCartRequest;
+import com.example.icebutler_server.cart.dto.cart.request.RemoveFoodFromCartRequest;
 import com.example.icebutler_server.cart.dto.cart.response.CartResponse;
 import com.example.icebutler_server.cart.service.CartServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -41,15 +42,16 @@ public class CartController {
     {
         return cartService.addFoodsToCart(fridgeIdx, request, loginStatus.getUserIdx());
     }
-//
-//    @Auth
-//    @PutMapping("/{cartId}/foods")
-//    public ResponseCustom<CartResponse> removeFoodsFromCart(
-//            @PathVariable Long cartId,
-//            @RequestBody RemoveFoodFromCartRequest request,
-//            @IsLogin LoginStatus loginStatus
-//    )
-//    {
-//        return cartService.removeFoodsFromCart(cartId, request, loginStatus.getUserIdx());
-//    }
+
+    // 장바구니 식품 삭제
+    @Auth
+    @PutMapping("/{fridgeIdx}/foods")
+    public ResponseCustom<?> removeFoodsFromCart(
+            @PathVariable Long fridgeIdx,
+            @RequestBody RemoveFoodFromCartRequest request,
+            @IsLogin LoginStatus loginStatus
+    )
+    {
+        return cartService.removeFoodsFromCart(fridgeIdx, request, loginStatus.getUserIdx());
+    }
 }

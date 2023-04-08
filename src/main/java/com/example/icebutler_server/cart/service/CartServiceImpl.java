@@ -85,24 +85,20 @@ public class CartServiceImpl implements CartService {
     }
     @Transactional
     @Override
-    public ResponseCustom<CartResponse> removeFoodsFromCart(
-            Long cartIdx,
+    public ResponseCustom<?> removeFoodsFromCart(
+            Long fridgeIdx,
             RemoveFoodFromCartRequest request,
             Long userIdx
     )
     {
-//        Cart cart = cartRepository.findById(cartIdx).orElseThrow(CartNotFoundException::new);
-//        List<Food> removeFoods = foodRepository.findAllByFoodIdxIn(request.getRemoveFoodIdxes());
-//        List<CartFood> removeCartFoods = cartFoodRepository.findByCardIdxAndFoodIdxIn(cart.getCartIdx(), request.getRemoveFoodIdxes());
-//
-//        removeCartFoods.forEach(cart::removeCartFood); //cart와의 연관관계 삭제
-//        removeCartFoods.forEach((rcf)->{ // food와의 연관관계 삭제
-//            removeFoods.forEach((rf)->rf.removeCartFood(rcf));
-//        });
-//
-//        cartFoodRepository.deleteAll(removeCartFoods);
-//
-//        return ResponseCustom.OK(CartResponse.toDto(cart));
-        return null;
+        User user = userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
+        Fridge fridge = fridgeRepository.findByFridgeIdx(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+        fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
+        Cart cart = fridge.getCart();
+
+        List<CartFood> removeCartFoods = cartFoodRepository.findByCartIdxAndFoodIdxIn(cart.getCartIdx(), request.getFoodIdxes());
+        cartFoodRepository.deleteAll(removeCartFoods);
+
+        return ResponseCustom.OK();
     }
 }

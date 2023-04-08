@@ -45,8 +45,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public ResponseCustom<CartResponse> getFoodsFromCart(Long fridgeIdx, Long userIdx) {
-        User user = userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
-        Fridge fridge = fridgeRepository.findByFridgeIdx(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
 
         List<CartFood> cartFood = cartFoodRepository.findByCart(fridge.getCart());
@@ -61,8 +61,8 @@ public class CartServiceImpl implements CartService {
             Long userIdx
     )
     {
-        User user = userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
-        Fridge fridge = fridgeRepository.findByFridgeIdx(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
         Cart cart = fridge.getCart();
 
@@ -91,8 +91,8 @@ public class CartServiceImpl implements CartService {
             Long userIdx
     )
     {
-        User user = userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
-        Fridge fridge = fridgeRepository.findByFridgeIdx(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
         Cart cart = fridge.getCart();
 

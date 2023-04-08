@@ -1,8 +1,6 @@
 package com.example.icebutler_server.fridge.dto.fridge.assembler;
 
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeRes;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeUserRes;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
@@ -11,8 +9,8 @@ import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -54,23 +52,6 @@ public class FridgeAssembler {
     if (newOwner != null) return newOwner;
     return originOwner;
   }
-
-  public FridgeFoodsRes getFridgeFoods(User owner, Fridge fridge) {
-//    List<Food> ownerFoods = owner.getFoods();
-//    List<List<Food>> usersFoods = new ArrayList<>();
-//
-//    List<FridgeUser> fridgeUsers = fridge.getFridgeUsers();
-//    for (FridgeUser users : fridgeUsers) {
-//      usersFoods.add(users.getUser().getFoods());
-//    }
-//
-//    return FridgeFoodsRes.builder()
-//            .ownerFoods(ownerFoods)
-//            .fridgeUserFoods(usersFoods)
-//            .build();
-    return null;
-  }
-
   public List<Food> findFoodByFoodName(User owner, Fridge fridge, String foodName) {
 
 //    List<Food> searchFood = new ArrayList<>();
@@ -93,4 +74,6 @@ public class FridgeAssembler {
 //    return searchFood;
     return null;
   }
+
+
 }

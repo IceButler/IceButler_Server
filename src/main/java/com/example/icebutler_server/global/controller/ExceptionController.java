@@ -5,6 +5,8 @@ import com.example.icebutler_server.food.exception.FoodCategoryNotFoundException
 import com.example.icebutler_server.fridge.exception.FridgeFoodNotFoundException;
 import com.example.icebutler_server.fridge.exception.FridgeNameEmptyException;
 import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
+import com.example.icebutler_server.fridge.exception.InvalidFridgeUserException;
+import com.example.icebutler_server.fridge.exception.InvalidFridgeUserRoleException;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import lombok.extern.slf4j.Slf4j;
@@ -21,21 +23,30 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseCustom<Void> catchUserNotFoundException(UserNotFoundException e) {
+    public ResponseCustom<?> catchUserNotFoundException(UserNotFoundException e) {
         log.error(e.getMessage());
-        return ResponseCustom.NOT_FOUND(null);
+        return ResponseCustom.NOT_FOUND(e.getMessage());
     }
 
+    /**
+     * Fridge Exceptions
+     */
     @ExceptionHandler(FridgeNotFoundException.class)
-    public ResponseCustom<Void> catchFridgeNotFoundException(FridgeNotFoundException e) {
+    public ResponseCustom<?> catchFridgeNotFoundException(FridgeNotFoundException e) {
         log.error(e.getMessage());
-        return ResponseCustom.NOT_FOUND(null);
+        return ResponseCustom.NOT_FOUND(e.getMessage());
     }
 
-    @ExceptionHandler(FridgeNameEmptyException.class)
-    public ResponseCustom<Void> catchFridgeNameEmptyException(FridgeNameEmptyException e) {
+    @ExceptionHandler(InvalidFridgeUserException.class)
+    public ResponseCustom<?> catchInvalidFridgeUserException(InvalidFridgeUserException e) {
         log.error(e.getMessage());
-        return ResponseCustom.NOT_FOUND(null);
+        return ResponseCustom.FORBIDDEN(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidFridgeUserRoleException.class)
+    public ResponseCustom<?> catchInvalidFridgeUserRoleException(InvalidFridgeUserRoleException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.FORBIDDEN(e.getMessage());
     }
 
     @ExceptionHandler(FoodCategoryNotFoundException.class)

@@ -70,6 +70,15 @@ public class ResponseCustom<T>{
                 .build();
     }
 
+    public static <T> ResponseCustom<T> NOT_FOUND(@Nullable String description){
+        return (ResponseCustom<T>) ResponseCustom.builder()
+                .transaction_time(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND)
+                .description(description)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .build();
+    }
+
     public static <T> ResponseCustom<T> FORBIDDEN(){
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
@@ -85,6 +94,7 @@ public class ResponseCustom<T>{
                 .statusCode(HttpStatus.FORBIDDEN.value())
                 .build();
     }
+
 
 
     public static <T> ResponseCustom<T> UNAUTHORIZED(){

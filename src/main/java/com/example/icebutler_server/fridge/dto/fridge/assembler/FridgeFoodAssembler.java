@@ -22,10 +22,13 @@ public class FridgeFoodAssembler {
     }
 
     public FridgeFoodRes toDto(FridgeFood fridgeFood) {
-        Long day = ChronoUnit.DAYS.between(LocalDate.now(), fridgeFood.getShelfLife());
-        String mark;
+        long day = Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), fridgeFood.getShelfLife()));
+        String mark, owner;
         if(fridgeFood.getShelfLife().isAfter(LocalDate.now())) mark = "-";
         else mark = "+";
+        if(fridgeFood.getOwner()==null) owner = null;
+        else owner = fridgeFood.getOwner().getNickname();
+
         return FridgeFoodRes.builder()
                 .fridgeFoodIdx(fridgeFood.getFridgeFoodIdx())
                 .foodIdx(fridgeFood.getFood().getFoodIdx())
@@ -34,7 +37,7 @@ public class FridgeFoodAssembler {
                 .foodCategory(fridgeFood.getFood().getFoodCategory().getName())
                 .shelfLife(fridgeFood.getShelfLife().format(DateTimeFormatter.ISO_DATE))
                 .day("D"+mark+day)
-                .owner(fridgeFood.getOwner().getNickname())
+                .owner(owner)
                 .memo(fridgeFood.getMemo())
                 .imgUrl(fridgeFood.getFridgeFoodImgKey())
                 .build();

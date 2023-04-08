@@ -2,6 +2,7 @@ package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.repository.FoodRepository;
+import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.dto.fridge.assembler.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -43,6 +45,24 @@ public class FridgeServiceImpl implements FridgeService {
     fridgeRepository.save(fridge);
 
     return ResponseCustom.CREATED(fridgeAssembler.toDto(fridge));
+  }
+
+  public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
+    User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+
+    if(category == null){
+      // 값이 없으면 전체 조회
+      return new FridgeMainRes(this.fridgeFoodRepository.findByIsEnableOrderByShelfLife(true).stream()
+              .map(ff -> new FridgeFoodsRes(ff.getFridgeFoodIdx(), ff.getFood().getFoodName(), ff.getFood().getFoodIconName(), this.fridgeFoodAssembler.calShelfLife(ff.getShelfLife())))
+              .collect(Collectors.toList()));
+    }else{
+      // 값이 있으면 특정 값을 불러온 조회
+      return new FridgeMainRes(this.fridgeFoodRepository.findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory.getFoodCategoryByName(category), true).stream()
+              .map(ff -> new FridgeFoodsRes(ff.getFridgeFoodIdx(), ff.getFood().getFoodName(), ff.getFood().getFoodIconName(), this.fridgeFoodAssembler.calShelfLife(ff.getShelfLife())))
+              .collect(Collectors.toList()));
+
+    }
   }
 
   @Transactional
@@ -73,14 +93,6 @@ public class FridgeServiceImpl implements FridgeService {
 //
 //    return ResponseCustom.OK(fridge.getFridgeIdx());
     return null;
-  }
-
-  public FridgeFoodsRes getFoods(Long fridgeIdx, Long ownerIdx) {
-    User owner = userRepository.findById(ownerIdx).orElseThrow(UserNotFoundException::new);
-    Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
-
-    return fridgeAssembler.getFridgeFoods(owner, fridge);
-
   }
 
   @Transactional

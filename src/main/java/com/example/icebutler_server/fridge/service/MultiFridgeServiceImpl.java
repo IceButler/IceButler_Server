@@ -5,6 +5,7 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
@@ -34,6 +35,11 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
     private final MultiFridgeAssembler multiFridgeAssembler;
 
+
+    @Override
+    public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
+        return null;
+    }
 
     // 멀티 냉장고 수정
     @Transactional
@@ -69,10 +75,6 @@ public class MultiFridgeServiceImpl implements FridgeService {
         return null;
     }
 
-    @Override
-    public FridgeFoodsRes getFoods(Long fridgeIdx, Long userIdx){
-        return null;
-    }
 
     @Override
     public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName){

@@ -39,11 +39,12 @@ public class FridgeController {
     return ResponseCustom.OK(fridgeService.removeFridge(fridgeIdx, loginStatus.getUserIdx()));
   }
 
-  // 냉장고 식품 전체 조회
+  // [Get] 냉장고 식품 전체 조회
   @GetMapping("/{fridgeIdx}/foods")
   public ResponseCustom<?> getFoods(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                    @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.getFoods(fridgeIdx, loginStatus.getUserIdx()));
+                                    @IsLogin LoginStatus loginStatus,
+                                    @RequestParam(required = false) String category) {
+    return ResponseCustom.OK(fridgeService.getFoods(fridgeIdx, loginStatus.getUserIdx(), category));
   }
 
   // 냉장고 내 식품 검색 조회

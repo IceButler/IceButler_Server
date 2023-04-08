@@ -1,9 +1,11 @@
 package com.example.icebutler_server.fridge.dto.fridge.assembler;
 
+import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
+import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +16,16 @@ import java.time.temporal.ChronoUnit;
 @Component
 @RequiredArgsConstructor
 public class FridgeFoodAssembler {
-    public Fridge toEntity(FridgeFoodReq fridgeFoodReq) {
-        return null;
-//    return FridgeFood.builder()
-//            .food(fridgeFoodReq.ge)
-//            .build();
+    public FridgeFood toEntity(User owner, Fridge fridge, Food food, FridgeFoodReq fridgeFoodReq) {
+        return FridgeFood.builder()
+                .fridge(fridge)
+                .food(food)
+                .foodDetailName(fridgeFoodReq.getFoodDetailName())
+                .shelfLife(LocalDate.parse(fridgeFoodReq.getShelfLife()))
+                .owner(owner)
+                .memo(fridgeFoodReq.getMemo())
+                .fridgeFoodImgKey(fridgeFoodReq.getImgUrl())
+                .build();
     }
 
     public FridgeFoodRes toDto(FridgeFood fridgeFood) {

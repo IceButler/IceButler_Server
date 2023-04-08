@@ -23,6 +23,8 @@ public class FridgeFood extends BaseEntity {
   private String fridgeFoodImgKey;
   private String memo;
   private String foodDetailName;
+
+  @Enumerated(EnumType.STRING)
   private FoodDeleteStatus foodDeleteStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -46,5 +48,6 @@ public class FridgeFood extends BaseEntity {
     this.owner = owner;
     this.food = food;
     this.fridge = fridge;
+    this.foodDeleteStatus = null;
   }
 }

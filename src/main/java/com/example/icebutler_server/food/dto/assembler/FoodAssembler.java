@@ -2,6 +2,8 @@ package com.example.icebutler_server.food.dto.assembler;
 
 import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.food.entity.FoodCategory;
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,14 @@ public class FoodAssembler {
 //  public Food toEntity(FoodReq foodReq) {
 //    return Food.builder()
 //  }
+
+  public Food toEntity(FridgeFoodReq fridgeFoodReq){
+    return Food.builder()
+            .foodName(fridgeFoodReq.getFoodName())
+            .foodCategory(FoodCategory.getFoodCategoryByName(fridgeFoodReq.getFoodCategory()))
+            .foodIconName(fridgeFoodReq.getFoodCategory())
+            .build();
+  }
 
   public FoodRes toDto(Food food) {
     return FoodRes.builder()

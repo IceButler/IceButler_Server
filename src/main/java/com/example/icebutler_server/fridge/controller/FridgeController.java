@@ -1,5 +1,6 @@
 package com.example.icebutler_server.fridge.controller;
 
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
@@ -55,9 +56,18 @@ public class FridgeController {
 
   // 냉장고 내 식품 상세 조회
   @GetMapping("/{fridgeIdx}/foods/{fridgeFoodIdx}")
-  public ResponseCustom<?> getFood(@PathVariable Long fridgeIdx,
-                                   @PathVariable Long fridgeFoodIdx,
-                                   @IsLogin LoginStatus loginStatus){
-    return ResponseCustom.OK(fridgeService.getFood(fridgeIdx, fridgeFoodIdx, loginStatus.getUserIdx()));
+  public ResponseCustom<?> getFridgeFood(@PathVariable Long fridgeIdx,
+                                         @PathVariable Long fridgeFoodIdx,
+                                         @IsLogin LoginStatus loginStatus){
+    return ResponseCustom.OK(fridgeService.getFridgeFood(fridgeIdx, fridgeFoodIdx, loginStatus.getUserIdx()));
+  }
+
+  // 냉장고 내 식품 추가
+  @PostMapping("/{fridgeIdx}/food")
+  public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
+                                         @PathVariable Long fridgeIdx,
+                                         @IsLogin LoginStatus loginStatus){
+    fridgeService.addFridgeFood(fridgeFoodReq, fridgeIdx, loginStatus.getUserIdx());
+    return ResponseCustom.OK();
   }
 }

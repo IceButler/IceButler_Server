@@ -42,6 +42,7 @@ public class ExceptionController {
     public ResponseCustom<Void> catchFridgeNotFoundException(FoodCategoryNotFoundException e) {
         log.error(e.getMessage());
         return ResponseCustom.BAD_REQUEST(e.getMessage());
+    }
 
     @ExceptionHandler(FridgeFoodNotFoundException.class)
     public ResponseCustom<Void> catchFridgeNameEmptyException(FridgeFoodNotFoundException e) {

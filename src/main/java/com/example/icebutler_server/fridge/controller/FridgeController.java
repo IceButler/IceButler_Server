@@ -71,4 +71,13 @@ public class FridgeController {
     fridgeService.addFridgeFood(fridgeFoodReq, fridgeIdx, loginStatus.getUserIdx());
     return ResponseCustom.OK();
   }
+
+  @GetMapping("{fridgeIdx}/members")
+  public ResponseCustom<?> getMembers(
+          @PathVariable(name="fridgeIdx") Long fridgeIdx,
+          @IsLogin LoginStatus loginStatus
+  ){
+    return ResponseCustom.OK(fridgeService.searchMembers(fridgeIdx,loginStatus.getUserIdx()));
+  }
+
 }

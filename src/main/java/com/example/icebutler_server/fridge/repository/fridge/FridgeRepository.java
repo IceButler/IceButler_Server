@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface FridgeRepository extends JpaRepository<Fridge, Long> {
-    Optional<Fridge> findByFridgeIdxAndIsEnable(Long fridgeIdx, Boolean active);
+    Optional<Fridge> findByFridgeIdxAndIsEnable(Long fridgeIdx, Boolean isEnable);
 //  Fridge findByFridgeIdxAndOwner(Long fridgeId, User user);
 }

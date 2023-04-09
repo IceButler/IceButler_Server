@@ -1,6 +1,9 @@
 package com.example.icebutler_server.fridge.service;
 
-import com.example.icebutler_server.fridge.dto.fridge.assembler.*;
+import com.example.icebutler_server.fridge.dto.assembler.FridgeAssembler;
+import com.example.icebutler_server.fridge.dto.assembler.FridgeFoodAssembler;
+
+
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.repository.fridge.*;
@@ -29,6 +32,8 @@ public class FridgeServiceImpl implements FridgeService {
 
   private final FridgeAssembler fridgeAssembler;
   private final FridgeFoodAssembler fridgeFoodAssembler;
+
+
 
   @Transactional
   public ResponseCustom<FridgeRes> registerFridge(FridgeRegisterReq registerFridgeReq) {
@@ -94,4 +99,14 @@ public class FridgeServiceImpl implements FridgeService {
 
     return fridgeFoodAssembler.getFridgeFood(fridgeFood);
   }
+
+  public List<User> searchMember(Long fridgeIdx,String nickName, Long ownerIdx) {
+
+        User owner=userRepository.findById(ownerIdx).orElseThrow(UserNotFoundException::new);
+    Fridge fridge=fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+
+    return fridgeAssembler.findMemberByMemberName(owner,fridge,nickName);
+}
+
+
 }

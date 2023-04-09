@@ -60,4 +60,21 @@ public class FridgeController {
                                    @IsLogin LoginStatus loginStatus){
     return ResponseCustom.OK(fridgeService.getFood(fridgeIdx, fridgeFoodIdx, loginStatus.getUserIdx()));
   }
+
+//  @GetMapping("/{fridgeIdx}/members")
+//  public ResponseCustom<?> getMember(@PathVariable Long fridgeIdx,
+//                                   @RequestParam String nickName,
+//                                   @IsLogin LoginStatus loginStatus){
+//    return ResponseCustom.OK(fridgeService.getMember(fridgeIdx,nickName,loginStatus.getUserIdx()));
+//  }
+
+  //냉장고 유저 검색
+  @GetMapping("/{fridgeIdx}/members")
+  public ResponseCustom<?> searchMember(@PathVariable(name= "fridgeIdx") Long fridgeIdx,
+                                     @RequestParam(value = "nickName") String nickName,
+                                     @IsLogin LoginStatus loginStatus){
+    return ResponseCustom.OK(fridgeService.searchMember(fridgeIdx,nickName,loginStatus.getUserIdx()));
+  }
+
+
 }

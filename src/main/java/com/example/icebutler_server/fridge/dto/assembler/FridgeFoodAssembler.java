@@ -1,4 +1,4 @@
-package com.example.icebutler_server.fridge.dto.fridge.assembler;
+package com.example.icebutler_server.fridge.dto.assembler;
 
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;

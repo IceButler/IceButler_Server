@@ -76,4 +76,10 @@ public class MultiFridgeServiceImpl implements FridgeService {
     public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName){
         return null;
     }
+
+    @Override
+    public List<User> searchMember(Long fridgeIdx, String nickName, Long ownerIdx) {
+        return null;
+    }
+
 }

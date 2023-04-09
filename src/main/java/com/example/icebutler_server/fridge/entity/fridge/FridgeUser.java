@@ -27,4 +27,6 @@ public class FridgeUser extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private FridgeRole role;
+
+
 }

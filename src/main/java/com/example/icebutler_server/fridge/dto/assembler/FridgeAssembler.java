@@ -1,4 +1,4 @@
-package com.example.icebutler_server.fridge.dto.fridge.assembler;
+package com.example.icebutler_server.fridge.dto.assembler;
 
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeRes;
@@ -7,10 +7,12 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,5 +94,28 @@ public class FridgeAssembler {
 ////    if (searchFood.size() == 0) throw new BaseException(NULL_SEARCH_FOOD);
 //    return searchFood;
     return null;
+  }
+
+  public List<User> findMemberByMemberName(User owner, Fridge fridge, String nickName) {
+    //case1
+//    List<User> members = new ArrayList<>();
+//
+//    for (FridgeUser fridgeUser : fridge.getFridgeUsers()) {
+//      if (fridgeUser.getUser().getNickname().equals(nickName)) {
+//        members.add(fridgeUser.getUser());
+//      }
+//    }
+//    if (owner.getNickname().equals(nickName)) {
+//      members.add(owner);
+//    }
+//
+//    return members;
+
+    //case2
+    return fridge.getFridgeUsers().stream()
+            .filter(fridgeUser -> fridgeUser.getUser().getNickname().equals(owner.getNickname())
+                    && fridgeUser.getUser().getNickname().equals(nickName))
+            .map(FridgeUser::getUser)
+            .collect(Collectors.toList());
   }
 }

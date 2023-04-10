@@ -23,10 +23,4 @@ public class MultiCart extends BaseEntity {
   @JoinColumn(name = "multiFridgeUserIdx")
   private MultiFridgeUser multiFridgeUser;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy="multiCart", cascade=ALL)
-  private List<MultiCartFood> multiCartFoods = new ArrayList<>();
-
-  public void addCartFood(MultiCartFood multiCartFood) {
-    this.multiCartFoods.add(multiCartFood);
-  }
 }

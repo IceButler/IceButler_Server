@@ -82,8 +82,8 @@ public class CartServiceImpl implements CartService {
 
         List<Food> foods = foodRepository.findAllByFoodIdxIn(request.getFoodIdxes());
 
-        List<Long> foodsInNowCart = cart.getCartFoods().stream()
-                .map((cf) -> cf.getFood().getFoodIdx()).collect(Collectors.toList());
+        List<Long> foodsInNowCart = this.cartFoodRepository.findByCartAndIsEnable(cart, true).stream()
+                        .map((cf) -> cf.getFood().getFoodIdx()).collect(Collectors.toList());
 
         List<CartFood> cartFoods = foods.stream()
                 .filter((f)->{

@@ -14,5 +14,6 @@ public class FridgeRegisterReq {
   private Long owner;
   private String fridgeName;
   private String fridgeComment;
-  private List<FridgeUser> users;
+  private List<FridgeRegisterMembersReq> members;
+//  private List<FridgeUser> users;
 }

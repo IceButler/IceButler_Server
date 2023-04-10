@@ -25,9 +25,9 @@ public class Fridge extends BaseEntity {
     @JoinColumn(name = "cartIdx")
     private Cart cart;
 
-    public void addFridgeUser(FridgeUser fridgeUser){
-        this.fridgeUsers.add(fridgeUser);
-    }
+//    public void addFridgeUser(FridgeUser fridgeUser){
+//        this.fridgeUsers.add(fridgeUser);
+//    }
 
     @Builder
     public Fridge(
@@ -40,4 +40,8 @@ public class Fridge extends BaseEntity {
 //        fridgeUser.addFridge(this);
     }
 
+    public void updateBasicFridgeInfo(String fridgeName, String fridgeComment) {
+        this.fridgeName = fridgeName;
+        this.fridgeComment = fridgeComment;
+    }
 }

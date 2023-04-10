@@ -70,9 +70,10 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
         // todo: 프론트 샘들께 수정 로직 여쭤보고, 다시 코드 작성 필요
         if(updateFridgeReq.getMembers()!=null){
+            List<MultiFridgeUser> members = this.multiFridgeUserRepository.findByMultiFridgeAndIsEnable(fridge, true);
             List<User> newMembers = updateFridgeReq.getMembers().stream()
                     .map(m -> this.userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-            List<MultiFridgeUser> checkNewMember = this.multiFridgeAssembler.toUpdateFridgeMembers(newMembers, fridge.getMultiFridgeUsers());
+            List<MultiFridgeUser> checkNewMember = this.multiFridgeAssembler.toUpdateFridgeMembers(newMembers, members);
 
             if(!checkNewMember.isEmpty()){
                 this.multiFridgeUserRepository.saveAll(checkNewMember);

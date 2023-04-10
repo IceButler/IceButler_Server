@@ -17,12 +17,13 @@ import java.util.List;
 public class FridgeAssembler {
 
   public Fridge toEntity(FridgeRegisterReq createFridgeReq, User user) {
-    return Fridge.builder()
-//            .owner(user)
-            .fridgeName(createFridgeReq.getFridgeName())
-            .fridgeComment(createFridgeReq.getFridgeComment())
-            .fridgeUsers(createFridgeReq.getUsers())
-            .build();
+//    return Fridge.builder()
+////            .owner(user)
+//            .fridgeName(createFridgeReq.getFridgeName())
+//            .fridgeComment(createFridgeReq.getFridgeComment())
+//            .fridgeUsers(createFridgeReq.getUsers())
+//            .build();
+    return null;
   }
 
   public FridgeRes toDto(Fridge fridge) {

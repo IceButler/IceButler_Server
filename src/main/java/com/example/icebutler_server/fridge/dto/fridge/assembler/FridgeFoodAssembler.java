@@ -41,7 +41,7 @@ public class FridgeFoodAssembler {
                 .foodDetailName(fridgeFood.getFoodDetailName())
                 .foodCategory(fridgeFood.getFood().getFoodCategory().getName())
                 .shelfLife(fridgeFood.getShelfLife().format(DateTimeFormatter.ISO_DATE))
-                .day(calShelfLife(fridgeFood.getShelfLife()))
+                .day(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))
                 .owner(owner)
                 .memo(fridgeFood.getMemo())
                 .imgUrl(fridgeFood.getFridgeFoodImgKey())
@@ -50,14 +50,5 @@ public class FridgeFoodAssembler {
 
     public FridgeFoodRes getFridgeFood(FridgeFood fridgeFood) {
         return toDto(fridgeFood);
-    }
-
-    public String calShelfLife(LocalDate shelfLife) {
-        long day = Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), shelfLife));
-        String mark;
-        if(shelfLife.isAfter(LocalDate.now())) mark = "-";
-        else mark = "+";
-
-        return "D"+mark+day;
     }
 }

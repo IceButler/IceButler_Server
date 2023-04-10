@@ -128,7 +128,7 @@ public class FridgeServiceImpl implements FridgeService {
     Fridge fridge=this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
 
     return new FridgeUserMainRes(this.fridgeUserRepository.findByFridge(fridge).stream()
-            .map(ff -> new FridgeUsersRes(ff.getFridgeUserIdx(), ff.getUser().getNickname(),ff.getUser().getProfileImage())).collect(Collectors.toList()));
+            .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(),ff.getUser().getProfileImage())).collect(Collectors.toList()));
   }
 
 

@@ -9,7 +9,9 @@ import com.example.icebutler_server.cart.entity.cart.Cart;
 import com.example.icebutler_server.cart.entity.cart.CartFood;
 import com.example.icebutler_server.cart.repository.cart.CartFoodRepository;
 import com.example.icebutler_server.cart.repository.cart.CartRepository;
+import com.example.icebutler_server.food.dto.response.FoodResponse;
 import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,13 +47,24 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public ResponseCustom<CartResponse> getFoodsFromCart(Long fridgeIdx, Long userIdx) {
+    public ResponseCustom<?> getFoodsFromCart(Long fridgeIdx, Long userIdx) {
         User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
 
-        List<CartFood> cartFood = cartFoodRepository.findByCart(fridge.getCart());
-        return ResponseCustom.OK(CartResponse.toDto(cartFood));
+//        List<CartFood> cartFood = cartFoodRepository.findByCart(fridge.getCart());
+//        return ResponseCustom.OK(CartResponse.toDto(cartFood));
+
+        List<CartResponse> cartResponses = new ArrayList<>();
+        for(FoodCategory category: FoodCategory.values()){
+            // 과일 카테고리 cartFood
+            List<FoodResponse> foodResponse = cartFoodRepository.findByCartAndFood_FoodCategory(fridge.getCart(), category)
+                    .stream().map(cart -> new FoodResponse(cart.getFood().getFoodIdx(), cart.getFood().getFoodName(), cart.getFood().getFoodIconName())).collect(Collectors.toList());
+            cartResponses.add(
+                    new CartResponse(category.getName(), foodResponse)
+            );
+        }
+        return ResponseCustom.OK(cartResponses);
     }
 
     @Transactional

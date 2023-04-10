@@ -37,4 +37,13 @@ public class MultiFridgeController {
         this.multiFridgeService.addFridgeFood(fridgeFoodReq, multiFridgeIdx, loginStatus.getUserIdx());
         return ResponseCustom.OK();
     }
+    /**
+     * [Get] 냉장고 식품 전체 조회
+     */
+    @GetMapping("/{multiFridgeIdx}/foods")
+    public ResponseCustom<?> getFoods(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
+                                      @IsLogin LoginStatus loginStatus,
+                                      @RequestParam(required = false) String category) {
+        return ResponseCustom.OK(multiFridgeService.getFoods(multiFridgeIdx, loginStatus.getUserIdx(), category));
+    }
 }

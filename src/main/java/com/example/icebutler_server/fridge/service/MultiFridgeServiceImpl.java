@@ -2,6 +2,7 @@ package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
@@ -9,6 +10,7 @@ import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
+import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
 import com.example.icebutler_server.fridge.exception.FridgeNameEmptyException;
@@ -46,9 +48,20 @@ public class MultiFridgeServiceImpl implements FridgeService {
     private final FoodAssembler foodAssembler;
 
 
+    // 멀티 냉장고 전체 조회
     @Override
-    public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
-        return null;
+    public FridgeMainRes getFoods(Long multiFridgeIdx, Long userIdx, String category) {
+        User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        MultiFridge multiFridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(multiFridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+
+        if(category == null){
+            // 값이 없으면 전체 조회
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByIsEnableOrderByShelfLife(true));
+        }else{
+            // 값이 있으면 특정 값을 불러온 조회
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory.getFoodCategoryByName(category), true));
+
+        }
     }
 
     // 멀티 냉장고 수정

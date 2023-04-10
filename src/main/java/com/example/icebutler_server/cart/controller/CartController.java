@@ -23,7 +23,7 @@ public class CartController {
     // 장바구니 식품 조회
     @Auth
     @GetMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<CartResponse> getFoodsFromCart(
+    public ResponseCustom<?> getFoodsFromCart(
             @PathVariable Long fridgeIdx,
             @IsLogin LoginStatus loginStatus
     )

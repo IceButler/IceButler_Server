@@ -47,18 +47,19 @@ public class FridgeServiceImpl implements FridgeService {
     Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
     fridgeRepository.save(fridge);
 
-    // fridge - fridgeUser 멤버 연관관계 추가
-    List<User> users = new ArrayList<>();
-    for (FridgeRegisterMembersReq membersReq : registerFridgeReq.getMembers()) {
-      users.add(userRepository.findByUserIdxAndIsEnable(membersReq.getUserIdx(), true).orElseThrow(UserNotFoundException::new));
-    }
-    for (User user : users) {
-      fridge.addFridgeUser(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
-    }
-
-    // fridge - fridgeUser 오너 연관관계 추가
-    User owner = userRepository.findByUserIdxAndIsEnable(registerFridgeReq.getOwner(), true).orElseThrow(UserNotFoundException::new);
-    fridge.addFridgeUser(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
+//    todo 엔티티 수정으로 인한 리팩토어 필요
+//    // fridge - fridgeUser 멤버 연관관계 추가
+//    List<User> users = new ArrayList<>();
+//    for (FridgeRegisterMembersReq membersReq : registerFridgeReq.getMembers()) {
+//      users.add(userRepository.findByUserIdxAndIsEnable(membersReq.getUserIdx(), true).orElseThrow(UserNotFoundException::new));
+//    }
+//    for (User user : users) {
+//      fridge.addFridgeUser(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
+//    }
+//
+//    // fridge - fridgeUser 오너 연관관계 추가
+//    User owner = userRepository.findByUserIdxAndIsEnable(registerFridgeReq.getOwner(), true).orElseThrow(UserNotFoundException::new);
+//    fridge.addFridgeUser(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
 
     return fridge.getFridgeIdx();
   }

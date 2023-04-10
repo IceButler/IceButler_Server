@@ -69,14 +69,10 @@ public class FridgeServiceImpl implements FridgeService {
 
     if (category == null) {
       // 값이 없으면 전체 조회
-      return new FridgeMainRes(this.fridgeFoodRepository.findByIsEnableOrderByShelfLife(true).stream()
-              .map(ff -> new FridgeFoodsRes(ff.getFridgeFoodIdx(), ff.getFood().getFoodName(), ff.getFood().getFoodIconName(), this.fridgeFoodAssembler.calShelfLife(ff.getShelfLife())))
-              .collect(Collectors.toList()));
-    } else {
+      return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByIsEnableOrderByShelfLife(true));
+    }else{
       // 값이 있으면 특정 값을 불러온 조회
-      return new FridgeMainRes(this.fridgeFoodRepository.findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory.getFoodCategoryByName(category), true).stream()
-              .map(ff -> new FridgeFoodsRes(ff.getFridgeFoodIdx(), ff.getFood().getFoodName(), ff.getFood().getFoodIconName(), this.fridgeFoodAssembler.calShelfLife(ff.getShelfLife())))
-              .collect(Collectors.toList()));
+      return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory.getFoodCategoryByName(category), true));
     }
   }
 
@@ -152,4 +148,14 @@ public class FridgeServiceImpl implements FridgeService {
     if (food == null) food = foodRepository.save(foodAssembler.toEntity(fridgeFoodReq));
     fridgeFoodRepository.save(fridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
   }
+
+  public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx){
+    User user=this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+    Fridge fridge=this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
+
+    return new FridgeUserMainRes(this.fridgeUserRepository.findByFridge(fridge).stream()
+            .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(),ff.getUser().getProfileImage())).collect(Collectors.toList()));
+  }
+
+
 }

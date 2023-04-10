@@ -25,17 +25,6 @@ public class Fridge extends BaseEntity {
     @JoinColumn(name = "cartIdx")
     private Cart cart;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="fridge", cascade=ALL)
-    private List<FridgeUser> fridgeUsers = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="fridge", cascade=ALL)
-    private List<FridgeFood> fridgeFoods = new ArrayList<>();
-
-    public void updateBasicFridgeInfo(String fridgeName, String fridgeComment) {
-        this.fridgeName = fridgeName;
-        this.fridgeComment = fridgeComment;
-    }
-
     public void addFridgeUser(FridgeUser fridgeUser){
         this.fridgeUsers.add(fridgeUser);
     }

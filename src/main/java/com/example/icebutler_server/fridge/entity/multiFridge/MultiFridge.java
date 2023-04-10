@@ -25,14 +25,6 @@ public class MultiFridge extends BaseEntity {
   private String fridgeName;
   private String fridgeComment;
 
-  @Where(clause = "is_enable = 1")
-  @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
-  private List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
-
-  @Where(clause = "is_enable = 1")
-  @OneToMany(fetch = FetchType.LAZY, mappedBy="multiFridge", cascade=ALL)
-  private List<MultiFridgeFood> multiFridgeFoods = new ArrayList<>();
-
   @Builder
   public MultiFridge(String fridgeName, String fridgeComment) {
     this.fridgeName = fridgeName;

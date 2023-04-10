@@ -25,7 +25,6 @@ public class FridgeAssembler {
             .fridgeName(createFridgeReq.getFridgeName())
             .fridgeComment(createFridgeReq.getFridgeComment())
             .build();
-  }
 
   public boolean isEmptyFridgeName(FridgeRegisterReq createFridgeReq) {
     return createFridgeReq.getFridgeName().isEmpty();

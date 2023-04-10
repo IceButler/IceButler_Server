@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @Repository
 public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
+
   Optional<Object> findByUserAndFridge(User user, Fridge fridge);
 
   Optional<FridgeUser> findByFridgeAndUserAndRoleAndIsEnable(Fridge fridge, User user, FridgeRole fridgeRole, Boolean status);

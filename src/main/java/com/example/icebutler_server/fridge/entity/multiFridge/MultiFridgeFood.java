@@ -38,4 +38,15 @@ public class MultiFridgeFood extends BaseEntity {
   @JoinColumn(name = "multiFridgeIdx")
   private MultiFridge multiFridge;
 
+  @Builder
+  public MultiFridgeFood(String fridgeFoodImgKey, LocalDate shelfLife, String memo, String foodDetailName, FoodDeleteStatus foodDeleteStatus, Food food, User owner, MultiFridge multiFridge) {
+    this.fridgeFoodImgKey = fridgeFoodImgKey;
+    this.shelfLife = shelfLife;
+    this.memo = memo;
+    this.foodDetailName = foodDetailName;
+    this.foodDeleteStatus = foodDeleteStatus;
+    this.food = food;
+    this.owner = owner;
+    this.multiFridge = multiFridge;
+  }
 }

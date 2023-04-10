@@ -150,6 +150,12 @@ public class FridgeServiceImpl implements FridgeService {
     fridgeFoodRepository.save(fridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
   }
 
+  // 냉장고 식품 수정
+  @Override
+  public void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx) {
+
+  }
+
   public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx){
     User user=this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
     Fridge fridge=this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);

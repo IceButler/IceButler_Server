@@ -75,5 +75,5 @@ configurations {
 }
 
 clean {
-	delete file('src/main/generated')
+	delete file('$buildDir/generated/querydsl')
 }

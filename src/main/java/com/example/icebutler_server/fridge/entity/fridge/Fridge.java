@@ -11,10 +11,8 @@ import java.util.List;
 import static javax.persistence.CascadeType.ALL;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @Entity
-@Builder
 public class Fridge extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,10 +25,19 @@ public class Fridge extends BaseEntity {
     @JoinColumn(name = "cartIdx")
     private Cart cart;
 
+    public void addFridgeUser(FridgeUser fridgeUser){
+        this.fridgeUsers.add(fridgeUser);
+    }
 
-    public void updateNameAndComment(Fridge toUpdateEntity) {
-        this.fridgeName = toUpdateEntity.getFridgeName();
-        this.fridgeComment = toUpdateEntity.getFridgeComment();
+    @Builder
+    public Fridge(
+                  String fridgeName,
+                  String fridgeComment,
+                  FridgeUser fridgeUser ) {
+        this.fridgeName = fridgeName;
+        this.fridgeComment = fridgeComment;
+//        this.fridgeUsers.add(fridgeUser);
+//        fridgeUser.addFridge(this);
     }
 
 }

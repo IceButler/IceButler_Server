@@ -13,6 +13,7 @@ import com.example.icebutler_server.user.exception.ProviderMissingValueException
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j

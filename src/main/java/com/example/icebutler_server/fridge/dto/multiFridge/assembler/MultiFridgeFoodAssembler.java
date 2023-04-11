@@ -4,6 +4,7 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
+import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
 import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,5 +24,21 @@ public class MultiFridgeFoodAssembler {
                 .memo(fridgeFoodReq.getMemo())
                 .fridgeFoodImgKey(fridgeFoodReq.getImgUrl())
                 .build();
+    }
+
+    public void toUpdateBasicMultiFridgeFoodInfo(MultiFridgeFood modifyFood, FridgeFoodReq fridgeFoodReq) {
+        modifyFood.updateBasicMultiFridgeFoodInfo(
+                fridgeFoodReq.getFoodDetailName(),
+                fridgeFoodReq.getMemo(),
+                LocalDate.parse(fridgeFoodReq.getShelfLife()),
+                fridgeFoodReq.getImgUrl());
+    }
+
+    public void toUpdateMultiFridgeFoodInfo(MultiFridgeFood modifyFood, Food food) {
+        modifyFood.toUpdateMultiFridgeFoodInfo(food);
+    }
+
+    public void toUpdateMultiFridgeFoodOwner(MultiFridgeFood modifyFood, User newOwner) {
+        modifyFood.toUpdateMultiFridgeFoodOwner(newOwner);
     }
 }

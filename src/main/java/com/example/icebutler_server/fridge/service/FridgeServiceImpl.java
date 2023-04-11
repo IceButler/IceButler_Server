@@ -148,9 +148,14 @@ public class FridgeServiceImpl implements FridgeService {
     fridgeFoodRepository.save(fridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
   }
 
-  public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx) {
-    User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-    Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+
+  public void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx) {
+
+  }
+
+  public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx){
+    User user=this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+    Fridge fridge=this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
 
     return new FridgeUserMainRes(this.fridgeUserRepository.findByFridge(fridge).stream()
             .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(), ff.getUser().getProfileImage())).collect(Collectors.toList()));

@@ -38,6 +38,20 @@ public class MultiFridgeFood extends BaseEntity {
   @JoinColumn(name = "multiFridgeIdx")
   private MultiFridge multiFridge;
 
+  public void updateBasicMultiFridgeFoodInfo(String foodDetailName, String memo, LocalDate shelfLife, String imgUrl) {
+    this.foodDetailName = foodDetailName;
+    this.memo = memo;
+    this.shelfLife = shelfLife;
+    this.fridgeFoodImgKey = imgUrl;
+  }
+
+  public void toUpdateMultiFridgeFoodInfo(Food food) {
+    this.food = food;
+  }
+
+  public void toUpdateMultiFridgeFoodOwner(User newOwner) {
+    this.owner = newOwner;
+  }
   @Builder
   public MultiFridgeFood(String fridgeFoodImgKey, LocalDate shelfLife, String memo, String foodDetailName, FoodDeleteStatus foodDeleteStatus, Food food, User owner, MultiFridge multiFridge) {
     this.fridgeFoodImgKey = fridgeFoodImgKey;

@@ -72,6 +72,7 @@ public class FridgeController {
     return ResponseCustom.OK();
   }
 
+  //냉장고 내 유저 조회
   @GetMapping("{fridgeIdx}/members")
   public ResponseCustom<?> getMembers(
           @PathVariable(name="fridgeIdx") Long fridgeIdx,
@@ -79,5 +80,14 @@ public class FridgeController {
   ){
     return ResponseCustom.OK(fridgeService.searchMembers(fridgeIdx,loginStatus.getUserIdx()));
   }
+
+  //냉장고 선택
+//  @GetMapping("{fridgeIdx}")
+//  public ResponseCustom<?> getFridge(
+//          @PathVariable(name="fridgeIdx") Long fridgeIdx,
+//          @IsLogin LoginStatus loginStatus
+//  ){
+//    return ResponseCustom.OK(fridgeService.getFridge(fridgeIdx,loginStatus.getUserIdx()));
+//  }
 
 }

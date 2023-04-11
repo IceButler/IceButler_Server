@@ -30,7 +30,7 @@ public class MultiFridgeController {
     /**
      * [post] 냉장고 식품 추가
      */
-    @PostMapping("/{multiFridgeIdx}/food")
+    @PostMapping("/{multiFridgeIdx}/foods")
     public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
                                            @PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
                                            @IsLogin LoginStatus loginStatus){
@@ -46,4 +46,17 @@ public class MultiFridgeController {
                                       @RequestParam(required = false) String category) {
         return ResponseCustom.OK(multiFridgeService.getFoods(multiFridgeIdx, loginStatus.getUserIdx(), category));
     }
+
+    /**
+     * [Patch] 냉장고식품수정
+     */
+    @PatchMapping("/{multiFridgeIdx}/foods/{multiFridgeFoodIdx}")
+    public ResponseCustom<?> modifyFridgeFood(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
+                                      @PathVariable(name = "multiFridgeFoodIdx") Long multiFridgeFoodIdx,
+                                      @IsLogin LoginStatus loginStatus,
+                                      @RequestBody FridgeFoodReq fridgeFoodReq) {
+        this.multiFridgeService.modifyFridgeFood(multiFridgeIdx, multiFridgeFoodIdx, fridgeFoodReq, loginStatus.getUserIdx());
+        return ResponseCustom.OK();
+    }
+
 }

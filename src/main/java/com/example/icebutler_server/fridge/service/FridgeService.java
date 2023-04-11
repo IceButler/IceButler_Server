@@ -18,6 +18,8 @@ public interface FridgeService {
   List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName);
   FridgeFoodRes getFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, Long userIdx);
   void addFridgeFood(FridgeFoodReq fridgeFoodReq, Long fridgeIdx, Long userIdx);
+  void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx);
+  FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx);
 
 
 }

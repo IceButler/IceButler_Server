@@ -8,22 +8,22 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeUserMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeUsersRes;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
+import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
-import com.example.icebutler_server.fridge.exception.FridgeNameEmptyException;
-import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
-import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
-import com.example.icebutler_server.fridge.exception.InvalidFridgeUserRoleException;
+import com.example.icebutler_server.fridge.exception.*;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFoodRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;
-import com.example.icebutler_server.user.exception.UserNotFoundException;
+import com.example.icebutler_server.user.exception.*;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -116,14 +116,49 @@ public class MultiFridgeServiceImpl implements FridgeService {
     public void addFridgeFood(FridgeFoodReq fridgeFoodReq, Long fridgeIdx, Long userIdx) {
         User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
-        MultiFridgeUser fridgeUser = this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
+        this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
 
 
         User owner = this.userRepository.findByUserIdxAndIsEnable(fridgeFoodReq.getOwnerIdx(), true).orElseThrow(UserNotFoundException::new);
-        MultiFridgeUser foodOwner = this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
+        this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
 
         Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName());
         if(food == null) food = foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq));
         this.multiFridgeFoodRepository.save(this.multiFridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
+    }
+
+    // 냉장고 식품 수정
+    @Transactional
+    @Override
+    public void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx) {
+        User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
+        MultiFridgeFood modifyMultiFridgeFood = this.multiFridgeFoodRepository.findByMultiFridgeFoodIdxAndOwnerAndMultiFridgeAndIsEnable(fridgeFoodIdx, user, fridge, true).orElseThrow(FridgeFoodNotFoundException::new);
+
+        // todo: foodName은 isEnable을 확인할 필요가 없나ㅇ,,
+        if(!modifyMultiFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
+            Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName());
+            if(food == null) food = foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq));
+            this.multiFridgeFoodAssembler.toUpdateMultiFridgeFoodInfo(modifyMultiFridgeFood, food);
+        }
+
+        this.multiFridgeFoodAssembler.toUpdateBasicMultiFridgeFoodInfo(modifyMultiFridgeFood, fridgeFoodReq);
+
+        // todo: controller domain 별로 나뉘어지면 exception 변경 예정 -> 충돌 땜시
+        if(!modifyMultiFridgeFood.getOwner().getUserIdx().equals(fridgeFoodReq.getOwnerIdx())){
+            User newOwner = this.userRepository.findByUserIdxAndIsEnable(fridgeFoodReq.getOwnerIdx(), true).orElseThrow(UserNotFoundException::new);
+            this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, newOwner, true).orElseThrow(FridgeUserNotFoundException::new);
+            this.multiFridgeFoodAssembler.toUpdateMultiFridgeFoodOwner(modifyMultiFridgeFood, newOwner);
+        }
+    }
+
+    @Override
+    public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx) {
+        User user=this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+        MultiFridge fridge=this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
+
+        return new FridgeUserMainRes(this.multiFridgeUserRepository.findByMultiFridge(user).stream()
+                .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(),ff.getUser().getProfileImage())).collect(Collectors.toList()));
     }
 }

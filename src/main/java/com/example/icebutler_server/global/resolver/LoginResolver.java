@@ -42,7 +42,7 @@ public class LoginResolver implements HandlerMethodArgumentResolver{
 //        String accessToken = webRequest.getHeader(env.getProperty("jwt.access_name"));
 //        if(accessToken == null || !tokenUtils.isValidToken(tokenUtils.parseJustTokenFromFullToken(accessToken)))
 //            return LoginStatus.getNotLoginStatus();
-
+//
 //        Long userId = tokenUtils.getIdxFromFullToken(accessToken);
 //        if (!auth.optional() && userId == null) {
 //            return LoginStatus.getNotLoginStatus();

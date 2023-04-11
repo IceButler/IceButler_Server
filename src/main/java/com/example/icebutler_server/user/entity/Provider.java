@@ -7,8 +7,7 @@ import java.util.Arrays;
 @Getter
 public enum Provider {
   KAKAO(1, "카카오"),
-  APPLE(2, "애플"),
-  ANONYMOUS(3, "비회원");
+  APPLE(2, "애플");
 
   private int number;
   private String name;

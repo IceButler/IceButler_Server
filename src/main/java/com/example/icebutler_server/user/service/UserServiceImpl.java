@@ -2,6 +2,7 @@ package com.example.icebutler_server.user.service;
 
 
 import com.example.icebutler_server.global.resolver.IsLogin;
+import com.example.icebutler_server.user.dto.assembler.UserAssembler;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
@@ -26,22 +27,15 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final AuthService authService;
-
+  private final UserAssembler userAssembler;
   // private final RedisTemplateService redisTemplateService;
-
 
   @Transactional
   public PostUserRes signUpOrLogin(PostUserReq postUserReq) {
     if (Provider.getProviderByName(postUserReq.getProvider()) == null) throw new ProviderMissingValueException();
 
     User user = userRepository.findByEmailAndProvider(postUserReq.getEmail(), Provider.getProviderByName(postUserReq.getProvider()));
-    if (user == null) user = signUp(postUserReq);
-    if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
-
-    user.login();
-    userRepository.save(user);
-
-    return authService.createToken(user);
+    return authService.createToken(userRepository.save(userAssembler.signUpOrLogin(user, postUserReq)));
   }
 
   @Transactional
@@ -57,7 +51,7 @@ public class UserServiceImpl implements UserService {
   public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
     if (patchProfileReq.getNickName() != null) user.modifyNickname(patchProfileReq.getNickName());
-    if (patchProfileReq.getProfileImage() != null) user.modifyProfileImg(patchProfileReq.getProfileImage());
+    if (patchProfileReq.getProfileImgUrl() != null) user.modifyProfileImg(patchProfileReq.getProfileImgUrl());
   }
 
   // 닉네임 중복 확인

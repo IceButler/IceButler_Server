@@ -1,23 +1,45 @@
 package com.example.icebutler_server.user.controller;
 
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
-import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
-import com.example.icebutler_server.user.service.UserServiceImpl;
-import io.swagger.annotations.Api;
+import com.example.icebutler_server.user.dto.PatchProfileReq;
+import com.example.icebutler_server.user.dto.PostNicknameReq;
+import com.example.icebutler_server.user.dto.request.PostUserReq;
+import com.example.icebutler_server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
+import com.example.icebutler_server.global.resolver.Auth;
 
-@RequiredArgsConstructor
-@RequestMapping("users")
 @RestController
-@Api(tags = "User 관련 API")
+@RequestMapping(value = "/users")
+@RequiredArgsConstructor
 public class UserController {
-    private final UserServiceImpl userService;
 
-    //유저 탈퇴
+  private final UserService userService;
+
+  @ResponseBody
+  @PostMapping("/login")
+  public ResponseCustom<?> login(@RequestBody PostUserReq postUserReq) {
+    return ResponseCustom.OK(userService.signUpOrLogin(postUserReq));
+  }
+
+  @ResponseBody
+  @PatchMapping("/profile")
+  public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
+                                         @IsLogin LoginStatus loginStatus) {
+    userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
+    return ResponseCustom.OK();
+  }
+
+  @ResponseBody
+  @PostMapping("/nickname")
+  public ResponseCustom<?> checkNickname(@RequestBody PostNicknameReq postNicknameReq) {
+    userService.checkNickname(postNicknameReq);
+    return ResponseCustom.OK();
+  }
+  
+     //유저 탈퇴
     @Auth
     @DeleteMapping("/delete")
     public ResponseCustom<Boolean> deleteUser(
@@ -43,7 +65,5 @@ public class UserController {
     ){
         return ResponseCustom.OK(userService.myProfile(loginStatus.getUserIdx()));
     }
-
-
 
 }

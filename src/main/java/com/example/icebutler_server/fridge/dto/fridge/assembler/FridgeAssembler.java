@@ -27,10 +27,6 @@ public class FridgeAssembler {
             .build();
   }
 
-  public boolean isEmptyFridgeName(FridgeRegisterReq createFridgeReq) {
-    return createFridgeReq.getFridgeName().isEmpty();
-  }
-
   public void toUpdateFridgeOwner(FridgeUser owner, FridgeUser newOwner) {
     owner.changeFridgeMember(owner.getUser());
     newOwner.changeFridgeOwner(newOwner.getUser());

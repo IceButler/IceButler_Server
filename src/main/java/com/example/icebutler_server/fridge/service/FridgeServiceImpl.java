@@ -43,23 +43,21 @@ public class FridgeServiceImpl implements FridgeService {
 
   @Transactional
   public Long registerFridge(FridgeRegisterReq registerFridgeReq) {
-    if (fridgeAssembler.isEmptyFridgeName(registerFridgeReq)) throw new FridgeNameEmptyException();
+    if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
     Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
     fridgeRepository.save(fridge);
 
-//    todo 엔티티 수정으로 인한 리팩토어 필요
-//    // fridge - fridgeUser 멤버 연관관계 추가
-//    List<User> users = new ArrayList<>();
-//    for (FridgeRegisterMembersReq membersReq : registerFridgeReq.getMembers()) {
-//      users.add(userRepository.findByUserIdxAndIsEnable(membersReq.getUserIdx(), true).orElseThrow(UserNotFoundException::new));
-//    }
-//    for (User user : users) {
-//      fridge.addFridgeUser(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
-//    }
-//
-//    // fridge - fridgeUser 오너 연관관계 추가
-//    User owner = userRepository.findByUserIdxAndIsEnable(registerFridgeReq.getOwner(), true).orElseThrow(UserNotFoundException::new);
-//    fridge.addFridgeUser(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
+    List<FridgeUser> fridgeUsers = new ArrayList<>();
+    List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
+    User owner = userRepository.findByUserIdxAndIsEnable(registerFridgeReq.getOwner(), true).orElseThrow(UserNotFoundException::new);
+
+    // fridge - fridgeUser  연관관계 추가
+    for (User user : users) {
+      fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
+    }
+    fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
+
+    fridgeUserRepository.saveAll(fridgeUsers);
 
     return fridge.getFridgeIdx();
   }
@@ -71,7 +69,7 @@ public class FridgeServiceImpl implements FridgeService {
     if (category == null) {
       // 값이 없으면 전체 조회
       return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByIsEnableOrderByShelfLife(true));
-    }else{
+    } else {
       // 값이 있으면 특정 값을 불러온 조회
       return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory.getFoodCategoryByName(category), true));
     }
@@ -100,7 +98,7 @@ public class FridgeServiceImpl implements FridgeService {
               .map(m -> this.userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
       List<FridgeUser> checkNewMember = this.fridgeAssembler.toUpdateFridgeMembers(newMembers, members);
 
-      if(!checkNewMember.isEmpty()){
+      if (!checkNewMember.isEmpty()) {
         this.fridgeUserRepository.saveAll(checkNewMember);
       }
     }
@@ -150,8 +148,7 @@ public class FridgeServiceImpl implements FridgeService {
     fridgeFoodRepository.save(fridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
   }
 
-  // 냉장고 식품 수정
-  @Override
+
   public void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx) {
 
   }
@@ -162,8 +159,8 @@ public class FridgeServiceImpl implements FridgeService {
     User user=this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
     Fridge fridge=this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
 
-    return new FridgeUserMainRes(this.fridgeUserRepository.findByFridge(user).stream()
-            .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(),ff.getUser().getProfileImage())).collect(Collectors.toList()));
+    return new FridgeUserMainRes(this.fridgeUserRepository.findByFridge(fridge).stream()
+            .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(), ff.getUser().getProfileImage())).collect(Collectors.toList()));
   }
 
 

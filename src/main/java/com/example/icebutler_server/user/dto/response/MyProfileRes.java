@@ -1,4 +1,4 @@
-package com.example.icebutler_server.user.dto;
+package com.example.icebutler_server.user.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

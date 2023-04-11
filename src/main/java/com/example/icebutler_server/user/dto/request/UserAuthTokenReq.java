@@ -1,13 +1,12 @@
-package com.example.icebutler_server.user.dto;
+package com.example.icebutler_server.user.dto.request;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 @Getter
-public class UserAuthTokenRequest {
+public class UserAuthTokenReq {
 
 //    @NotNull(message = "유저 ID를 입력해주세요")
 //    @NotBlank(message = "유저 ID를 입력해주세요")

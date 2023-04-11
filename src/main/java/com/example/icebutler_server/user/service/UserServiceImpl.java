@@ -2,8 +2,8 @@ package com.example.icebutler_server.user.service;
 
 
 import com.example.icebutler_server.global.resolver.IsLogin;
-import com.example.icebutler_server.user.dto.PatchProfileReq;
-import com.example.icebutler_server.user.dto.PostNicknameReq;
+import com.example.icebutler_server.user.dto.request.PatchProfileReq;
+import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.dto.response.PostUserRes;
 import com.example.icebutler_server.user.entity.Provider;
@@ -12,7 +12,7 @@ import com.example.icebutler_server.user.exception.AlreadyExistNickNameException
 import com.example.icebutler_server.user.exception.AlreadyWithdrawUserException;
 import com.example.icebutler_server.user.exception.ProviderMissingValueException;
 //import com.example.icebutler_server.global.util.RedisTemplateService;
-import com.example.icebutler_server.user.dto.MyProfileRes;
+import com.example.icebutler_server.user.dto.response.MyProfileRes;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final AuthService authService;
-  
+
   // private final RedisTemplateService redisTemplateService;
 
 
@@ -65,12 +65,12 @@ public class UserServiceImpl implements UserService {
     boolean existence = userRepository.existsByNickname(postNicknameReq.getNickName());
     if (existence) throw new AlreadyExistNickNameException();
   }
-  
+
       //유저 탈퇴
     @Override
     @Transactional
     public Boolean deleteUser(Long userIdx) {
-        User user=userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
+        User user=userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx);
         return true;
     }
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     //유저 로그아웃
     @Override
     public Boolean logout(Long userIdx) {
-        userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
+        userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx);
         return true;
     }
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
     //마이페이지 조회
     @Override
     public MyProfileRes myProfile(Long userIdx) {
-        User user=userRepository.findByUserIdx(userIdx).orElseThrow(UserNotFoundException::new);
+        User user=userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
 
         return MyProfileRes.builder()
                 .userIdx(user.getUserIdx())

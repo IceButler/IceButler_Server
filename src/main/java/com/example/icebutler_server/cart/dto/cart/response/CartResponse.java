@@ -4,14 +4,16 @@ import com.example.icebutler_server.cart.entity.cart.CartFood;
 import com.example.icebutler_server.food.dto.response.FoodResponse;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Data
+@Getter
 public class CartResponse {
     private String category;
     private List<FoodResponse> cartFoods;
@@ -21,16 +23,11 @@ public class CartResponse {
         this.cartFoods = cartFoods;
     }
 
-    public static List<CartResponse> toDto(List<CartFood> cartFood) {
-//        CartResponse cartResponse = new CartResponse();
-//        cartResponse.cartFoods = cartFood.stream()
-//                .map((cf) -> FoodResponse.toDto(cf.getFood())).collect(Collectors.toList());
-//        return cartResponse;
-//        for(FoodCategory category: FoodCategory.values()){
-//            FoodResponse foodResponse = new FoodResponse();
-//
-return null;
-        }
-
-
+    public static  CartResponse doDto(List<CartFood> cartFoods, FoodCategory category) {
+        CartResponse cartResponse = new CartResponse();
+        cartResponse.category = category.getName();
+        cartResponse.cartFoods = cartFoods.stream().sorted(Comparator.comparing(CartFood::getCreatedAt))
+                .map(cf -> FoodResponse.toDto(cf.getFood())).collect(Collectors.toList());
+        return cartResponse;
+    }
 }

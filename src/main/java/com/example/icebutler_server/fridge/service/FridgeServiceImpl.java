@@ -153,7 +153,9 @@ public class FridgeServiceImpl implements FridgeService {
 
   }
 
-  public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx){
+  @Override
+  //냉장고 내 유저 조회
+  public FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx){
     User user=this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
     Fridge fridge=this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
 
@@ -162,4 +164,6 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
 
+//  public Object getFridge(Long fridgeIdx, Long userIdx) {
+//  }
 }

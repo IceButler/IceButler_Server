@@ -8,8 +8,11 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeUserMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeUsersRes;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
+import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
@@ -148,5 +151,14 @@ public class MultiFridgeServiceImpl implements FridgeService {
             this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, newOwner, true).orElseThrow(FridgeUserNotFoundException::new);
             this.multiFridgeFoodAssembler.toUpdateMultiFridgeFoodOwner(modifyMultiFridgeFood, newOwner);
         }
+    }
+
+    @Override
+    public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx) {
+        User user=this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+        MultiFridge fridge=this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
+
+        return new FridgeUserMainRes(this.multiFridgeUserRepository.findByMultiFridge(user).stream()
+                .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(),ff.getUser().getProfileImage())).collect(Collectors.toList()));
     }
 }

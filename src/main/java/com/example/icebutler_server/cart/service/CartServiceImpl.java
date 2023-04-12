@@ -73,7 +73,7 @@ public class CartServiceImpl implements CartService {
 
         // food 없는 경우 food 생성
         List<Food> foodRequests = new ArrayList<>();
-        for(AddFoodRequest foodRequest : request.getFoodrequests()) {
+        for(AddFoodRequest foodRequest : request.getFoodRequests()) {
             Food food = this.foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
             if(food == null) food = this.foodRepository.save(new Food(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory())));
             foodRequests.add(food);

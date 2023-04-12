@@ -15,9 +15,15 @@ public interface UserService {
 
   void checkNickname(PostNicknameReq postNicknameReq);
 
+<<<<<<< Updated upstream
   IsEnableRes deleteUser(Long userIdx);
 
   IsEnableRes logout(Long userIdx);
+=======
+  void deleteUser(Long userIdx);
+
+  void logout(Long userIdx);
+>>>>>>> Stashed changes
 
   //마이페이지 조회
   MyProfileRes myProfile(Long userIdx);

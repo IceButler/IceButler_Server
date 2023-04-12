@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
     if (existence) throw new AlreadyExistNickNameException();
   }
 
+<<<<<<< Updated upstream
       //유저 탈퇴
     @Override
     @Transactional
@@ -81,6 +82,24 @@ public class UserServiceImpl implements UserService {
                 .isEnable(user.getIsEnable())
                 .build();
     }
+=======
+  //유저 탈퇴
+  @Override
+  @Transactional
+  public void deleteUser(Long userIdx) {
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+//        redisTemplateService.deleteUserRefreshToken(userIdx);
+    user.setIsEnable(false);
+  }
+
+  //유저 로그아웃
+  @Override
+  public void logout(Long userIdx) {
+    User user=userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+//        redisTemplateService.deleteUserRefreshToken(userIdx)
+    user.logout();
+  }
+>>>>>>> Stashed changes
 
     //마이페이지 조회
     @Override

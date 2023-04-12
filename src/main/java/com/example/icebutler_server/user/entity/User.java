@@ -33,6 +33,11 @@ public class User extends BaseEntity {
         this.loginStatus = true;
     }
 
+    public void logout() {
+        this.loginStatus = false;
+    }
+
+
     public void modifyNickname(String nickName) {
         this.nickname = nickName;
     }

@@ -2,6 +2,7 @@ package com.example.icebutler_server.cart.service;
 
 import com.example.icebutler_server.cart.dto.cart.assembler.CartAssembler;
 import com.example.icebutler_server.cart.dto.cart.assembler.CartFoodAssembler;
+import com.example.icebutler_server.cart.dto.cart.request.AddFoodRequest;
 import com.example.icebutler_server.cart.dto.cart.request.AddFoodToCartRequest;
 import com.example.icebutler_server.cart.dto.cart.request.RemoveFoodFromCartRequest;
 import com.example.icebutler_server.cart.dto.cart.response.CartResponse;
@@ -65,7 +66,6 @@ public class CartServiceImpl implements CartService {
     }
 
     @Transactional
-
     @Override
     public ResponseCustom<?> addFoodsToCart(
             Long fridgeIdx,
@@ -77,9 +77,21 @@ public class CartServiceImpl implements CartService {
         Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
         Cart cart = fridge.getCart();
+        List<Food> foods = new ArrayList<>();
 
-        List<Food> foods = foodRepository.findAllByFoodIdxIn(request.getFoodIdxes());
+        // foodName과 category로 찾아서 있으면 foodIdx, 없으면 food에 저장 후 foodIdx
+        for(AddFoodRequest foodRequest : request.getFoodrequests()) {
+            Food food;
+            food = foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
+            if(food==null) {
+                foodRepository.save(new Food(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory())));
+                food = foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
+            }
+            foods.add(food);
+        }
 
+//        List<Food> foods = foodRepository.findAllByFoodIdxIn(request.getFoodIdxes());
+//
         List<Long> foodsInNowCart = this.cartFoodRepository.findByCartAndIsEnable(cart, true).stream()
                         .map((cf) -> cf.getFood().getFoodIdx()).collect(Collectors.toList());
 

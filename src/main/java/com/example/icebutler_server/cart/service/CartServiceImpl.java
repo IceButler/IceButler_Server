@@ -26,8 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -52,22 +51,21 @@ public class CartServiceImpl implements CartService {
         Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
 
-//        List<CartFood> cartFood = cartFoodRepository.findByCart(fridge.getCart());
-//        return ResponseCustom.OK(CartResponse.toDto(cartFood));
-
         List<CartResponse> cartResponses = new ArrayList<>();
-        for(FoodCategory category: FoodCategory.values()){
-            // 과일 카테고리 cartFood
-            List<FoodResponse> foodResponse = cartFoodRepository.findByCartAndFood_FoodCategory(fridge.getCart(), category)
-                    .stream().map(cart -> new FoodResponse(cart.getFood().getFoodIdx(), cart.getFood().getFoodName(), cart.getFood().getFoodIconName())).collect(Collectors.toList());
-            cartResponses.add(
-                    new CartResponse(category.getName(), foodResponse)
-            );
+        for (FoodCategory category : FoodCategory.values()) {
+            List<CartFood> cartFoods = cartFoodRepository.findByCartAndFood_FoodCategoryAndIsEnableOrderByCreatedAt(fridge.getCart(), category, true);
+            // 카테고리별 음식이 있는 경우만 응답
+            if(cartFoods.isEmpty()) continue;
+            CartResponse cartResponse = CartResponse.doDto(cartFoods, category);
+            cartResponses.add(cartResponse);
         }
+        // 카테고리별 음식 개수 내림차순 정렬
+        cartResponses.sort((cf1, cf2) -> cf2.getCartFoods().size() - cf1.getCartFoods().size());
         return ResponseCustom.OK(cartResponses);
     }
 
     @Transactional
+
     @Override
     public ResponseCustom<?> addFoodsToCart(
             Long fridgeIdx,

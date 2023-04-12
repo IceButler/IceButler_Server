@@ -11,5 +11,5 @@ public interface CartFoodRepository extends JpaRepository<CartFood, Long>, CartF
     List<CartFood> findByCart(Cart cart);
     List<CartFood> findByCartAndIsEnable(Cart cart, Boolean isEnable);
 
-    List<CartFood> findByCartAndFood_FoodCategory(Cart cart, FoodCategory category);
+    List<CartFood> findByCartAndFood_FoodCategoryAndIsEnableOrderByCreatedAt(Cart cart, FoodCategory category, Boolean isEnable);
 }

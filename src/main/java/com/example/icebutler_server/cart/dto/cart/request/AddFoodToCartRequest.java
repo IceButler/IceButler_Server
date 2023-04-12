@@ -8,6 +8,6 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class AddFoodToCartRequest {
-    private List<AddFoodRequest> foodrequests;
+    private List<AddFoodRequest> foodRequests;
 
 }

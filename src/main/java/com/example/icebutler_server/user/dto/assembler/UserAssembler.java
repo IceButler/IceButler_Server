@@ -27,11 +27,11 @@ public class UserAssembler {
     return user;
   }
 
-//  2자 이상 16자 이하, 영어 또는 숫자 또는 한글로 구성
+//  2자 이상 8자 이하, 영어 또는 숫자 또는 한글로 구성
 //  특이사항 : 한글 초성 및 모음은 허가하지 않는다.
-  public boolean isValidNickName(String nickName) {
+  public Boolean isValidNickName(String nickName) {
     boolean err = false;
-    String regex = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$";
+    String regex = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$";
     Pattern p = Pattern.compile(regex);
     Matcher m = p.matcher(nickName);
     if(m.matches()) {

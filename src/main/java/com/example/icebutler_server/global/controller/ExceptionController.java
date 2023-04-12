@@ -59,19 +59,4 @@ public class ExceptionController {
         log.error(e.getMessage());
         return ResponseCustom.BAD_REQUEST(e.getMessage());
     }
-
-    /*
-     * user Exceptions
-     */
-    @ExceptionHandler(ProviderMissingValueException.class)
-    public ResponseCustom<Void> catchProviderMissingValueException(ProviderMissingValueException e) {
-        log.error(e.getMessage());
-        return ResponseCustom.NOT_FOUND(e.getMessage());
-    }
-
-    @ExceptionHandler(AlreadyWithdrawUserException.class)
-    public ResponseCustom<Void> catchAlreadyWithdrawUserException(AlreadyWithdrawUserException e) {
-        log.error(e.getMessage());
-        return ResponseCustom.FORBIDDEN(e.getMessage());
-    }
 }

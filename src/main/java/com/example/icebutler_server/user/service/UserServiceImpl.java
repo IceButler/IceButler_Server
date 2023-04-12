@@ -6,6 +6,7 @@ import com.example.icebutler_server.user.dto.assembler.UserAssembler;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
+import com.example.icebutler_server.user.dto.response.PostNickNameRes;
 import com.example.icebutler_server.user.dto.response.PostUserRes;
 import com.example.icebutler_server.user.entity.Provider;
 import com.example.icebutler_server.user.entity.User;
@@ -55,38 +56,39 @@ public class UserServiceImpl implements UserService {
   }
 
   // 닉네임 중복 확인
-  public void checkNickname(PostNicknameReq postNicknameReq) {
-    boolean existence = userRepository.existsByNickname(postNicknameReq.getNickName());
-    if (existence) throw new AlreadyExistNickNameException();
+  public PostNickNameRes checkNickname(PostNicknameReq postNicknameReq) {
+    Boolean existence = userRepository.existsByNickname(postNicknameReq.getNickName());
+    return PostNickNameRes.builder().nickName(postNicknameReq.getNickName()).existence(existence).build();
   }
 
-      //유저 탈퇴
-    @Override
-    @Transactional
-    public Boolean deleteUser(Long userIdx) {
-        User user=userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+
+  //유저 탈퇴
+  @Override
+  @Transactional
+  public Boolean deleteUser(Long userIdx) {
+    User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx);
-        return true;
-    }
+    return true;
+  }
 
-    //유저 로그아웃
-    @Override
-    public Boolean logout(Long userIdx) {
-        userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+  //유저 로그아웃
+  @Override
+  public Boolean logout(Long userIdx) {
+    userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx);
-        return true;
-    }
+    return true;
+  }
 
-    //마이페이지 조회
-    @Override
-    public MyProfileRes myProfile(Long userIdx) {
-        User user=userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+  //마이페이지 조회
+  @Override
+  public MyProfileRes myProfile(Long userIdx) {
+    User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
 
-        return MyProfileRes.builder()
-                .userIdx(user.getUserIdx())
-                .nickName(user.getNickname())
-                .profileImage(user.getProfileImage())
-                .build();
-    }
+    return MyProfileRes.builder()
+            .userIdx(user.getUserIdx())
+            .nickName(user.getNickname())
+            .profileImage(user.getProfileImage())
+            .build();
+  }
 
 }

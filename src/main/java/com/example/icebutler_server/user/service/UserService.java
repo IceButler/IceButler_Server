@@ -1,5 +1,6 @@
 package com.example.icebutler_server.user.service;
 
+import com.example.icebutler_server.user.dto.response.IsEnableRes;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
@@ -14,9 +15,9 @@ public interface UserService {
 
   void checkNickname(PostNicknameReq postNicknameReq);
 
-  Boolean deleteUser(Long userIdx);
+  IsEnableRes deleteUser(Long userIdx);
 
-  Boolean logout(Long userIdx);
+  IsEnableRes logout(Long userIdx);
 
   //마이페이지 조회
   MyProfileRes myProfile(Long userIdx);

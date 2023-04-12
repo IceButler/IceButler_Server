@@ -6,6 +6,7 @@ import com.example.icebutler_server.user.dto.assembler.UserAssembler;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
+import com.example.icebutler_server.user.dto.response.IsEnableRes;
 import com.example.icebutler_server.user.dto.response.PostUserRes;
 import com.example.icebutler_server.user.entity.Provider;
 import com.example.icebutler_server.user.entity.User;
@@ -63,18 +64,22 @@ public class UserServiceImpl implements UserService {
       //유저 탈퇴
     @Override
     @Transactional
-    public Boolean deleteUser(Long userIdx) {
+    public IsEnableRes deleteUser(Long userIdx) {
         User user=userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx);
-        return true;
+        return IsEnableRes.builder()
+                .isEnable(user.getIsEnable())
+                .build();
     }
 
     //유저 로그아웃
     @Override
-    public Boolean logout(Long userIdx) {
-        userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+    public IsEnableRes logout(Long userIdx) {
+        User user=userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx);
-        return true;
+        return IsEnableRes.builder()
+                .isEnable(user.getIsEnable())
+                .build();
     }
 
     //마이페이지 조회

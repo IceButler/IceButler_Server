@@ -42,7 +42,7 @@ public class UserController {
   //유저 탈퇴
   @Auth
   @DeleteMapping("/delete")
-  public ResponseCustom<Boolean> deleteUser(
+  public ResponseCustom<?> deleteUser(
           @IsLogin LoginStatus loginStatus
   ) {
     return ResponseCustom.OK(userService.deleteUser(loginStatus.getUserIdx()));
@@ -51,7 +51,7 @@ public class UserController {
   //유저 로그아
   @Auth
   @PostMapping("/logout")
-  public ResponseCustom<Boolean> logout(
+  public ResponseCustom<?> logout(
           @IsLogin LoginStatus loginStatus
   ) {
     return ResponseCustom.OK(userService.logout(loginStatus.getUserIdx()));

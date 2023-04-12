@@ -46,7 +46,7 @@ public class AuthService {
             .setExpiration(new Date(now.getTime() + refreshTokenExpiryDate))
             .signWith(SignatureAlgorithm.HS256, key)
             .compact();
-    redisTemplate.opsForValue().set(String.valueOf(userIdx), refreshToken, Duration.ofMillis(refreshTokenExpiryDate));
+//    redisTemplate.opsForValue().set(String.valueOf(userIdx), refreshToken, Duration.ofMillis(refreshTokenExpiryDate));
     return refreshToken;
   }
 

@@ -5,6 +5,7 @@ import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
+import com.example.icebutler_server.user.dto.response.PostNickNameRes;
 import com.example.icebutler_server.user.dto.response.PostUserRes;
 
 public interface UserService {
@@ -12,7 +13,7 @@ public interface UserService {
 
   void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq);
 
-  void checkNickname(PostNicknameReq postNicknameReq);
+  PostNickNameRes checkNickname(PostNicknameReq postNicknameReq);
 
   Boolean deleteUser(Long userIdx);
 

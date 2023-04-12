@@ -11,7 +11,7 @@ import com.example.icebutler_server.user.dto.response.PostUserRes;
 public interface UserService {
   PostUserRes signUpOrLogin(PostUserReq postUserReq);
 
-  void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq);
+//  void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq);
 
   PostNickNameRes checkNickname(PostNicknameReq postNicknameReq);
 

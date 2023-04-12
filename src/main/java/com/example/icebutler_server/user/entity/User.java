@@ -24,9 +24,11 @@ public class User extends BaseEntity {
     private Boolean loginStatus;
 
     @Builder
-    public User(Provider provider, String email) {
+    public User(Provider provider, String email, String nickname, String profileImgUrl) {
         this.provider = provider;
         this.email = email;
+        this.nickname = nickname;
+        this.profileImage = profileImgUrl;
     }
 
     public void login() {

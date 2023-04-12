@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FridgesMainRes {
+public class GetFridgesMainRes {
   List<FridgesRes> fridgeList;
+  List<MultiFridgesRes> multiFridgeList;
 }

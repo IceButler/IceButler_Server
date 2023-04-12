@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FridgesRes {
-  private String fridgeName;
-  private Long fridgeIdx;
+public class MultiFridgesRes {
+  private String multiFridgeName;
+  private Long multiFridgeIdx;
 }

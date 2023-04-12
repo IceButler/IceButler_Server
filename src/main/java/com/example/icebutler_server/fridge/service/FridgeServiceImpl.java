@@ -3,7 +3,7 @@ package com.example.icebutler_server.fridge.service;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.food.entity.FoodCategory;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgesMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.GetFridgesMainRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgesRes;
 import com.example.icebutler_server.fridge.dto.fridge.assembler.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
@@ -12,6 +12,7 @@ import com.example.icebutler_server.fridge.repository.fridge.*;
 import com.example.icebutler_server.fridge.exception.*;
 import com.example.icebutler_server.fridge.entity.fridge.*;
 import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
@@ -33,6 +34,7 @@ public class FridgeServiceImpl implements FridgeService {
 
   private final FridgeRepository fridgeRepository;
   private final FridgeUserRepository fridgeUserRepository;
+  private final MultiFridgeUserRepository multiFridgeUserRepository;
   private final UserRepository userRepository;
   private final FridgeFoodRepository fridgeFoodRepository;
   private final FoodRepository foodRepository;
@@ -163,8 +165,10 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   //냉장고 선택 화면 전체 조회
-  public FridgesMainRes getFridges(Long fridgeIdx, Long userIdx) {
+  public GetFridgesMainRes getFridges(Long fridgeIdx, Long userIdx) {
     User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
-    return new FridgesMainRes(fridgeUserRepository.findByUser(user).stream().map(m -> new FridgesRes(m.getFridge().getFridgeName())).collect(Collectors.toList()));
+    List<FridgesRes> fridgeList = fridgeUserRepository.findByUser(user).stream().map(m -> new FridgesRes(m.getFridge().getFridgeName(), m.getFridge().getFridgeIdx())).collect(Collectors.toList());
+    List<MultiFridgesRes> multiFridgeList = multiFridgeUserRepository.findByUser(user).stream().map(m -> new MultiFridgesRes(m.getMultiFridge().getFridgeName(), m.getMultiFridge().getMultiFridgeIdx())).collect(Collectors.toList());
+    return new GetFridgesMainRes(fridgeList, multiFridgeList);
   }
 }

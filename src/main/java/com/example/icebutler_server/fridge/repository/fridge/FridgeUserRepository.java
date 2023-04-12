@@ -27,4 +27,6 @@ public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
 
 //  List<FridgeUser> findByFridge(Fridge fridge);
 List<FridgeUser> findByFridge(User user);
+
+  List<FridgeUser> findByUser(User user);
 }

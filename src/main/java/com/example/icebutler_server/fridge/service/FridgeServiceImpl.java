@@ -3,11 +3,11 @@ package com.example.icebutler_server.fridge.service;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.food.entity.FoodCategory;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgesMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgesRes;
 import com.example.icebutler_server.fridge.dto.fridge.assembler.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
 import com.example.icebutler_server.fridge.repository.fridge.*;
 import com.example.icebutler_server.fridge.exception.*;
 import com.example.icebutler_server.fridge.entity.fridge.*;
@@ -162,7 +162,10 @@ public class FridgeServiceImpl implements FridgeService {
             .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(), ff.getUser().getProfileImage())).collect(Collectors.toList()));
   }
 
-
-//  public Object getFridge(Long fridgeIdx, Long userIdx) {
-//  }
+  //냉장고 선택 화면 전체 조회
+  public FridgesMainRes getFridges(Long fridgeIdx, Long userIdx) {
+    User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+    List<FridgeUser> fridgeUser = fridgeUserRepository.findByUser(user);
+    return new FridgesMainRes(fridgeUser.stream().map(m -> new FridgesRes(m.getFridge().getFridgeName())).collect(Collectors.toList()));
+  }
 }

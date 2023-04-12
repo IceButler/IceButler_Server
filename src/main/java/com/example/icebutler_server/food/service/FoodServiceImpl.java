@@ -56,7 +56,7 @@ public class FoodServiceImpl implements FoodService{
     }
 
     private JSONObject callBarcodeApi(String barcodeNum) throws IOException, ParseException {
-        String serviceKey = "sample";
+        String serviceKey = "5b44035a29544b54aa72";
         URL url = new URL("https://openapi.foodsafetykorea.go.kr/api/" + serviceKey +
                 "/I2570/json/1/5/BRCD_NO=" + barcodeNum);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

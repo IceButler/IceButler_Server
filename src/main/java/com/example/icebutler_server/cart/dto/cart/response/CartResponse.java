@@ -26,7 +26,7 @@ public class CartResponse {
     public static  CartResponse doDto(List<CartFood> cartFoods, FoodCategory category) {
         CartResponse cartResponse = new CartResponse();
         cartResponse.category = category.getName();
-        cartResponse.cartFoods = cartFoods.stream().sorted(Comparator.comparing(CartFood::getCreatedAt))
+        cartResponse.cartFoods = cartFoods.stream()
                 .map(cf -> FoodResponse.toDto(cf.getFood())).collect(Collectors.toList());
         return cartResponse;
     }

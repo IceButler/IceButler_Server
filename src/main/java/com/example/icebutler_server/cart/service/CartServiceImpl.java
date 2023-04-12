@@ -53,7 +53,7 @@ public class CartServiceImpl implements CartService {
 
         List<CartResponse> cartResponses = new ArrayList<>();
         for (FoodCategory category : FoodCategory.values()) {
-            List<CartFood> cartFoods = cartFoodRepository.findByCartAndFood_FoodCategoryAndIsEnable(fridge.getCart(), category, true);
+            List<CartFood> cartFoods = cartFoodRepository.findByCartAndFood_FoodCategoryAndIsEnableOrderByCreatedAt(fridge.getCart(), category, true);
             // 카테고리별 음식이 있는 경우만 응답
             if(cartFoods.isEmpty()) continue;
             CartResponse cartResponse = CartResponse.doDto(cartFoods, category);

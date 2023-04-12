@@ -166,9 +166,7 @@ public class FridgeServiceImpl implements FridgeService {
 
   //냉장고 선택 화면 전체 조회
   public GetFridgesMainRes getFridges(Long fridgeIdx, Long userIdx) {
-    User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
-    List<FridgesRes> fridgeList = fridgeUserRepository.findByUser(user).stream().map(m -> new FridgesRes(m.getFridge().getFridgeName(), m.getFridge().getFridgeIdx())).collect(Collectors.toList());
-    List<MultiFridgesRes> multiFridgeList = multiFridgeUserRepository.findByUser(user).stream().map(m -> new MultiFridgesRes(m.getMultiFridge().getFridgeName(), m.getMultiFridge().getMultiFridgeIdx())).collect(Collectors.toList());
-    return new GetFridgesMainRes(fridgeList, multiFridgeList);
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    return GetFridgesMainRes.toDto(fridgeUserRepository.findByUser(user), multiFridgeUserRepository.findByUser(user));
   }
 }

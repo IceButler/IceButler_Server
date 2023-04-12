@@ -35,8 +35,7 @@ public class UserController {
   @ResponseBody
   @PostMapping("/nickname")
   public ResponseCustom<?> checkNickname(@RequestBody PostNicknameReq postNicknameReq) {
-    userService.checkNickname(postNicknameReq);
-    return ResponseCustom.OK();
+    return ResponseCustom.OK(userService.checkNickname(postNicknameReq));
   }
 
   //유저 탈퇴

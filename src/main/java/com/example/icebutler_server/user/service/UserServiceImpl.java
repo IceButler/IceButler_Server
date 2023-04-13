@@ -40,15 +40,15 @@ public class UserServiceImpl implements UserService {
     return authService.createToken(userRepository.save(userAssembler.signUpOrLogin(user, postUserReq)));
   }
 
-  // 프로필 설정
-  @Transactional
-  public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-
-    if(!userAssembler.isValidNickName(patchProfileReq.getNickName())) throw new InvalidUserNickNameException();
-    if (patchProfileReq.getNickName() != null) user.modifyNickname(patchProfileReq.getNickName());
-    if (patchProfileReq.getProfileImgUrl() != null) user.modifyProfileImg(patchProfileReq.getProfileImgUrl());
-  }
+//  // 프로필 설정
+//  @Transactional
+//  public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
+//    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+//
+//    if(!userAssembler.isValidNickName(patchProfileReq.getNickName())) throw new InvalidUserNickNameException();
+//    if (patchProfileReq.getNickName() != null) user.modifyNickname(patchProfileReq.getNickName());
+//    if (patchProfileReq.getProfileImgUrl() != null) user.modifyProfileImg(patchProfileReq.getProfileImgUrl());
+//  }
 
   // 닉네임 중복 확인
   public PostNickNameRes checkNickname(PostNicknameReq postNicknameReq) {

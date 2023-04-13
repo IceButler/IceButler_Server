@@ -24,13 +24,13 @@ public class UserController {
     return ResponseCustom.OK(userService.signUpOrLogin(postUserReq));
   }
 
-  @ResponseBody
-  @PatchMapping("/profile")
-  public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
-                                         @IsLogin LoginStatus loginStatus) {
-    userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
-    return ResponseCustom.OK();
-  }
+//  @ResponseBody
+//  @PatchMapping("/profile")
+//  public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
+//                                         @IsLogin LoginStatus loginStatus) {
+//    userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
+//    return ResponseCustom.OK();
+//  }
 
   @ResponseBody
   @PostMapping("/nickname")

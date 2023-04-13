@@ -10,6 +10,7 @@ import com.example.icebutler_server.cart.entity.multiCart.MultiCartFood;
 import com.example.icebutler_server.cart.exception.CartNotFoundException;
 import com.example.icebutler_server.cart.repository.multiCart.MultiCartFoodRepository;
 import com.example.icebutler_server.cart.repository.multiCart.MultiCartRepository;
+import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;

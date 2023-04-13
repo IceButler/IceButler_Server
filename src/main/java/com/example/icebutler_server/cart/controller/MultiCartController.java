@@ -6,6 +6,10 @@ import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -29,4 +33,5 @@ public class MultiCartController {
                                             @IsLogin LoginStatus loginStatus) {
         return cartService.addFoodsToCart(multiFridgeIdx, request, loginStatus.getUserIdx());
     }
+
 }

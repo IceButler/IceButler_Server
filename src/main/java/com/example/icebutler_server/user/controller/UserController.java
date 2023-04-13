@@ -24,37 +24,38 @@ public class UserController {
     return ResponseCustom.OK(userService.signUpOrLogin(postUserReq));
   }
 
-  @ResponseBody
-  @PatchMapping("/profile")
-  public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
-                                         @IsLogin LoginStatus loginStatus) {
-    userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
-    return ResponseCustom.OK();
-  }
+//  @ResponseBody
+//  @PatchMapping("/profile")
+//  public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
+//                                         @IsLogin LoginStatus loginStatus) {
+//    userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
+//    return ResponseCustom.OK();
+//  }
 
   @ResponseBody
   @PostMapping("/nickname")
   public ResponseCustom<?> checkNickname(@RequestBody PostNicknameReq postNicknameReq) {
-    userService.checkNickname(postNicknameReq);
-    return ResponseCustom.OK();
+    return ResponseCustom.OK(userService.checkNickname(postNicknameReq));
   }
 
   //유저 탈퇴
   @Auth
   @DeleteMapping("/delete")
-  public ResponseCustom<Boolean> deleteUser(
+  public ResponseCustom<?> deleteUser(
           @IsLogin LoginStatus loginStatus
   ) {
-    return ResponseCustom.OK(userService.deleteUser(loginStatus.getUserIdx()));
+    userService.deleteUser(loginStatus.getUserIdx());
+    return ResponseCustom.OK();
   }
 
-  //유저 로그아
+  //유저 로그아웃
   @Auth
   @PostMapping("/logout")
-  public ResponseCustom<Boolean> logout(
+  public ResponseCustom<?> logout(
           @IsLogin LoginStatus loginStatus
   ) {
-    return ResponseCustom.OK(userService.logout(loginStatus.getUserIdx()));
+    userService.logout(loginStatus.getUserIdx());
+    return ResponseCustom.OK();
   }
 
   // 마이페이지 조회

@@ -8,6 +8,7 @@ import com.example.icebutler_server.fridge.exception.FridgeFoodNotFoundException
 import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
 import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
 import com.example.icebutler_server.fridge.exception.InvalidFridgeUserRoleException;
+import com.example.icebutler_server.user.exception.AlreadyExistNickNameException;
 import com.example.icebutler_server.user.exception.AlreadyWithdrawUserException;
 import com.example.icebutler_server.user.exception.ProviderMissingValueException;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
@@ -58,20 +59,4 @@ public class ExceptionController {
         log.error(e.getMessage());
         return ResponseCustom.BAD_REQUEST(e.getMessage());
     }
-
-    /*
-     * user Exceptions
-     */
-    @ExceptionHandler(ProviderMissingValueException.class)
-    public ResponseCustom<Void> catchProviderMissingValueException(ProviderMissingValueException e) {
-        log.error(e.getMessage());
-        return ResponseCustom.NOT_FOUND(e.getMessage());
-    }
-
-    @ExceptionHandler(AlreadyWithdrawUserException.class)
-    public ResponseCustom<Void> catchAlreadyWithdrawUserException(AlreadyWithdrawUserException e) {
-        log.error(e.getMessage());
-        return ResponseCustom.FORBIDDEN(e.getMessage());
-    }
-
 }

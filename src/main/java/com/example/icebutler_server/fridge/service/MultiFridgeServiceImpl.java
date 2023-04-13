@@ -32,7 +32,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Transactional(readOnly = true)
 @Service
@@ -56,10 +55,10 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
         if(category == null){
             // 값이 없으면 전체 조회
-            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByIsEnableOrderByShelfLife(true));
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeAndIsEnableOrderByShelfLife(multiFridge, true));
         }else {
             // 값이 있으면 특정 값을 불러온 조회
-            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory.getFoodCategoryByName(category), true));
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(multiFridge, FoodCategory.getFoodCategoryByName(category), true));
         }
     }
 

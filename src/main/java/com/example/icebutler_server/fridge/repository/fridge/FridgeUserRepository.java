@@ -25,6 +25,10 @@ public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
 
   List<FridgeUser> findByFridgeAndIsEnable(Fridge fridge, Boolean isEnable);
 
+
+
+  List<FridgeUser> findByUserAndIsEnable(User user, Boolean status);
+
   List<FridgeUser> findByFridge(Fridge fridge);
 
 }

@@ -162,6 +162,11 @@ public class FridgeServiceImpl implements FridgeService {
             .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(), ff.getUser().getProfileImage())).collect(Collectors.toList()));
   }
 
+  @Override
+  public FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month) {
+    return null;
+  }
+
 
 //  public Object getFridge(Long fridgeIdx, Long userIdx) {
 //  }

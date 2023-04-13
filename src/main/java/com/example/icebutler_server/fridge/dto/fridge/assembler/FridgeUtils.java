@@ -12,4 +12,10 @@ public abstract class FridgeUtils {
 
         return "D"+mark+day;
     }
+
+    public static double calPercentage(int val, int sum) {
+        // todo: 소수점 둘째까지 할지 아님 그냥 넘길지 프론트에 여쭤봄!
+        if(sum == 0) return 0.0;
+        return ((double) val /sum)*100.0;
+    }
 }

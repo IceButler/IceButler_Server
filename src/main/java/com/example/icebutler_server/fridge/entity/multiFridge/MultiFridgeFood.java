@@ -24,6 +24,7 @@ public class MultiFridgeFood extends BaseEntity {
   private LocalDate shelfLife;
   private String memo;
   private String foodDetailName;
+  @Enumerated(EnumType.STRING)
   private FoodDeleteStatus foodDeleteStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)

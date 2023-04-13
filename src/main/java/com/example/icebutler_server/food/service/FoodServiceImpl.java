@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,7 +86,8 @@ public class FoodServiceImpl implements FoodService{
     }
 
     private String callGPTOneWord(String foodDetailName) throws IOException, ParseException {
-        URL oneWordGPTUrl = new URL("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-oneword?keyword="+foodDetailName);
+        String encFoodDetailName = URLEncoder.encode(foodDetailName, StandardCharsets.UTF_8); /**/
+        URL oneWordGPTUrl = new URL("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-oneword?keyword="+encFoodDetailName);
         StringBuilder sb = callAPI(oneWordGPTUrl);
         System.out.println(sb.toString());
         JSONParser parser = new JSONParser();
@@ -93,7 +96,8 @@ public class FoodServiceImpl implements FoodService{
     }
 
     private String callGPTCategory(String word) throws IOException, ParseException {
-        URL categoryGPTUrl = new URL("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-category?keyword="+word);
+        String encURL = URLEncoder.encode("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-category?keyword="+word, StandardCharsets.UTF_8);
+        URL categoryGPTUrl = new URL(encURL);
         StringBuilder sb = callAPI(categoryGPTUrl);
 
         JSONParser parser = new JSONParser();
@@ -103,8 +107,8 @@ public class FoodServiceImpl implements FoodService{
 
     private StringBuilder callAPI(URL url) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
 
+        conn.setRequestMethod("GET");
         BufferedReader rd;
         // 서비스코드가 정상이면 200~300
         if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {

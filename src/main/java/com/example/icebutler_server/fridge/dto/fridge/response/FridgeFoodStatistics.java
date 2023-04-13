@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FridgeFoodStatistics {
-    private FoodCategory foodCategory;
+    private String foodCategory;
     private Double percentage;
     private Integer count;
 }

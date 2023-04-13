@@ -156,9 +156,9 @@ public class FridgeServiceImpl implements FridgeService {
   @Override
   //냉장고 내 유저 조회
   public FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx){
-    User user=this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+    Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
 
-    return new FridgeUserMainRes(this.fridgeUserRepository.findByFridge(user).stream()
+    return new FridgeUserMainRes(this.fridgeUserRepository.findByFridge(fridge).stream()
             .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(), ff.getUser().getProfileImage())).collect(Collectors.toList()));
   }
 

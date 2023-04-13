@@ -95,20 +95,16 @@ public class CartServiceImpl implements CartService {
     }
     @Transactional
     @Override
-    public ResponseCustom<?> removeFoodsFromCart(
-            Long fridgeIdx,
-            RemoveFoodFromCartRequest request,
-            Long userIdx
-    )
-    {
-        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-        Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+    public ResponseCustom<?> removeFoodsFromCart(Long fridgeIdx,
+                                                 RemoveFoodFromCartRequest request,
+                                                 Long userIdx) {
+        User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
         Cart cart = fridge.getCart();
-
         List<CartFood> removeCartFoods = cartFoodRepository.findByCartIdxAndFoodIdxIn(cart.getCartIdx(), request.getFoodIdxes());
-        cartFoodRepository.deleteAll(removeCartFoods);
 
+        cartFoodRepository.deleteAll(removeCartFoods);
         return ResponseCustom.OK();
     }
 }

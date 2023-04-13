@@ -64,9 +64,9 @@ public class MultiFridgeController {
      */
     @GetMapping("/{multiFridgeIdx}/statistics")
 public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
-                                                 @RequestParam(required = false) String deleteCategory,
-                                                 @RequestParam(required = false) Integer year,
-                                                 @RequestParam(required = false) Integer month,
+                                                 @RequestParam String deleteCategory,
+                                                 @RequestParam Integer year,
+                                                 @RequestParam Integer month,
                                                  @IsLogin LoginStatus status){
         return ResponseCustom.OK(this.multiFridgeService.getFridgeFoodStatistics(multiFridgeIdx, deleteCategory, status.getUserIdx(), year, month));
     }

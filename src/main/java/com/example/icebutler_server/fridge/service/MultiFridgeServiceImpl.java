@@ -51,7 +51,16 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
     @Override
     public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
-        return null;
+        User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        MultiFridge multiFridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+
+        if(category == null){
+            // 값이 없으면 전체 조회
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByIsEnableOrderByShelfLife(true));
+        }else {
+            // 값이 있으면 특정 값을 불러온 조회
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory.getFoodCategoryByName(category), true));
+        }
     }
 
     // 멀티 냉장고 수정

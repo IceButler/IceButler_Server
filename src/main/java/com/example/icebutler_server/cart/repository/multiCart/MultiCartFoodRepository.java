@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface MultiCartFoodRepository extends JpaRepository<MultiCartFood, Long> {
     List<MultiCartFood> findByMultiCartAndFood_FoodCategoryAndIsEnableOrderByCreatedAt(MultiCart cart, FoodCategory category, Boolean status);
+    List<MultiCartFood> findByMultiCartAndIsEnable(MultiCart cart, Boolean status);
 }

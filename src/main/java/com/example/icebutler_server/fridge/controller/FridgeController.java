@@ -82,12 +82,12 @@ public class FridgeController {
   }
 
   //냉장고 선택
-//  @GetMapping("{fridgeIdx}")
-//  public ResponseCustom<?> getFridge(
-//          @PathVariable(name="fridgeIdx") Long fridgeIdx,
-//          @IsLogin LoginStatus loginStatus
-//  ){
-//    return ResponseCustom.OK(fridgeService.getFridge(fridgeIdx,loginStatus.getUserIdx()));
-//  }
+  @GetMapping("{fridgeIdx}")
+  public ResponseCustom<?> getFridge(
+          @PathVariable(name="fridgeIdx") Long fridgeIdx,
+          @IsLogin LoginStatus loginStatus
+  ){
+    return ResponseCustom.OK(fridgeService.getFridges(fridgeIdx,loginStatus.getUserIdx()));
+  }
 
 }

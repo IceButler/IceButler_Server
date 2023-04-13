@@ -1,10 +1,8 @@
 package com.example.icebutler_server.user.controller;
 
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
-import com.example.icebutler_server.user.exception.AlreadyWithdrawUserException;
-import com.example.icebutler_server.user.exception.InvalidUserNickNameException;
-import com.example.icebutler_server.user.exception.ProviderMissingValueException;
-import com.example.icebutler_server.user.exception.UserNotFoundException;
+import com.example.icebutler_server.user.exception.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -39,4 +37,9 @@ public class UserExceptionController {
         return ResponseCustom.BAD_REQUEST(e.getMessage());
     }
 
+    @ExceptionHandler(TokenExpirationException.class)
+    public ResponseCustom<?> catchTokenExpirationException(TokenExpirationException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.BAD_REQUEST(e.getMessage());
+    }
 }

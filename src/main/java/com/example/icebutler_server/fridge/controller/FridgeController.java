@@ -5,6 +5,7 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import lombok.RequiredArgsConstructor;
@@ -82,8 +83,9 @@ public class FridgeController {
   }
 
   //냉장고 선택
+  @Auth
   @GetMapping("{fridgeIdx}")
-  public ResponseCustom<?> getFridge(
+  public ResponseCustom<?> getFridges(
           @PathVariable(name="fridgeIdx") Long fridgeIdx,
           @IsLogin LoginStatus loginStatus
   ){

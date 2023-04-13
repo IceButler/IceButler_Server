@@ -26,6 +26,7 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
                 .data(data)
                 .build();
     }
@@ -34,6 +35,7 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
                 .data(data)
                 .build();
     }
@@ -42,6 +44,7 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
                 .build();
     }
 
@@ -49,6 +52,7 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .description(description)
                 .build();
     }
@@ -57,6 +61,7 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .data(data)
                 .build();
     }
@@ -65,8 +70,8 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND)
-                .data(data)
                 .statusCode(HttpStatus.NOT_FOUND.value())
+                .data(data)
                 .build();
     }
 
@@ -74,8 +79,8 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND)
-                .description(description)
                 .statusCode(HttpStatus.NOT_FOUND.value())
+                .description(description)
                 .build();
     }
 
@@ -83,6 +88,7 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.FORBIDDEN)
+                .statusCode(HttpStatus.FORBIDDEN.value())
                 .build();
     }
 
@@ -90,8 +96,8 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.FORBIDDEN)
-                .description(description)
                 .statusCode(HttpStatus.FORBIDDEN.value())
+                .description(description)
                 .build();
     }
 
@@ -101,6 +107,7 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.UNAUTHORIZED)
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .build();
     }
 
@@ -115,6 +122,7 @@ public class ResponseCustom<T>{
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .description(description)
                 .build();
     }

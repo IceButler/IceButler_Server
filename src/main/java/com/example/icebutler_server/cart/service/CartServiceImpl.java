@@ -1,15 +1,13 @@
 package com.example.icebutler_server.cart.service;
 
-import com.example.icebutler_server.cart.dto.cart.assembler.CartAssembler;
 import com.example.icebutler_server.cart.dto.cart.assembler.CartFoodAssembler;
+import com.example.icebutler_server.cart.dto.cart.request.AddFoodRequest;
 import com.example.icebutler_server.cart.dto.cart.request.AddFoodToCartRequest;
 import com.example.icebutler_server.cart.dto.cart.request.RemoveFoodFromCartRequest;
 import com.example.icebutler_server.cart.dto.cart.response.CartResponse;
 import com.example.icebutler_server.cart.entity.cart.Cart;
 import com.example.icebutler_server.cart.entity.cart.CartFood;
 import com.example.icebutler_server.cart.repository.cart.CartFoodRepository;
-import com.example.icebutler_server.cart.repository.cart.CartRepository;
-import com.example.icebutler_server.food.dto.response.FoodResponse;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
@@ -37,10 +35,8 @@ public class CartServiceImpl implements CartService {
 
     private final UserRepository userRepository;
     private final CartFoodRepository cartFoodRepository;
-    private final CartRepository cartRepository;
     private final FoodRepository foodRepository;
     private final FridgeRepository fridgeRepository;
-    private final CartAssembler cartAssembler;
     private final CartFoodAssembler cartFoodAssembler;
     private final FridgeUserRepository fridgeUserRepository;
 
@@ -65,26 +61,29 @@ public class CartServiceImpl implements CartService {
     }
 
     @Transactional
-
     @Override
     public ResponseCustom<?> addFoodsToCart(
             Long fridgeIdx,
             AddFoodToCartRequest request,
-            Long userIdx
-    )
-    {
-        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-        Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+            Long userIdx) {
+        User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
         Cart cart = fridge.getCart();
 
-        List<Food> foods = foodRepository.findAllByFoodIdxIn(request.getFoodIdxes());
+        // food 없는 경우 food 생성
+        List<Food> foodRequests = new ArrayList<>();
+        for(AddFoodRequest foodRequest : request.getFoodRequests()) {
+            Food food = this.foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
+            if(food == null) food = this.foodRepository.save(new Food(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory())));
+            foodRequests.add(food);
+        }
 
+        // 장바구니 내 식품 유무 확인
         List<Long> foodsInNowCart = this.cartFoodRepository.findByCartAndIsEnable(cart, true).stream()
                         .map((cf) -> cf.getFood().getFoodIdx()).collect(Collectors.toList());
-
-        List<CartFood> cartFoods = foods.stream()
-                .filter((f)->{
+        List<CartFood> cartFoods = foodRequests.stream()
+                .filter((f) -> {
                     for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getFoodIdx())) return false;
                     return true;
                 })
@@ -92,7 +91,6 @@ public class CartServiceImpl implements CartService {
                 .collect(Collectors.toList());
 
         cartFoodRepository.saveAll(cartFoods);
-
         return ResponseCustom.OK();
     }
     @Transactional

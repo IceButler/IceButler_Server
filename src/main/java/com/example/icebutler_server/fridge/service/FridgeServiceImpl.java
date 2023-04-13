@@ -4,7 +4,6 @@ import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.dto.fridge.response.GetFridgesMainRes;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgesRes;
 import com.example.icebutler_server.fridge.dto.fridge.assembler.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
@@ -110,7 +109,7 @@ public class FridgeServiceImpl implements FridgeService {
   public ResponseCustom<Long> removeFridge(Long fridgeIdx, Long userId) {
     User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
-    FridgeUser fridgeUser = (FridgeUser) fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
+    FridgeUser fridgeUser = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
 
     // todo 냉장고 자체 삭제, 멤버가 속해있는 냉장고 삭제
     if (fridgeUser.getRole() != FridgeRole.OWNER) fridgeUser.updateFridgeUser(null, user, null);
@@ -140,10 +139,10 @@ public class FridgeServiceImpl implements FridgeService {
   public void addFridgeFood(FridgeFoodReq fridgeFoodReq, Long fridgeIdx, Long userIdx) {
     User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
     Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
-    fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
+    fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
 
     User owner = userRepository.findById(fridgeFoodReq.getOwnerIdx()).orElseThrow(UserNotFoundException::new);
-    fridgeUserRepository.findByUserAndFridge(owner, fridge).orElseThrow(FridgeUserNotFoundException::new);
+    fridgeUserRepository.findByUserAndFridgeAndIsEnable(owner, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
     Food food = foodRepository.findByFoodName(fridgeFoodReq.getFoodName());
 
     if (food == null) food = foodRepository.save(foodAssembler.toEntity(fridgeFoodReq));
@@ -152,7 +151,30 @@ public class FridgeServiceImpl implements FridgeService {
 
 
   public void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx) {
+    User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true)
+            .orElseThrow(UserNotFoundException::new);
+    Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true)
+            .orElseThrow(FridgeNotFoundException::new);
+    this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, user, true)
+            .orElseThrow(FridgeUserNotFoundException::new);
+    FridgeFood modifyFridgeFood = this.fridgeFoodRepository.findByFridgeFoodIdxAndOwnerAndFridgeAndIsEnable(fridgeFoodIdx, user, fridge, true)
+            .orElseThrow(FridgeFoodNotFoundException::new);
 
+    if(!modifyFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
+      Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName());
+      if(food == null) food = foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq));
+      this.fridgeFoodAssembler.toUpdateFridgeFoodInfo(modifyFridgeFood, food);
+    }
+
+    this.fridgeFoodAssembler.toUpdateBasicFridgeFoodInfo(modifyFridgeFood, fridgeFoodReq);
+
+    if(!modifyFridgeFood.getOwner().getUserIdx().equals(fridgeFoodReq.getOwnerIdx())){
+      User newOwner = this.userRepository.findByUserIdxAndIsEnable(fridgeFoodReq.getOwnerIdx(), true)
+              .orElseThrow(UserNotFoundException::new);
+      this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, newOwner, true)
+              .orElseThrow(FridgeUserNotFoundException::new);
+      this.fridgeFoodAssembler.toUpdateFridgeFoodOwner(modifyFridgeFood, newOwner);
+    }
   }
 
   @Override
@@ -160,7 +182,7 @@ public class FridgeServiceImpl implements FridgeService {
   public FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx){
     Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
 
-    return new FridgeUserMainRes(this.fridgeUserRepository.findByFridge(fridge).stream()
+    return new FridgeUserMainRes(this.fridgeUserRepository.findByFridgeAndIsEnable(fridge, true).stream()
             .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(), ff.getUser().getProfileImage())).collect(Collectors.toList()));
   }
 

@@ -72,6 +72,16 @@ public class FridgeController {
     return ResponseCustom.OK();
   }
 
+  // 냉장고 내 식품 수정
+  @PatchMapping("/{fridgeIdx}/foods/{fridgeFoodIdx}")
+  public ResponseCustom<?> modifyFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
+                                         @PathVariable Long fridgeIdx,
+                                         @PathVariable Long fridgeFoodIdx,
+                                         @IsLogin LoginStatus loginStatus){
+    fridgeService.modifyFridgeFood(fridgeIdx,fridgeFoodIdx, fridgeFoodReq,  loginStatus.getUserIdx());
+    return ResponseCustom.OK();
+  }
+
   //냉장고 내 유저 조회
   @GetMapping("{fridgeIdx}/members")
   public ResponseCustom<?> getMembers(

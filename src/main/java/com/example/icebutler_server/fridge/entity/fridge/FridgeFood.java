@@ -50,4 +50,19 @@ public class FridgeFood extends BaseEntity {
     this.fridge = fridge;
     this.foodDeleteStatus = null;
   }
+
+  public void updateFridgeFoodInfo(Food food) {
+    this.food = food;
+  }
+
+  public void updateFridgeFoodInfo(String foodDetailName, String memo, LocalDate shelfLife, String imgUrl) {
+    this.foodDetailName = foodDetailName;
+    this.memo = memo;
+    this.shelfLife = shelfLife;
+    this.fridgeFoodImgKey = imgUrl;
+  }
+
+  public void updateMultiFridgeFoodOwner(User newOwner) {
+    this.owner = newOwner;
+  }
 }

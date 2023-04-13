@@ -1,10 +1,12 @@
 package com.example.icebutler_server.fridge.dto.fridge.assembler;
 
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeRes;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;

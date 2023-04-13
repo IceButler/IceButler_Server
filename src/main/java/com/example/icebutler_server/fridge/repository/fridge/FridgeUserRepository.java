@@ -2,22 +2,18 @@ package com.example.icebutler_server.fridge.repository.fridge;
 
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
 
-  Optional<Object> findByUserAndFridge(User user, Fridge fridge);
+  Optional<Object> findByUserAndFridgeAndIsEnable(User user, Fridge fridge, Boolean isEnable);
 
   Optional<FridgeUser> findByFridgeAndUserAndRoleAndIsEnable(Fridge fridge, User user, FridgeRole fridgeRole, Boolean status);
 
@@ -25,10 +21,7 @@ public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
 
   List<FridgeUser> findByFridgeAndIsEnable(Fridge fridge, Boolean isEnable);
 
-
-
   List<FridgeUser> findByUserAndIsEnable(User user, Boolean status);
 
-  List<FridgeUser> findByFridge(Fridge fridge);
-
+  Optional<FridgeUser> findByFridgeAndUserAndIsEnable(Fridge fridge, User user, Boolean isEnable);
 }

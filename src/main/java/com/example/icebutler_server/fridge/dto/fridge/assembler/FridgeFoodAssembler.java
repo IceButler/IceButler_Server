@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -48,7 +47,24 @@ public class FridgeFoodAssembler {
                 .build();
     }
 
+    public void toUpdateFridgeFoodInfo(FridgeFood modifyFood, Food food){
+        modifyFood.updateFridgeFoodInfo(food);
+    }
+
+    public void toUpdateBasicFridgeFoodInfo(FridgeFood modifyFood, FridgeFoodReq fridgeFoodReq){
+        modifyFood.updateFridgeFoodInfo(
+                fridgeFoodReq.getFoodDetailName(),
+                fridgeFoodReq.getMemo(),
+                LocalDate.parse(fridgeFoodReq.getShelfLife()),
+                fridgeFoodReq.getImgUrl()
+        );
+    }
+
     public FridgeFoodRes getFridgeFood(FridgeFood fridgeFood) {
         return toDto(fridgeFood);
+    }
+
+    public void toUpdateFridgeFoodOwner(FridgeFood modifyFridgeFood, User newOwner) {
+        modifyFridgeFood.updateMultiFridgeFoodOwner(newOwner);
     }
 }

@@ -45,7 +45,7 @@ public class CartServiceImpl implements CartService {
     public ResponseCustom<?> getFoodsFromCart(Long fridgeIdx, Long userIdx) {
         User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
-        fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
+        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
 
         List<CartResponse> cartResponses = new ArrayList<>();
         for (FoodCategory category : FoodCategory.values()) {
@@ -68,7 +68,7 @@ public class CartServiceImpl implements CartService {
             Long userIdx) {
         User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
-        fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
+        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
         Cart cart = fridge.getCart();
 
         // food 없는 경우 food 생성
@@ -100,7 +100,7 @@ public class CartServiceImpl implements CartService {
                                                  Long userIdx) {
         User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
-        fridgeUserRepository.findByUserAndFridge(user, fridge).orElseThrow(FridgeUserNotFoundException::new);
+        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
         Cart cart = fridge.getCart();
         List<CartFood> removeCartFoods = cartFoodRepository.findByCartIdxAndFoodIdxIn(cart.getCartIdx(), request.getFoodIdxes());
 

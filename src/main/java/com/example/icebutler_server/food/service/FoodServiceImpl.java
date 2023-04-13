@@ -55,6 +55,19 @@ public class FoodServiceImpl implements FoodService{
         return BarcodeFoodRes.toDto(null, foodDetailName, null);
     }
 
+    @Override
+    public List<FoodRes> getAllFoodByCategoryAndWord(String categoryName, String word) {
+        FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(categoryName);
+        return foodRepository.findByFoodNameContainsAndFoodCategory(word, foodCategory)
+                .stream().map(FoodRes::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FoodRes> getAllFoodByWord(String word) {
+        return foodRepository.findByFoodNameContains(word)
+                .stream().map(FoodRes::toDto).collect(Collectors.toList());
+    }
+
     private JSONObject callBarcodeApi(String barcodeNum) throws IOException, ParseException {
         String serviceKey = "sample";
         URL url = new URL("https://openapi.foodsafetykorea.go.kr/api/" + serviceKey +

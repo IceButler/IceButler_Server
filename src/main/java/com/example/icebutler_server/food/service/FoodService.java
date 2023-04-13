@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface FoodService {
     List<FoodRes> getAllFood();
-    List<FoodRes> getAllFoodByCategory(String category);
+    List<FoodRes> getAllFoodByCategory(String categoryName);
 
     BarcodeFoodRes searchByBarcode(String barcodeNum) throws IOException, ParseException, org.json.simple.parser.ParseException;
+
+    List<FoodRes> getAllFoodByCategoryAndWord(String categoryName, String word);
+    List<FoodRes> getAllFoodByWord(String word);
 }

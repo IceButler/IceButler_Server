@@ -60,7 +60,7 @@ public class MultiFridgeFoodAssembler {
             foodStatisticsList.add(new FridgeFoodStatistics(deleteStatus.getKey(), FridgeUtils.calPercentage(deleteStatus.getValue().intValue(), sum), deleteStatus.getValue().intValue()));
         }
         // sorting
-        foodStatisticsList.sort((fs1, fs2) -> (int) (fs2.getPercentage() - fs1.getPercentage()));
+        foodStatisticsList.sort((fs1, fs2) -> (fs2.getCount() - fs1.getCount()));
         return FridgeFoodsStatistics.toDto(foodStatisticsList);
     }
 }

@@ -9,4 +9,6 @@ import org.springframework.stereotype.Component;
 public class PostUserReq {
   private String provider;
   private String email;
+  private String nickname;
+  private String profileImgUrl;
 }

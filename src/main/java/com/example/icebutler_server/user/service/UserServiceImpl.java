@@ -40,15 +40,15 @@ public class UserServiceImpl implements UserService {
     return authService.createToken(userRepository.save(userAssembler.signUpOrLogin(user, postUserReq)));
   }
 
-  // 프로필 설정
-  @Transactional
-  public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-
-    if(!userAssembler.isValidNickName(patchProfileReq.getNickName())) throw new InvalidUserNickNameException();
-    if (patchProfileReq.getNickName() != null) user.modifyNickname(patchProfileReq.getNickName());
-    if (patchProfileReq.getProfileImgUrl() != null) user.modifyProfileImg(patchProfileReq.getProfileImgUrl());
-  }
+//  // 프로필 설정
+//  @Transactional
+//  public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
+//    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+//
+//    if(!userAssembler.isValidNickName(patchProfileReq.getNickName())) throw new InvalidUserNickNameException();
+//    if (patchProfileReq.getNickName() != null) user.modifyNickname(patchProfileReq.getNickName());
+//    if (patchProfileReq.getProfileImgUrl() != null) user.modifyProfileImg(patchProfileReq.getProfileImgUrl());
+//  }
 
   // 닉네임 중복 확인
   public PostNickNameRes checkNickname(PostNicknameReq postNicknameReq) {
@@ -61,18 +61,18 @@ public class UserServiceImpl implements UserService {
   //유저 탈퇴
   @Override
   @Transactional
-  public Boolean deleteUser(Long userIdx) {
-    User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+  public void deleteUser(Long userIdx) {
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx);
-    return true;
+    user.setIsEnable(false);
   }
 
   //유저 로그아웃
   @Override
-  public Boolean logout(Long userIdx) {
-    userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
-//        redisTemplateService.deleteUserRefreshToken(userIdx);
-    return true;
+  public void logout(Long userIdx) {
+    User user=userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+//        redisTemplateService.deleteUserRefreshToken(userIdx)
+    user.logout();
   }
 
   //마이페이지 조회

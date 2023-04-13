@@ -19,6 +19,8 @@ public class UserAssembler {
       user = User.builder()
               .provider(Provider.getProviderByName(postUserReq.getProvider()))
               .email(postUserReq.getEmail())
+              .nickname(postUserReq.getNickname())
+              .profileImgUrl(postUserReq.getProfileImgUrl())
               .build();
     }
     if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();

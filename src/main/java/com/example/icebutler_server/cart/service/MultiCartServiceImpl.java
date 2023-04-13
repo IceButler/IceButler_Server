@@ -12,7 +12,6 @@ import com.example.icebutler_server.cart.repository.multiCart.MultiCartFoodRepos
 import com.example.icebutler_server.cart.repository.multiCart.MultiCartRepository;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
@@ -96,8 +95,16 @@ public class MultiCartServiceImpl implements CartService {
         return ResponseCustom.OK();
     }
 
+    @Transactional
     @Override
-    public ResponseCustom<CartResponse> removeFoodsFromCart(Long cartIdx, RemoveFoodFromCartRequest request, Long userIdx) {
-        return null;
+    public ResponseCustom<?> removeFoodsFromCart(Long fridgeIdx, RemoveFoodFromCartRequest request, Long userIdx) {
+        User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        MultiFridge fridge = multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        MultiFridgeUser fridgeUser = multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
+        MultiCart cart = multiCartRepository.findByMultiFridgeUserAndIsEnable(fridgeUser, true).orElseThrow(CartNotFoundException::new);
+        List<MultiCartFood> removeCartFoods = multiCartFoodRepository.findByCartIdxAndFoodIdxInAndIsEnable(cart.getMultiCartIdx(), request.getFoodIdxes(), true);
+
+        multiCartFoodRepository.deleteAll(removeCartFoods);
+        return ResponseCustom.OK();
     }
 }

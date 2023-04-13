@@ -1,6 +1,7 @@
 package com.example.icebutler_server.cart.controller;
 
 import com.example.icebutler_server.cart.dto.cart.request.AddFoodToCartRequest;
+import com.example.icebutler_server.cart.dto.cart.request.RemoveFoodFromCartRequest;
 import com.example.icebutler_server.cart.service.MultiCartServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.IsLogin;
@@ -32,6 +33,14 @@ public class MultiCartController {
                                             @RequestBody AddFoodToCartRequest request,
                                             @IsLogin LoginStatus loginStatus) {
         return cartService.addFoodsToCart(multiFridgeIdx, request, loginStatus.getUserIdx());
+    }
+
+    // 공용 장바구니 식품 삭제
+    @DeleteMapping("/{multiFridgeIdx}/foods")
+    public ResponseCustom<?> removeCartFood(@PathVariable Long multiFridgeIdx,
+                                                 @RequestBody RemoveFoodFromCartRequest request,
+                                                 @IsLogin LoginStatus loginStatus) {
+        return cartService.removeFoodsFromCart(multiFridgeIdx, request, loginStatus.getUserIdx());
     }
 
 }

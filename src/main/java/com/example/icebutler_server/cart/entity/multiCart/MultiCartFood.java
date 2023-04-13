@@ -6,12 +6,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE multi_cart_food SET is_enable = false, update_at = current_timestamp WHERE multi_cart_food_idx = ?")
 public class MultiCartFood extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

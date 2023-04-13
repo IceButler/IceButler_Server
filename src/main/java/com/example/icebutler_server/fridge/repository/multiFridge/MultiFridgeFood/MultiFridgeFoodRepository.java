@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface MultiFridgeFoodRepository extends JpaRepository<MultiFridgeFood, Long>, MultiFridgeFoodCustom{
-    List<MultiFridgeFood> findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory foodCategory, Boolean isEnable);
-    List<MultiFridgeFood> findByIsEnableOrderByShelfLife(Boolean status);
+    List<MultiFridgeFood> findByMultiFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(MultiFridge multiFridge,FoodCategory foodCategory, Boolean isEnable);
+    List<MultiFridgeFood> findByMultiFridgeAndIsEnableOrderByShelfLife(MultiFridge multiFridge, Boolean status);
     Optional<MultiFridgeFood> findByMultiFridgeFoodIdxAndOwnerAndMultiFridgeAndIsEnable(Long multiFridgeFoodIdx, User owner, MultiFridge multiFridge, Boolean isEnable);
 
 }

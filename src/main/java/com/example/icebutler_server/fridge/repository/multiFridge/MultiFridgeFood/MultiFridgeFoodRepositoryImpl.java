@@ -23,7 +23,7 @@ public class MultiFridgeFoodRepositoryImpl implements MultiFridgeFoodCustom{
                         .and(multiFridgeFood.food.foodCategory.eq(category))
                         .and(multiFridgeFood.shelfLife.year().eq(year))
                         .and(multiFridgeFood.shelfLife.month().eq(month))
-                        .and(multiFridgeFood.isEnable.eq(true)))
+                        .and(multiFridgeFood.isEnable.eq(false)))
                 .fetchOne();
     }
 }

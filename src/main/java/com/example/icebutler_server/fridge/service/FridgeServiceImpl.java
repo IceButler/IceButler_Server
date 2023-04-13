@@ -69,10 +69,10 @@ public class FridgeServiceImpl implements FridgeService {
 
     if (category == null) {
       // 값이 없으면 전체 조회
-      return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByIsEnableOrderByShelfLife(true));
+      return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByFridgeAndIsEnableOrderByShelfLife(fridge, true));
     } else {
       // 값이 있으면 특정 값을 불러온 조회
-      return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory.getFoodCategoryByName(category), true));
+      return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(fridge, FoodCategory.getFoodCategoryByName(category), true));
     }
   }
 

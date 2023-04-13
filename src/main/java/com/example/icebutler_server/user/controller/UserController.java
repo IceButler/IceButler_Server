@@ -41,19 +41,21 @@ public class UserController {
   //유저 탈퇴
   @Auth
   @DeleteMapping("/delete")
-  public ResponseCustom<Boolean> deleteUser(
+  public ResponseCustom<?> deleteUser(
           @IsLogin LoginStatus loginStatus
   ) {
-    return ResponseCustom.OK(userService.deleteUser(loginStatus.getUserIdx()));
+    userService.deleteUser(loginStatus.getUserIdx());
+    return ResponseCustom.OK();
   }
 
-  //유저 로그아
+  //유저 로그아웃
   @Auth
   @PostMapping("/logout")
-  public ResponseCustom<Boolean> logout(
+  public ResponseCustom<?> logout(
           @IsLogin LoginStatus loginStatus
   ) {
-    return ResponseCustom.OK(userService.logout(loginStatus.getUserIdx()));
+    userService.logout(loginStatus.getUserIdx());
+    return ResponseCustom.OK();
   }
 
   // 마이페이지 조회

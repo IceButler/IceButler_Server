@@ -61,18 +61,18 @@ public class UserServiceImpl implements UserService {
   //유저 탈퇴
   @Override
   @Transactional
-  public Boolean deleteUser(Long userIdx) {
-    User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+  public void deleteUser(Long userIdx) {
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx);
-    return true;
+    user.setIsEnable(false);
   }
 
   //유저 로그아웃
   @Override
-  public Boolean logout(Long userIdx) {
-    userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
-//        redisTemplateService.deleteUserRefreshToken(userIdx);
-    return true;
+  public void logout(Long userIdx) {
+    User user=userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+//        redisTemplateService.deleteUserRefreshToken(userIdx)
+    user.logout();
   }
 
   //마이페이지 조회

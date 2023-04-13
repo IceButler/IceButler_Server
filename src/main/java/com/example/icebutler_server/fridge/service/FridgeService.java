@@ -4,6 +4,7 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
 import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsStatistics;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeUserMainRes;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -20,6 +21,7 @@ public interface FridgeService {
   void addFridgeFood(FridgeFoodReq fridgeFoodReq, Long fridgeIdx, Long userIdx);
   void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx);
   FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx);
+  FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month);
 
 
 }

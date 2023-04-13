@@ -164,6 +164,11 @@ public class FridgeServiceImpl implements FridgeService {
             .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(), ff.getUser().getProfileImage())).collect(Collectors.toList()));
   }
 
+  @Override
+  public FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month) {
+    return null;
+  }
+
   //냉장고 선택 화면 전체 조회
   public GetFridgesMainRes getFridges(Long fridgeIdx, Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);

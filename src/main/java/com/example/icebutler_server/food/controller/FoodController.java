@@ -19,12 +19,16 @@ public class FoodController {
 
     private final FoodServiceImpl foodService;
 
+    // 식품 검색
     @GetMapping("")
-    public ResponseCustom<?> getAllFood(@RequestParam(required = false) String category) {
-        if(category==null) return ResponseCustom.OK(foodService.getAllFood());
-        else return ResponseCustom.OK(foodService.getAllFoodByCategory(category));
+    public ResponseCustom<?> searchFood(@RequestParam(required = false) String category, @RequestParam(required = false) String word) {
+        if(category != null && word != null) return ResponseCustom.OK(foodService.getAllFoodByCategoryAndWord(category, word));
+        else if(category != null) return ResponseCustom.OK(foodService.getAllFoodByCategory(category));
+        else if(word != null) return ResponseCustom.OK(foodService.getAllFoodByWord(word));
+        else return ResponseCustom.OK(foodService.getAllFood());
     }
 
+    // 식품 바코드 검색
     @GetMapping("/barcode")
     public ResponseCustom<?> searchByBarcode(@RequestParam String code_num) throws IOException, org.json.simple.parser.ParseException {
         return ResponseCustom.OK(foodService.searchByBarcode(code_num));

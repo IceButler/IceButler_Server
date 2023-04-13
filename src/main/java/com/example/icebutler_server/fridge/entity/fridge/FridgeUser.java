@@ -4,6 +4,7 @@ import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +28,24 @@ public class FridgeUser extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private FridgeRole role;
+
+    @Builder
+    public FridgeUser(User user, Fridge fridge, FridgeRole role) {
+        this.user = user;
+        this.fridge = fridge;
+        this.role = role;
+    }
+
+    public void updateFridgeUser(Fridge fridge, User user, FridgeRole role) {
+        this.fridge = fridge;
+        this.user = user;
+        this.role = role;
+    }
+
+    public void changeFridgeOwner(User user){
+        this.role = FridgeRole.OWNER;
+    }
+    public void changeFridgeMember(User user){
+        this.role = FridgeRole.MEMBER;
+    }
 }

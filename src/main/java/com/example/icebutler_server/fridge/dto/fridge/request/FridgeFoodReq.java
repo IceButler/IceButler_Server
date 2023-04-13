@@ -14,7 +14,7 @@ public class FridgeFoodReq {
   private String foodDetailName;
   private String foodCategory;
   private String shelfLife;
-  private String owner;
+  private Long ownerIdx;
   private String memo;
   private String imgUrl;
 }

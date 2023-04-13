@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/carts")
@@ -23,7 +25,7 @@ public class CartController {
     // 장바구니 식품 조회
     @Auth
     @GetMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<CartResponse> getFoodsFromCart(
+    public ResponseCustom<?> getFoodsFromCart(
             @PathVariable Long fridgeIdx,
             @IsLogin LoginStatus loginStatus
     )
@@ -44,8 +46,7 @@ public class CartController {
     }
 
     // 장바구니 식품 삭제
-    @Auth
-    @PutMapping("/{fridgeIdx}/foods")
+    @DeleteMapping("/{fridgeIdx}/foods")
     public ResponseCustom<?> removeFoodsFromCart(
             @PathVariable Long fridgeIdx,
             @RequestBody RemoveFoodFromCartRequest request,

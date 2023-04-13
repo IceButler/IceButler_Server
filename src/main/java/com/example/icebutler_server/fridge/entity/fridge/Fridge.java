@@ -5,16 +5,10 @@ import com.example.icebutler_server.global.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.persistence.CascadeType.ALL;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @Entity
-@Builder
 public class Fridge extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,19 +21,16 @@ public class Fridge extends BaseEntity {
     @JoinColumn(name = "cartIdx")
     private Cart cart;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="fridge", cascade=ALL)
-    private List<FridgeUser> fridgeUsers = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="fridge", cascade=ALL)
-    private List<FridgeFood> fridgeFoods = new ArrayList<>();
-
-    public void updateMembers(List<FridgeUser> updateMembers) {
-        this.fridgeUsers = updateMembers;
+    @Builder
+    public Fridge(
+                  String fridgeName,
+                  String fridgeComment) {
+        this.fridgeName = fridgeName;
+        this.fridgeComment = fridgeComment;
     }
 
-    public void updateNameAndComment(Fridge toUpdateEntity) {
-        this.fridgeName = toUpdateEntity.getFridgeName();
-        this.fridgeComment = toUpdateEntity.getFridgeComment();
+    public void updateBasicFridgeInfo(String fridgeName, String fridgeComment) {
+        this.fridgeName = fridgeName;
+        this.fridgeComment = fridgeComment;
     }
-
 }

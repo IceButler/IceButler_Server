@@ -51,8 +51,9 @@ public class FoodServiceImpl implements FoodService{
         String foodDetailName = (String) data.get("PRDT_NM");
         String apiCategory = (String) data.get("PRDLST_NM");
 
-        // TODO: GPT도입 후 수정예정
-        return BarcodeFoodRes.toDto(null, foodDetailName, null);
+        String foodName = callGPTOneWord(foodDetailName);
+        String foodCategory = callGPTCategory(apiCategory);
+        return BarcodeFoodRes.toDto(foodName, foodDetailName, foodCategory);
     }
 
     @Override
@@ -72,6 +73,35 @@ public class FoodServiceImpl implements FoodService{
         String serviceKey = "5b44035a29544b54aa72";
         URL url = new URL("https://openapi.foodsafetykorea.go.kr/api/" + serviceKey +
                 "/I2570/json/1/5/BRCD_NO=" + barcodeNum);
+        StringBuilder sb = callAPI(url);
+
+        JSONParser parser = new JSONParser();
+        JSONObject obj = (JSONObject)parser.parse(sb.toString());
+        JSONObject result = (JSONObject) obj.get("I2570");
+        JSONArray row = (JSONArray) result.get("row");
+        if (row == null) return null;
+        return (JSONObject) row.get(0);
+    }
+
+    private String callGPTOneWord(String foodDetailName) throws IOException, ParseException {
+        URL oneWordGPTUrl = new URL("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-oneword?keyword="+foodDetailName);
+        StringBuilder sb = callAPI(oneWordGPTUrl);
+        System.out.println(sb.toString());
+        JSONParser parser = new JSONParser();
+        JSONObject result = (JSONObject)parser.parse(sb.toString());
+        return (String) result.get("oneword");
+    }
+
+    private String callGPTCategory(String word) throws IOException, ParseException {
+        URL categoryGPTUrl = new URL("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-category?keyword="+word);
+        StringBuilder sb = callAPI(categoryGPTUrl);
+
+        JSONParser parser = new JSONParser();
+        JSONObject result = (JSONObject)parser.parse(sb.toString());
+        return (String) result.get("category");
+    }
+
+    private StringBuilder callAPI(URL url) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
 
@@ -90,12 +120,6 @@ public class FoodServiceImpl implements FoodService{
         }
         rd.close();
         conn.disconnect();
-
-        JSONParser parser = new JSONParser();
-        JSONObject obj = (JSONObject)parser.parse(sb.toString());
-        JSONObject result = (JSONObject) obj.get("I2570");
-        JSONArray row = (JSONArray) result.get("row");
-        if (row == null) return null;
-        return (JSONObject) row.get(0);
+        return sb;
     }
 }

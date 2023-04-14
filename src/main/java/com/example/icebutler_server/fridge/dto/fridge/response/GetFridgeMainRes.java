@@ -23,14 +23,6 @@ public class GetFridgeMainRes {
   List<FridgeRes> fridgeList;
   List<MultiFridgeRes> multiFridgeResList;
 
-  //  public static GetFridgeMainRes toDto(List<FridgeUser> fridgeUsers, List<List<User>> userListInFridgeUser, List<MultiFridgeUser> multiFridgeUsers, List<List<User>> userListInMultiFridgeUser) {
-//    final int[] idx = {0, 0};
-//    GetFridgeMainRes getFridgeMainRes = new GetFridgeMainRes();
-//    getFridgeMainRes.fridgeList = fridgeUsers.stream().map(ff -> FridgeRes.toDto(ff.getFridge(), ff.getUser(), userListInFridgeUser, idx[0]++)).collect(Collectors.toList());
-//    getFridgeMainRes.multiFridgeResList = multiFridgeUsers.stream().map(ff -> MultiFridgeRes.toDto(ff.getMultiFridge(), ff.getUser(), userListInMultiFridgeUser, idx[1]++)).collect(Collectors.toList());
-//    return getFridgeMainRes;
-//  }
-
   public static GetFridgeMainRes toDto(List<List<FridgeUser>> fridgeUserListList, List<List<MultiFridgeUser>> multiFridgeUserListList, Long userIdx) {
     GetFridgeMainRes getFridgeMainRes = new GetFridgeMainRes();
 

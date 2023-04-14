@@ -103,6 +103,7 @@ public class FridgeController {
   }
 
   //마이 냉장고 전체 조회
+  @Auth
   @GetMapping("")
   public ResponseCustom<?> myFridge(
 //          @PathVariable(name = "fridgeIdx") Long fridgeIdx,

@@ -86,6 +86,7 @@ public class UserServiceImpl implements UserService {
     return MyProfileRes.builder()
             .userIdx(user.getUserIdx())
             .nickName(user.getNickname())
+            .email(user.getEmail())
             .profileImage(user.getProfileImage())
             .build();
   }

@@ -20,16 +20,12 @@ public class FridgeRes {
   private String comment;
 
 
-  public static FridgeRes toDto(Fridge fridge,User user
-          , List<FridgeUser> fridgeUserList
-
-  ){
-    FridgeRes fridgeRes=new FridgeRes();
-//    fridgeRes.users=user.stream().map(ff->FridgeUserRes.toDto(ff.getUser())).collect(Collectors.toList());
-  fridgeRes.ownerNickname=user.getNickname();
-    fridgeRes.fridgeName=fridge.getFridgeName();
-    fridgeRes.users=fridgeUserList.stream().map(cf->FridgeUserRes.toDto(cf.getUser())).collect(Collectors.toList());
-    fridgeRes.comment=fridge.getFridgeComment();
+  public static FridgeRes toDto(Fridge fridge, User user, List<List<User>> userList, int idx) {
+    FridgeRes fridgeRes = new FridgeRes();
+    fridgeRes.ownerNickname = user.getNickname();
+    fridgeRes.fridgeName = fridge.getFridgeName();
+    fridgeRes.comment = fridge.getFridgeComment();
+    fridgeRes.users = userList.get(idx).stream().map(FridgeUserRes::toDto).collect(Collectors.toList());
     return fridgeRes;
   }
 }

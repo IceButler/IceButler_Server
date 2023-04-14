@@ -11,8 +11,8 @@ public class MyProfileRes {
     private String profileImage;
     private String email;
 
-@Builder
-    public MyProfileRes(Long userIdx, String nickName, String profileImage,String email) {
+    @Builder
+    public MyProfileRes(Long userIdx, String nickName, String profileImage, String email) {
         this.userIdx = userIdx;
         this.nickName = nickName;
         this.profileImage = profileImage;

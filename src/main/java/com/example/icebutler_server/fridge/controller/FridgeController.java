@@ -100,4 +100,13 @@ public class FridgeController {
     return ResponseCustom.OK(fridgeService.getFridges(fridgeIdx,loginStatus.getUserIdx()));
   }
 
+  //마이 냉장고 전체 조회
+  @GetMapping("")
+  public ResponseCustom<?> myFridge(
+//          @PathVariable(name = "fridgeIdx") Long fridgeIdx,
+          @IsLogin LoginStatus loginStatus
+  ){
+    return ResponseCustom.OK(fridgeService.myFridge(loginStatus.getUserIdx()));
+  }
+
 }

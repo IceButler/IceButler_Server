@@ -53,8 +53,11 @@ public class FoodServiceImpl implements FoodService{
         String foodDetailName = (String) data.get("PRDT_NM");
         String apiCategory = (String) data.get("PRDLST_NM");
 
-        String foodName = callGPTOneWord(foodDetailName);
-        String foodCategory = callGPTCategory(apiCategory);
+//        String foodName = callGPTOneWord(foodDetailName);
+//        String foodCategory = callGPTCategory(apiCategory);
+
+        String foodName = null;
+        String foodCategory = null;
         return BarcodeFoodRes.toDto(foodName, foodDetailName, foodCategory);
     }
 
@@ -77,8 +80,7 @@ public class FoodServiceImpl implements FoodService{
                 "/I2570/json/1/5/BRCD_NO=" + barcodeNum);
         StringBuilder sb = callAPI(url);
 
-        JSONParser parser = new JSONParser();
-        JSONObject obj = (JSONObject)parser.parse(sb.toString());
+        JSONObject obj = getJsonObjectByParser(sb);
         JSONObject result = (JSONObject) obj.get("I2570");
         JSONArray row = (JSONArray) result.get("row");
         if (row == null) return null;
@@ -89,39 +91,38 @@ public class FoodServiceImpl implements FoodService{
         String encFoodDetailName = URLEncoder.encode(foodDetailName, StandardCharsets.UTF_8); /**/
         URL oneWordGPTUrl = new URL("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-oneword?keyword="+encFoodDetailName);
         StringBuilder sb = callAPI(oneWordGPTUrl);
-        System.out.println(sb.toString());
-        JSONParser parser = new JSONParser();
-        JSONObject result = (JSONObject)parser.parse(sb.toString());
-        return (String) result.get("oneword");
+
+        return (String) getJsonObjectByParser(sb).get("oneword");
     }
 
     private String callGPTCategory(String word) throws IOException, ParseException {
-        String encURL = URLEncoder.encode("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-category?keyword="+word, StandardCharsets.UTF_8);
-        URL categoryGPTUrl = new URL(encURL);
+        String encWord = URLEncoder.encode(word, StandardCharsets.UTF_8);
+        URL categoryGPTUrl = new URL("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-category?keyword="+encWord);
         StringBuilder sb = callAPI(categoryGPTUrl);
 
+        return (String) getJsonObjectByParser(sb).get("category");
+    }
+
+    private JSONObject getJsonObjectByParser(StringBuilder sb) throws ParseException {
         JSONParser parser = new JSONParser();
-        JSONObject result = (JSONObject)parser.parse(sb.toString());
-        return (String) result.get("category");
+        return (JSONObject)parser.parse(sb.toString());
     }
 
     private StringBuilder callAPI(URL url) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
         conn.setRequestMethod("GET");
+
         BufferedReader rd;
         // 서비스코드가 정상이면 200~300
-        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300)
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        } else {
+        else
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-        }
 
         StringBuilder sb = new StringBuilder();
         String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
+        while ((line = rd.readLine()) != null) sb.append(line);
+
         rd.close();
         conn.disconnect();
         return sb;

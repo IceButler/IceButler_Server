@@ -1,5 +1,6 @@
 package com.example.icebutler_server.food.entity;
 
+import com.example.icebutler_server.food.exception.FoodDeleteStatusNotFoundException;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -18,6 +19,6 @@ public enum FoodDeleteStatus {
     public static FoodDeleteStatus getFoodCategoryByName(String name){
         return Arrays.stream(FoodDeleteStatus.values())
                 .filter(r -> r.getName().equals(name))
-                .findAny().orElse(null);
+                .findAny().orElseThrow(FoodDeleteStatusNotFoundException::new);
     }
 }

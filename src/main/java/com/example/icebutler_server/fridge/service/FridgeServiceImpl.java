@@ -207,22 +207,14 @@ public class FridgeServiceImpl implements FridgeService {
 
     // 가정용 냉장고 조회
     List<FridgeUser> fridgeUsers = fridgeUserRepository.findByUserAndIsEnable(user, true);
-
     List<Fridge> fridges = fridgeUsers.stream().map(m -> fridgeRepository.findByFridgeIdxAndIsEnable(m.getFridge().getFridgeIdx(), true).orElseThrow(FridgeNotFoundException::new)).collect(Collectors.toList());
     List<List<FridgeUser>> fridgeUserListList = fridges.stream().map(m -> fridgeUserRepository.findByFridgeAndIsEnable(m, true)).collect(Collectors.toList());
 
-    List<List<User>> userListInFridgeUser = new ArrayList<>();
-    userListInFridgeUser = fridgeUserListList.stream().map(m -> m.stream().map(FridgeUser::getUser).collect(Collectors.toList())).collect(Collectors.toList());
-
     // 공용 냉장고 조회
     List<MultiFridgeUser> multiFridgeUsers = multiFridgeUserRepository.findByUserAndIsEnable(user, true);
-
     List<MultiFridge> multiFridges = multiFridgeUsers.stream().map(m -> multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(m.getMultiFridge().getMultiFridgeIdx(), true).orElseThrow(FridgeNotFoundException::new)).collect(Collectors.toList());
     List<List<MultiFridgeUser>> multiFridgeUserListList = multiFridges.stream().map(m -> multiFridgeUserRepository.findByMultiFridgeAndIsEnable(m, true)).collect(Collectors.toList());
 
-    List<List<User>> userListInMultiFridgeUser = new ArrayList<>();
-    userListInMultiFridgeUser = multiFridgeUserListList.stream().map(m -> m.stream().map(MultiFridgeUser::getUser).collect(Collectors.toList())).collect(Collectors.toList());
-
-    return GetFridgeMainRes.toDto(fridgeUsers, userListInFridgeUser, multiFridgeUsers, userListInMultiFridgeUser);
+    return GetFridgeMainRes.toDto(fridgeUserListList, multiFridgeUserListList, userIdx);
   }
 }

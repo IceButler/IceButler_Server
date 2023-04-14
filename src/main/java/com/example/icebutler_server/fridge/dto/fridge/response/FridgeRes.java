@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -19,12 +20,15 @@ public class FridgeRes {
   private String comment;
 
 
-  public static FridgeRes toDto(Fridge fridge
-          , User user
+  public static FridgeRes toDto(Fridge fridge,User user
+          , List<FridgeUser> fridgeUserList
+
   ){
     FridgeRes fridgeRes=new FridgeRes();
-    fridgeRes.ownerNickname=user.getNickname();
-  fridgeRes.fridgeName=fridge.getFridgeName();
+//    fridgeRes.users=user.stream().map(ff->FridgeUserRes.toDto(ff.getUser())).collect(Collectors.toList());
+  fridgeRes.ownerNickname=user.getNickname();
+    fridgeRes.fridgeName=fridge.getFridgeName();
+    fridgeRes.users=fridgeUserList.stream().map(cf->FridgeUserRes.toDto(cf.getUser())).collect(Collectors.toList());
     fridgeRes.comment=fridge.getFridgeComment();
     return fridgeRes;
   }

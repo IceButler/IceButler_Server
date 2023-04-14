@@ -197,11 +197,17 @@ public class FridgeServiceImpl implements FridgeService {
     return GetFridgesMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user, true), multiFridgeUserRepository.findByUserAndIsEnable(user, true));
   }
 
-  public GetFridgeMainRes myFridge(Long userIdx) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-    return GetFridgeMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user,true)
-//            ,multiFridgeUserRepository.findByUserAndIsEnable(user,true)
-            );
-
-  }
+//  public GetFridgeMainRes myFridge(Long userIdx) {
+//    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+//    List<FridgeUser> byUserAndIsEnable = fridgeUserRepository.findByUserAndIsEnable(user, true);
+////    List<FridgeUser> byUserAndIsEnable = fridgeUserRepository.findByUserAndIsEnable(user, true);
+////    for (FridgeUser fridgeUser : byUserAndIsEnable) {
+////      System.out.println("fridgeUser = " + fridgeUser.getUser().getNickname());
+////    }
+//    return GetFridgeMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user,true));
+//
+////            ,multiFridgeUserRepository.findByUserAndIsEnable(user,true)
+//
+//
+//  }
 }

@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
   //마이페이지 조회
   @Override
   public MyProfileRes myProfile(Long userIdx) {
-    User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
 
     return MyProfileRes.builder()
             .userIdx(user.getUserIdx())

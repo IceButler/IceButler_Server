@@ -105,7 +105,12 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
     @Override
     public FridgeFoodRes getFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, Long userIdx) {
-        return null;
+        userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        multiFridgeUserRepository.findByUser_UserIdxAndMultiFridge_MultiFridgeIdxAndIsEnable(userIdx, fridgeIdx, true).orElseThrow(FridgeUserNotFoundException::new);
+        MultiFridgeFood fridgeFood = multiFridgeFoodRepository.findById(fridgeFoodIdx).orElseThrow(FridgeFoodNotFoundException::new);
+
+        return FridgeFoodRes.toDto(fridgeFood);
     }
 
     // 냉장고 내 식품 추가

@@ -108,7 +108,8 @@ public class FridgeController {
 //          @PathVariable(name = "fridgeIdx") Long fridgeIdx,
           @IsLogin LoginStatus loginStatus
   ){
-    return ResponseCustom.OK(fridgeService.myFridge(loginStatus.getUserIdx()));
+//    return ResponseCustom.OK(fridgeService.myFridge(loginStatus.getUserIdx()));
+    return null;
   }
 
 }

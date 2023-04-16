@@ -4,6 +4,7 @@ import com.example.icebutler_server.cart.dto.cart.request.AddFoodToCartRequest;
 import com.example.icebutler_server.cart.dto.cart.request.RemoveFoodFromCartRequest;
 import com.example.icebutler_server.cart.service.MultiCartServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class MultiCartController {
     private final MultiCartServiceImpl cartService;
 
     // 공용 장바구니 식품 조회
+    @Auth
     @GetMapping("/{multiFridgeIdx}/foods")
     public ResponseCustom<?> getCartFood(@PathVariable Long multiFridgeIdx,
                                          @IsLogin LoginStatus loginStatus) {
@@ -28,6 +30,7 @@ public class MultiCartController {
     }
 
     // 공용 장바구니 식품 추가
+    @Auth
     @PostMapping("/{multiFridgeIdx}/foods")
     public ResponseCustom<?> addFoodsToCart(@PathVariable Long multiFridgeIdx,
                                             @RequestBody AddFoodToCartRequest request,
@@ -36,6 +39,7 @@ public class MultiCartController {
     }
 
     // 공용 장바구니 식품 삭제
+    @Auth
     @DeleteMapping("/{multiFridgeIdx}/foods")
     public ResponseCustom<?> removeCartFood(@PathVariable Long multiFridgeIdx,
                                                  @RequestBody RemoveFoodFromCartRequest request,

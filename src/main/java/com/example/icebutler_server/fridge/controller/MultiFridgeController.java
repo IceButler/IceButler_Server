@@ -4,6 +4,7 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.service.MultiFridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,15 @@ public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "multiFrid
                                                  @RequestParam Integer month,
                                                  @IsLogin LoginStatus status){
         return ResponseCustom.OK(this.multiFridgeService.getFridgeFoodStatistics(multiFridgeIdx, deleteCategory, status.getUserIdx(), year, month));
+    }
+
+    // 냉장고 내 식품 상세 조회
+    @Auth
+    @GetMapping("/{multiFridgeIdx}/foods/{multiFridgeFoodIdx}")
+    public ResponseCustom<?> getFridgeFood(@PathVariable Long multiFridgeIdx,
+                                           @PathVariable Long multiFridgeFoodIdx,
+                                           @IsLogin LoginStatus loginStatus){
+        return ResponseCustom.OK(this.multiFridgeService.getFridgeFood(multiFridgeIdx, multiFridgeFoodIdx, loginStatus.getUserIdx()));
     }
 
 }

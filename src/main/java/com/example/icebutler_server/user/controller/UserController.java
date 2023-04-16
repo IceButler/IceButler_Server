@@ -59,7 +59,8 @@ public class UserController {
   }
 
   // 마이페이지 조회
-  @Auth
+
+  @ResponseBody
   @GetMapping("/profile")
   public ResponseCustom<?> profile(
           @IsLogin LoginStatus loginStatus

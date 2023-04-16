@@ -81,13 +81,10 @@ public class UserServiceImpl implements UserService {
   //마이페이지 조회
   @Override
   public MyProfileRes myProfile(Long userIdx) {
+    userIdx = authService.getUserIdx();
     User user = userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
 
-    return MyProfileRes.builder()
-            .userIdx(user.getUserIdx())
-            .nickName(user.getNickname())
-            .profileImage(user.getProfileImage())
-            .build();
+    return new MyProfileRes(user.getUserIdx(),user.getNickname(),user.getProfileImage(),user.getEmail());
   }
 
 }

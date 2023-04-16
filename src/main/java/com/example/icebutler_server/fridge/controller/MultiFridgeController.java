@@ -19,6 +19,7 @@ public class MultiFridgeController {
     /**
      * [patch] 냉장고 수정
      */
+    @Auth
     @PatchMapping("/{multiFridgeIdx}")
     @ResponseBody
     public ResponseCustom<?> modifyFridge(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
@@ -31,6 +32,7 @@ public class MultiFridgeController {
     /**
      * [post] 냉장고 식품 추가
      */
+    @Auth
     @PostMapping("/{multiFridgeIdx}/food")
     public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
                                            @PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
@@ -41,6 +43,7 @@ public class MultiFridgeController {
     /**
      * [Get] 냉장고 식품 전체 조회
      */
+    @Auth
     @GetMapping("/{multiFridgeIdx}/foods")
     public ResponseCustom<?> getFoods(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
                                       @IsLogin LoginStatus loginStatus,
@@ -51,6 +54,7 @@ public class MultiFridgeController {
     /**
      * [Patch] 냉장고식품수정
      */
+    @Auth
     @PatchMapping("/{multiFridgeIdx}/foods/{multiFridgeFoodIdx}")
     public ResponseCustom<?> modifyFridgeFood(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
                                       @PathVariable(name = "multiFridgeFoodIdx") Long multiFridgeFoodIdx,
@@ -63,6 +67,7 @@ public class MultiFridgeController {
     /**
      * [Get] 냉장고 통계 (낭비/소비)
      */
+    @Auth
     @GetMapping("/{multiFridgeIdx}/statistics")
 public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
                                                  @RequestParam String deleteCategory,

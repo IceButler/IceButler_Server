@@ -19,12 +19,14 @@ public class FridgeController {
   private final FridgeServiceImpl fridgeService;
 
   // 냉장고 추가
+  @Auth
   @PostMapping("/register")
   public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq) {
     return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq));
   }
 
   // 냉장고 업데이트
+  @Auth
   @PatchMapping("/{fridgeIdx}")
   public ResponseCustom<?> modifyFridge(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
                                         @RequestBody FridgeModifyReq fridgeModifyReq,
@@ -34,6 +36,7 @@ public class FridgeController {
   }
 
   // 냉장고 삭제
+  @Auth
   @PatchMapping("/{fridgeIdx}/remove")
   public ResponseCustom<?> removeFridge(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
                                         @IsLogin LoginStatus loginStatus) {
@@ -41,6 +44,7 @@ public class FridgeController {
   }
 
   // [Get] 냉장고 식품 전체 조회
+  @Auth
   @GetMapping("/{fridgeIdx}/foods")
   public ResponseCustom<?> getFoods(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
                                     @IsLogin LoginStatus loginStatus,
@@ -49,6 +53,7 @@ public class FridgeController {
   }
 
   // 냉장고 내 식품 검색 조회
+  @Auth
   @GetMapping("/{fridgeIdx}/search")
   public ResponseCustom<?> findFoodByName(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
                                           @RequestParam(value = "foodName") String foodName,
@@ -57,6 +62,7 @@ public class FridgeController {
   }
 
   // 냉장고 내 식품 상세 조회
+  @Auth
   @GetMapping("/{fridgeIdx}/foods/{fridgeFoodIdx}")
   public ResponseCustom<?> getFridgeFood(@PathVariable Long fridgeIdx,
                                          @PathVariable Long fridgeFoodIdx,
@@ -65,6 +71,7 @@ public class FridgeController {
   }
 
   // 냉장고 내 식품 추가
+  @Auth
   @PostMapping("/{fridgeIdx}/food")
   public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
                                          @PathVariable Long fridgeIdx,
@@ -74,6 +81,7 @@ public class FridgeController {
   }
 
   // 냉장고 내 식품 수정
+  @Auth
   @PatchMapping("/{fridgeIdx}/foods/{fridgeFoodIdx}")
   public ResponseCustom<?> modifyFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
                                          @PathVariable Long fridgeIdx,
@@ -84,6 +92,7 @@ public class FridgeController {
   }
 
   //냉장고 내 유저 조회
+  @Auth
   @GetMapping("{fridgeIdx}/members")
   public ResponseCustom<?> getMembers(
           @PathVariable(name="fridgeIdx") Long fridgeIdx,
@@ -103,6 +112,7 @@ public class FridgeController {
   }
 
   //마이 냉장고 전체 조회
+  @Auth
   @GetMapping("")
   public ResponseCustom<?> myFridge(
 //          @PathVariable(name = "fridgeIdx") Long fridgeIdx,

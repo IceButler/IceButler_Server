@@ -83,11 +83,13 @@ public class UserServiceImpl implements UserService {
   public MyProfileRes myProfile(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
 
-    return MyProfileRes.builder()
-            .userIdx(user.getUserIdx())
-            .nickName(user.getNickname())
-            .profileImage(user.getProfileImage())
-            .build();
+//    return MyProfileRes.builder()
+//            .userIdx(user.getUserIdx())
+//            .nickName(user.getNickname())
+//            .email(user.getEmail())
+//            .profileImage(user.getProfileImage())
+//            .build();
+    return new MyProfileRes(user);
   }
 
 }

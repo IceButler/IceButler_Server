@@ -8,7 +8,6 @@ import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.*;
 import com.example.icebutler_server.global.resolver.Auth;
 

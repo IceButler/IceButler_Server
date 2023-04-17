@@ -1,8 +1,10 @@
 package com.example.icebutler_server.user.service;
 
 
+import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.assembler.UserAssembler;
+import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.dto.response.PostNickNameRes;
@@ -16,7 +18,6 @@ import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 
 @Service
@@ -30,11 +31,11 @@ public class UserServiceImpl implements UserService {
 
   // 소셜로그인
   @Transactional
-  public PostUserRes login(PostUserReq postUserReq) {
+  public PostUserRes join(PostUserReq postUserReq) {
     if (Provider.getProviderByName(postUserReq.getProvider()) == null) throw new ProviderMissingValueException();
     User user = userRepository.findByEmailAndProvider(postUserReq.getEmail(), Provider.getProviderByName(postUserReq.getProvider()));
 
-    if (user == null) user = join(postUserReq);
+    if (user == null) user = saveUser(postUserReq);
     if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
 
     user.login();
@@ -42,24 +43,34 @@ public class UserServiceImpl implements UserService {
     return PostUserRes.toDto(tokenUtils.createToken(user));
   }
 
-  public User join(PostUserReq postUserReq) {
+  @Transactional
+  public PostUserRes login(Long userIdx) {
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    if(user != null){
+      user.login();
+      return PostUserRes.toDto(tokenUtils.createToken(user));
+    }
+    return null;
+  }
+
+  @Transactional
+  public User saveUser(PostUserReq postUserReq) {
     return userRepository.save(User.builder()
             .provider(Provider.getProviderByName(postUserReq.getProvider()))
             .email(postUserReq.getEmail())
             .nickname(postUserReq.getNickname())
-            .profileImgUrl(postUserReq.getProfileImgUrl())
+            .profileImgKey(postUserReq.getProfileImgKey())
             .build());
   }
 
-//  // 프로필 설정
-//  @Transactional
-//  public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
-//    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-//
-//    if(!userAssembler.isValidNickName(patchProfileReq.getNickName())) throw new InvalidUserNickNameException();
-//    if (patchProfileReq.getNickName() != null) user.modifyNickname(patchProfileReq.getNickName());
-//    if (patchProfileReq.getProfileImgUrl() != null) user.modifyProfileImg(patchProfileReq.getProfileImgUrl());
-//  }
+  // 프로필 설정
+  @Transactional
+  public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+
+    if (patchProfileReq.getNickname() != null) user.modifyNickname(patchProfileReq.getNickname());
+    if (patchProfileReq.getProfileImgKey() != null) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
+  }
 
   // 닉네임 중복 확인
   public PostNickNameRes checkNickname(PostNicknameReq postNicknameReq) {

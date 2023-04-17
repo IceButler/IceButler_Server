@@ -14,7 +14,7 @@ public class UserJoinEvent {
         UserJoinEvent userJoinEvent = new UserJoinEvent();
         userJoinEvent.userIdx = user.getUserIdx();
         userJoinEvent.nickname = user.getNickname();
-        userJoinEvent.profileImg = user.getProfileImage();
+        userJoinEvent.profileImg = user.getProfileImgKey();
         return userJoinEvent;
     }
 

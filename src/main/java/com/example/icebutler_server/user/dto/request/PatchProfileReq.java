@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class PatchProfileReq {
-  private String nickName;
-  private String profileImgUrl;
+  private String nickname;
+  private String profileImgKey;
 }

@@ -1,6 +1,5 @@
 package com.example.icebutler_server.fridge.dto.fridge.response;
 
-import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,7 @@ public class FridgeUserRes {
         FridgeUserRes fridgeUserRes = new FridgeUserRes();
         fridgeUserRes.nickname = user.getNickname();
         fridgeUserRes.role = role;
-        fridgeUserRes.profileImage = user.getProfileImage();
+        fridgeUserRes.profileImage = user.getProfileImgKey();
         return fridgeUserRes;
     }
 

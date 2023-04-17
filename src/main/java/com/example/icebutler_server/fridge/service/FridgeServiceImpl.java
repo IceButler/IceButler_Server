@@ -216,5 +216,6 @@ public class FridgeServiceImpl implements FridgeService {
     List<List<MultiFridgeUser>> multiFridgeUserListList = multiFridges.stream().map(m -> multiFridgeUserRepository.findByMultiFridgeAndIsEnable(m, true)).collect(Collectors.toList());
 
     return GetFridgeMainRes.toDto(fridgeUserListList, multiFridgeUserListList, userIdx);
+
   }
 }

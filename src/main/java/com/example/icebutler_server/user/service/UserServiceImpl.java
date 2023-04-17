@@ -84,6 +84,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
 
     return MyProfileRes.toDto(user);
+
   }
 
 }

@@ -12,10 +12,12 @@ public class MyProfileRes {
     private String profileImage;
     private String email;
 
-    public MyProfileRes(User user) {
-        this.userIdx = user.getUserIdx();
-        this.nickName = user.getNickname();
-        this.profileImage = user.getProfileImage();
-        this.email=user.getEmail();
+    public static MyProfileRes toDto(User user) {
+        MyProfileRes myProfileRes = new MyProfileRes();
+        myProfileRes.userIdx = user.getUserIdx();
+        myProfileRes.nickName = user.getNickname();
+        myProfileRes.profileImage = user.getProfileImage();
+        myProfileRes.email=user.getEmail();
+        return myProfileRes;
     }
 }

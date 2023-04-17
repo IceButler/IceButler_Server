@@ -1,11 +1,8 @@
 package com.example.icebutler_server.user.service;
 
 
-import com.example.icebutler_server.global.resolver.IsLogin;
-import com.example.icebutler_server.global.util.RedisTemplateServiceMock;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.assembler.UserAssembler;
-import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.dto.response.PostNickNameRes;
@@ -19,9 +16,7 @@ import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.springframework.util.StringUtils;
 
 
 @Service
@@ -36,11 +31,25 @@ public class UserServiceImpl implements UserService {
 
   // 소셜로그인
   @Transactional
-  public PostUserRes signUpOrLogin(PostUserReq postUserReq) {
+  public PostUserRes login(PostUserReq postUserReq) {
     if (Provider.getProviderByName(postUserReq.getProvider()) == null) throw new ProviderMissingValueException();
-
     User user = userRepository.findByEmailAndProvider(postUserReq.getEmail(), Provider.getProviderByName(postUserReq.getProvider()));
-    return tokenUtils.createToken(userRepository.save(userAssembler.signUpOrLogin(user, postUserReq)));
+
+    if (user == null) user = join(postUserReq);
+    if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
+
+    user.login();
+
+    return tokenUtils.createToken(user);
+  }
+
+  public User join(PostUserReq postUserReq) {
+    return userRepository.save(User.builder()
+            .provider(Provider.getProviderByName(postUserReq.getProvider()))
+            .email(postUserReq.getEmail())
+            .nickname(postUserReq.getNickname())
+            .profileImgUrl(postUserReq.getProfileImgUrl())
+            .build());
   }
 
 //  // 프로필 설정
@@ -55,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
   // 닉네임 중복 확인
   public PostNickNameRes checkNickname(PostNicknameReq postNicknameReq) {
-    if(!userAssembler.isValidNickName(postNicknameReq.getNickName())) throw new InvalidUserNickNameException();
+    if (!userAssembler.isValidNickName(postNicknameReq.getNickName())) throw new InvalidUserNickNameException();
     Boolean existence = userRepository.existsByNickname(postNicknameReq.getNickName());
 
     return PostNickNameRes.builder().nickName(postNicknameReq.getNickName()).existence(existence).build();
@@ -65,7 +74,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void deleteUser(Long userIdx) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx);
     user.setIsEnable(false);
   }
@@ -73,7 +82,7 @@ public class UserServiceImpl implements UserService {
   //유저 로그아웃
   @Override
   public void logout(Long userIdx) {
-    User user=userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx)
     user.logout();
   }
@@ -81,7 +90,7 @@ public class UserServiceImpl implements UserService {
   //마이페이지 조회
   @Override
   public MyProfileRes myProfile(Long userIdx) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     return new MyProfileRes(user);
   }

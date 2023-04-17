@@ -3,7 +3,6 @@ package com.example.icebutler_server.user.controller;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
-import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.service.UserService;
@@ -21,7 +20,7 @@ public class UserController {
   @ResponseBody
   @PostMapping("/login")
   public ResponseCustom<?> login(@RequestBody PostUserReq postUserReq) {
-    return ResponseCustom.OK(userService.signUpOrLogin(postUserReq));
+    return ResponseCustom.OK(userService.login(postUserReq));
   }
 
 //  @ResponseBody

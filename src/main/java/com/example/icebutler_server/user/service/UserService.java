@@ -1,16 +1,13 @@
 package com.example.icebutler_server.user.service;
 
-import com.example.icebutler_server.user.dto.response.IsEnableRes;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
-import com.example.icebutler_server.global.resolver.IsLogin;
-import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.dto.response.PostNickNameRes;
 import com.example.icebutler_server.user.dto.response.PostUserRes;
 
 public interface UserService {
-  PostUserRes signUpOrLogin(PostUserReq postUserReq);
+  PostUserRes login(PostUserReq postUserReq);
 
 //  void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq);
 

@@ -24,7 +24,6 @@ import org.springframework.util.StringUtils;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
-  private final AuthService authService;
   private final UserAssembler userAssembler;
   private final TokenUtils tokenUtils;
   // private final RedisTemplateService redisTemplateService;
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     user.login();
 
-    return tokenUtils.createToken(user);
+    return PostUserRes.toDto(tokenUtils.createToken(user));
   }
 
   public User join(PostUserReq postUserReq) {

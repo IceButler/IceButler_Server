@@ -23,6 +23,7 @@ public class TokenUtils {
   public static final String USER_IDX = "userIdx";
   public static final String NICKNAME = "nickname";
   public static final String ONE_BLOCK = " ";
+  public static final String COMMA = ",";
 
   public enum TYPE {
     REFRESH,
@@ -69,10 +70,10 @@ public class TokenUtils {
     refreshExTime = value;
   }
 
-  public PostUserRes createToken(User user) {
+  public String createToken(User user) {
     String access_token = this.createAccessToken(user.getUserIdx(), user.getNickname());
     String refresh_token = this.createRefreshToken(user.getUserIdx(), user.getNickname());
-    return new PostUserRes(access_token, refresh_token);
+    return access_token + COMMA + refresh_token;
   }
 
   public String createAccessToken(Long userIdx, String nickname) {

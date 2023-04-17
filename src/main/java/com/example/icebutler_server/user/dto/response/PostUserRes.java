@@ -1,16 +1,16 @@
 package com.example.icebutler_server.user.dto.response;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
 public class PostUserRes {
-    private final String accessToken;
-    private final String refreshToken;
+    private String accessToken;
+    private String refreshToken;
 
-    @Builder
-    public PostUserRes(String accessToken, String refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+    public static PostUserRes toDto(String token) {
+        PostUserRes postUserRes = new PostUserRes();
+        postUserRes.accessToken = token.split(",")[0];
+        postUserRes.refreshToken = token.split(",")[1];
+        return postUserRes;
     }
 }

@@ -18,10 +18,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MultiFridgeRes {
-  private String ownerNickname;
+  private Long multiFridgeIdx;
   private String multiFridgeName;
   private String comment;
   private List<FridgeUserRes> users;
+  private Integer userCnt;
 
   public static MultiFridgeRes toDto(MultiFridge multiFridge, List<List<MultiFridgeUser>> multiFridgeUserList) {
     List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
@@ -32,10 +33,11 @@ public class MultiFridgeRes {
     }
 
     MultiFridgeRes multiFridgeRes = new MultiFridgeRes();
-    multiFridgeRes.ownerNickname = multiFridgeUsers.stream().filter(f -> f.getRole().equals(FridgeRole.OWNER)).findAny().get().getUser().getNickname();
+    multiFridgeRes.multiFridgeIdx = multiFridge.getMultiFridgeIdx();
     multiFridgeRes.multiFridgeName = multiFridge.getFridgeName();
     multiFridgeRes.comment = multiFridge.getFridgeComment();
-    multiFridgeRes.users = multiFridgeUsers.stream().map(m -> FridgeUserRes.toDto(m.getUser())).collect(Collectors.toList());
+    multiFridgeRes.users = multiFridgeUsers.stream().map(m -> FridgeUserRes.toDto(m.getUser(), m.getRole())).collect(Collectors.toList());
+    multiFridgeRes.userCnt = multiFridgeUsers.size();
 
     return multiFridgeRes;
   }

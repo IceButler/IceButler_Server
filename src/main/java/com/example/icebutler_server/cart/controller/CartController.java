@@ -46,6 +46,7 @@ public class CartController {
     }
 
     // 장바구니 식품 삭제
+    @Auth
     @DeleteMapping("/{fridgeIdx}/foods")
     public ResponseCustom<?> removeFoodsFromCart(
             @PathVariable Long fridgeIdx,

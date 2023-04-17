@@ -1,5 +1,6 @@
 package com.example.icebutler_server.user.dto.response;
 
+import com.example.icebutler_server.user.entity.User;
 import lombok.*;
 
 @Data
@@ -11,11 +12,12 @@ public class MyProfileRes {
     private String profileImage;
     private String email;
 
-    @Builder
-    public MyProfileRes(Long userIdx, String nickName, String profileImage, String email) {
-        this.userIdx = userIdx;
-        this.nickName = nickName;
-        this.profileImage = profileImage;
-        this.email=email;
+    public static MyProfileRes toDto(User user) {
+        MyProfileRes myProfileRes = new MyProfileRes();
+        myProfileRes.userIdx = user.getUserIdx();
+        myProfileRes.nickName = user.getNickname();
+        myProfileRes.profileImage = user.getProfileImage();
+        myProfileRes.email=user.getEmail();
+        return myProfileRes;
     }
 }

@@ -4,6 +4,7 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.service.MultiFridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class MultiFridgeController {
     /**
      * [patch] 냉장고 수정
      */
+    @Auth
     @PatchMapping("/{multiFridgeIdx}")
     @ResponseBody
     public ResponseCustom<?> modifyFridge(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
@@ -30,6 +32,7 @@ public class MultiFridgeController {
     /**
      * [post] 냉장고 식품 추가
      */
+    @Auth
     @PostMapping("/{multiFridgeIdx}/food")
     public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
                                            @PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
@@ -40,6 +43,7 @@ public class MultiFridgeController {
     /**
      * [Get] 냉장고 식품 전체 조회
      */
+    @Auth
     @GetMapping("/{multiFridgeIdx}/foods")
     public ResponseCustom<?> getFoods(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
                                       @IsLogin LoginStatus loginStatus,
@@ -50,6 +54,7 @@ public class MultiFridgeController {
     /**
      * [Patch] 냉장고식품수정
      */
+    @Auth
     @PatchMapping("/{multiFridgeIdx}/foods/{multiFridgeFoodIdx}")
     public ResponseCustom<?> modifyFridgeFood(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
                                       @PathVariable(name = "multiFridgeFoodIdx") Long multiFridgeFoodIdx,
@@ -62,6 +67,7 @@ public class MultiFridgeController {
     /**
      * [Get] 냉장고 통계 (낭비/소비)
      */
+    @Auth
     @GetMapping("/{multiFridgeIdx}/statistics")
 public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
                                                  @RequestParam String deleteCategory,
@@ -69,6 +75,15 @@ public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "multiFrid
                                                  @RequestParam Integer month,
                                                  @IsLogin LoginStatus status){
         return ResponseCustom.OK(this.multiFridgeService.getFridgeFoodStatistics(multiFridgeIdx, deleteCategory, status.getUserIdx(), year, month));
+    }
+
+    // 냉장고 내 식품 상세 조회
+    @Auth
+    @GetMapping("/{multiFridgeIdx}/foods/{multiFridgeFoodIdx}")
+    public ResponseCustom<?> getFridgeFood(@PathVariable Long multiFridgeIdx,
+                                           @PathVariable Long multiFridgeFoodIdx,
+                                           @IsLogin LoginStatus loginStatus){
+        return ResponseCustom.OK(this.multiFridgeService.getFridgeFood(multiFridgeIdx, multiFridgeFoodIdx, loginStatus.getUserIdx()));
     }
 
 }

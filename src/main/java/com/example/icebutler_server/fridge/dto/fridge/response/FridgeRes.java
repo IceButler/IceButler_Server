@@ -20,13 +20,13 @@ import static com.example.icebutler_server.user.entity.QUser.user;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FridgeRes {
+  private Long fridgeIdx;
   private String fridgeName;
-  private String ownerNickname;
-  private List<FridgeUserRes> users;
   private String comment;
+  private List<FridgeUserRes> users;
+  private Integer userCnt;
 
   public static FridgeRes toDto(Fridge fridge, List<List<FridgeUser>> fridgeUserList) {
-    System.out.println(fridge.getFridgeIdx());
     List<FridgeUser> fridgeUsers = new ArrayList<>();
     for (List<FridgeUser> fridgeArr : fridgeUserList) {
       for (FridgeUser fridgeUser : fridgeArr) {
@@ -35,10 +35,11 @@ public class FridgeRes {
     }
 
     FridgeRes fridgeRes = new FridgeRes();
-    fridgeRes.ownerNickname = fridgeUsers.stream().filter(f -> f.getRole().equals(FridgeRole.OWNER)).findAny().get().getUser().getNickname();
+    fridgeRes.fridgeIdx = fridge.getFridgeIdx();
     fridgeRes.fridgeName = fridge.getFridgeName();
     fridgeRes.comment = fridge.getFridgeComment();
-    fridgeRes.users = fridgeUsers.stream().map(m -> FridgeUserRes.toDto(m.getUser())).collect(Collectors.toList());
+    fridgeRes.users = fridgeUsers.stream().map(m -> FridgeUserRes.toDto(m.getUser(), m.getRole())).collect(Collectors.toList());
+    fridgeRes.userCnt = fridgeUsers.size();
     return fridgeRes;
   }
 }

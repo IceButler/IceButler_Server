@@ -5,11 +5,12 @@ import com.example.icebutler_server.food.entity.FoodCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FoodRepository extends JpaRepository<Food, Long> {
     List<Food> findAllByFoodIdxIn(List<Long> foodIdxes);
     List<Food> findAllByFoodCategory(FoodCategory foodCategory);
-    Food findByFoodName(String foodName);
+    Optional<Food> findByFoodName(String foodName);
     Food findByFoodNameAndFoodCategory(String foodName, FoodCategory foodCategory);
     List<Food> findByFoodNameContainsAndFoodCategory(String foodName, FoodCategory foodCategory);
     List<Food> findByFoodNameContains(String foodName);

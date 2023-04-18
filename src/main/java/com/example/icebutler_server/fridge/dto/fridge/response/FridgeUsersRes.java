@@ -18,7 +18,7 @@ public class FridgeUsersRes {
         FridgeUsersRes fridgeUsersRes=new FridgeUsersRes();
         fridgeUsersRes.nickName=user.getNickname();
         fridgeUsersRes.userIdx=user.getUserIdx();
-        fridgeUsersRes.profileImage=user.getProfileImage();
+        fridgeUsersRes.profileImage=user.getProfileImgKey();
         return fridgeUsersRes;
     }
 }

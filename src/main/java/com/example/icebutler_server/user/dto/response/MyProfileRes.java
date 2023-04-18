@@ -16,7 +16,7 @@ public class MyProfileRes {
         MyProfileRes myProfileRes = new MyProfileRes();
         myProfileRes.userIdx = user.getUserIdx();
         myProfileRes.nickName = user.getNickname();
-        myProfileRes.profileImgUrl = user.getProfileImage();
+        myProfileRes.profileImgUrl = user.getProfileImgKey();
         myProfileRes.email=user.getEmail();
         return myProfileRes;
     }

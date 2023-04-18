@@ -44,4 +44,4 @@ jwt:
 
 server:
   recipe:
-    port: 54.180.212.229
+    url: https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev

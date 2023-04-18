@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Component
-@FeignClient(name="recipe-server", url = "${server.recipe.port}")
+@FeignClient(name="recipe-server", url = "${server.recipe.url}")
 public interface RecipeServerClient {
     @PostMapping("/users")
     void addUser(@RequestBody AddUserReq addUserReq);

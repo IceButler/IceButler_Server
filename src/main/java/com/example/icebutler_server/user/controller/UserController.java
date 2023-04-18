@@ -3,6 +3,7 @@ package com.example.icebutler_server.user.controller;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
+import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.service.UserService;
@@ -18,18 +19,25 @@ public class UserController {
   private final UserService userService;
 
   @ResponseBody
-  @PostMapping("/login")
-  public ResponseCustom<?> login(@RequestBody PostUserReq postUserReq) {
-    return ResponseCustom.OK(userService.login(postUserReq));
+  @PostMapping("/join")
+  public ResponseCustom<?> join(@RequestBody PostUserReq postUserReq) {
+    return ResponseCustom.OK(userService.join(postUserReq));
   }
 
-//  @ResponseBody
-//  @PatchMapping("/profile")
-//  public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
-//                                         @IsLogin LoginStatus loginStatus) {
-//    userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
-//    return ResponseCustom.OK();
-//  }
+  @Auth
+  @ResponseBody
+  @GetMapping("/login")
+  public ResponseCustom<?> login(@IsLogin LoginStatus loginStatus) {
+    return ResponseCustom.OK(userService.login(loginStatus.getUserIdx()));
+  }
+
+  @ResponseBody
+  @PatchMapping("/profile")
+  public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
+                                         @IsLogin LoginStatus loginStatus) {
+    userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
+    return ResponseCustom.OK();
+  }
 
   @ResponseBody
   @PostMapping("/nickname")

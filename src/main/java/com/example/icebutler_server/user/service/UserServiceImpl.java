@@ -18,6 +18,7 @@ import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 
 @Service
@@ -68,16 +69,16 @@ public class UserServiceImpl implements UserService {
   public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
-    if (patchProfileReq.getNickname() != null) user.modifyNickname(patchProfileReq.getNickname());
-    if (patchProfileReq.getProfileImgKey() != null) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
+    if (!StringUtils.hasText(patchProfileReq.getNickname())) user.modifyNickname(patchProfileReq.getNickname());
+    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
   }
 
   // 닉네임 중복 확인
   public PostNickNameRes checkNickname(PostNicknameReq postNicknameReq) {
-    if (!userAssembler.isValidNickName(postNicknameReq.getNickName())) throw new InvalidUserNickNameException();
-    Boolean existence = userRepository.existsByNickname(postNicknameReq.getNickName());
+    if (!userAssembler.isValidNickname(postNicknameReq.getNickname())) throw new InvalidUserNickNameException();
+    Boolean existence = userRepository.existsByNickname(postNicknameReq.getNickname());
 
-    return PostNickNameRes.builder().nickName(postNicknameReq.getNickName()).existence(existence).build();
+    return PostNickNameRes.toDto(postNicknameReq.getNickname(), existence);
   }
 
   //유저 탈퇴

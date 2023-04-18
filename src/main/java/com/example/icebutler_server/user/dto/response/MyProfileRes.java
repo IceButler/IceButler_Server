@@ -9,14 +9,14 @@ public class MyProfileRes {
 
     private Long userIdx;
     private String nickName;
-    private String profileImage;
+    private String profileImgUrl;
     private String email;
 
     public static MyProfileRes toDto(User user) {
         MyProfileRes myProfileRes = new MyProfileRes();
         myProfileRes.userIdx = user.getUserIdx();
         myProfileRes.nickName = user.getNickname();
-        myProfileRes.profileImage = user.getProfileImgKey();
+        myProfileRes.profileImgUrl = user.getProfileImage();
         myProfileRes.email=user.getEmail();
         return myProfileRes;
     }

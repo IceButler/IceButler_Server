@@ -31,6 +31,7 @@ public class UserController {
     return ResponseCustom.OK(userService.login(loginStatus.getUserIdx()));
   }
 
+  @Auth
   @ResponseBody
   @PatchMapping("/profile")
   public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,

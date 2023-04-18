@@ -3,6 +3,7 @@ package com.example.icebutler_server.user.service;
 
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.util.TokenUtils;
+import com.example.icebutler_server.user.dto.LoginUserReq;
 import com.example.icebutler_server.user.dto.assembler.UserAssembler;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
@@ -45,9 +46,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Transactional
-  public PostUserRes login(Long userIdx) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-    if(user != null){
+  public PostUserRes login(LoginUserReq loginUserReq) {
+    User user = userRepository.findByEmailAndProvider(loginUserReq.getEmail(), Provider.getProviderByName(loginUserReq.getProvider()));
+    if (user != null) {
       user.login();
       return PostUserRes.toDto(tokenUtils.createToken(user));
     }
@@ -70,7 +71,8 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     if (!StringUtils.hasText(patchProfileReq.getNickname())) user.modifyNickname(patchProfileReq.getNickname());
-    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
+    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey()))
+      user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
   }
 
   // 닉네임 중복 확인

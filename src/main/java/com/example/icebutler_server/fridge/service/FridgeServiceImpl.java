@@ -188,8 +188,8 @@ public class FridgeServiceImpl implements FridgeService {
   public FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx){
     Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
 
-    return new FridgeUserMainRes(this.fridgeUserRepository.findByFridgeAndIsEnable(fridge, true).stream()
-            .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(), ff.getUser().getProfileImgKey())).collect(Collectors.toList()));
+    return FridgeUserMainRes.doDto(fridgeUserRepository.findByFridgeAndIsEnable(fridge,true));
+
   }
 
   @Override

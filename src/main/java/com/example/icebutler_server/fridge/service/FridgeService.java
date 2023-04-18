@@ -2,11 +2,8 @@ package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsStatistics;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeUserMainRes;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 
 import java.util.List;

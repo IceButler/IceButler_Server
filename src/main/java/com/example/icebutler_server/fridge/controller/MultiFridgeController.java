@@ -86,4 +86,14 @@ public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "multiFrid
         return ResponseCustom.OK(this.multiFridgeService.getFridgeFood(multiFridgeIdx, multiFridgeFoodIdx, loginStatus.getUserIdx()));
     }
 
+    //냉장고 내 유저 조회
+    @Auth
+    @GetMapping("{multiFridgeIdx}/members")
+    public ResponseCustom<?> getMembers(
+            @PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
+            @IsLogin LoginStatus loginStatus
+    ) {
+        return ResponseCustom.OK(multiFridgeService.searchMembers(multiFridgeIdx, loginStatus.getUserIdx()));
+    }
+
 }

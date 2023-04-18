@@ -21,7 +21,6 @@ public interface MultiFridgeUserRepository extends JpaRepository<MultiFridgeUser
   List<MultiFridgeUser> findByMultiFridgeAndIsEnable(MultiFridge fridge, Boolean status);
 
   //  FridgeUser findByOwner(User user);
-  List<MultiFridgeUser> findByMultiFridge(User user);
 
   List<MultiFridgeUser> findByUserAndIsEnable(User user, Boolean status);
 

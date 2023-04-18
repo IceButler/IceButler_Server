@@ -157,12 +157,10 @@ public class MultiFridgeServiceImpl implements FridgeService {
     }
 
     @Override
-    public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx) {
-        User user=this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+    public FridgeUserMainRes searchMembers (Long fridgeIdx, Long userIdx) {
         MultiFridge fridge=this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
+        return FridgeUserMainRes.doMultiDto(multiFridgeUserRepository.findByMultiFridgeAndIsEnable(fridge,true));
 
-        return new FridgeUserMainRes(this.multiFridgeUserRepository.findByMultiFridge(user).stream()
-                .map(ff -> new FridgeUsersRes(ff.getUser().getUserIdx(), ff.getUser().getNickname(),ff.getUser().getProfileImgKey())).collect(Collectors.toList()));
     }
 
     public FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month) {

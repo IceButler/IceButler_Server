@@ -121,4 +121,17 @@ public class FridgeController {
     return ResponseCustom.OK(fridgeService.myFridge(loginStatus.getUserIdx()));
   }
 
+  /**
+   * [Get] 냉장고 통계 (낭비/소비)
+   */
+  @Auth
+  @GetMapping("/{fridgeIdx}/statistics")
+  public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
+                                                   @RequestParam String deleteCategory,
+                                                   @RequestParam Integer year,
+                                                   @RequestParam Integer month,
+                                                   @IsLogin LoginStatus status){
+    return ResponseCustom.OK(fridgeService.getFridgeFoodStatistics(fridgeIdx, deleteCategory, status.getUserIdx(), year, month));
+  }
+
 }

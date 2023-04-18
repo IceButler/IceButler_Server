@@ -20,15 +20,15 @@ public class User extends BaseEntity {
     private String nickname;
     @Enumerated(EnumType.STRING)
     private Provider provider;
-    private String profileImage;
+    private String profileImgKey;
     private Boolean loginStatus;
 
     @Builder
-    public User(Provider provider, String email, String nickname, String profileImgUrl) {
+    public User(Provider provider, String email, String nickname, String profileImgKey) {
         this.provider = provider;
         this.email = email;
         this.nickname = nickname;
-        this.profileImage = profileImgUrl;
+        this.profileImgKey = profileImgKey;
     }
 
     public void login() {
@@ -39,12 +39,11 @@ public class User extends BaseEntity {
         this.loginStatus = false;
     }
 
-
     public void modifyNickname(String nickName) {
         this.nickname = nickName;
     }
 
-    public void modifyProfileImg(String profileImage) {
-        this.profileImage = profileImage;
+    public void modifyProfileImgKey(String profileImgKey) {
+        this.profileImgKey = profileImgKey;
     }
 }

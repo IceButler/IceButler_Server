@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -186,7 +187,9 @@ public class FridgeServiceImpl implements FridgeService {
   //냉장고 내 유저 조회
   public FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx){
     Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+
     return FridgeUserMainRes.doDto(fridgeUserRepository.findByFridgeAndIsEnable(fridge,true));
+
   }
 
   @Override

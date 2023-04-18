@@ -2,12 +2,12 @@ package com.example.icebutler_server.fridge.dto.fridge.response;
 
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
+import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,16 +16,17 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetFridgesMainRes {
+  List<FridgeRes> fridgeList;
+  List<MultiFridgeRes> multiFridgeResList;
 
-  private static final String FRIDGE = "fridge";
-  private static final String MULTI_FRIDGE = "multi";
-  List<SelectFridgeRes> fridgeList;
-
-  public static GetFridgesMainRes toDto(List<FridgeUser> fridgeUsers, List<MultiFridgeUser> multiFridgeUsers) {
+  public static GetFridgesMainRes toDto(List<List<FridgeUser>> fridgeUserListList, List<List<MultiFridgeUser>> multiFridgeUserListList, Long userIdx) {
     GetFridgesMainRes getFridgesMainRes = new GetFridgesMainRes();
 
-    getFridgesMainRes.fridgeList = fridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getFridge().getFridgeName(), m.getFridge().getFridgeIdx(), FRIDGE)).collect(Collectors.toList());
-    getFridgesMainRes.fridgeList.addAll(multiFridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getMultiFridge().getFridgeName(), m.getMultiFridge().getMultiFridgeIdx(), MULTI_FRIDGE)).collect(Collectors.toList()));
+    List<FridgeUser> fridgeUsers = fridgeUserListList.stream().map(m -> m.stream().filter(f -> f.getUser().getUserIdx().equals(userIdx)).findAny().orElseThrow(FridgeUserNotFoundException::new)).collect(Collectors.toList());
+    getFridgesMainRes.fridgeList = fridgeUsers.stream().map(m -> FridgeRes.toDto(m.getFridge(), fridgeUserListList)).collect(Collectors.toList());
+
+    List<MultiFridgeUser> multiFridgeUsers = multiFridgeUserListList.stream().map(m -> m.stream().filter(f -> f.getUser().getUserIdx().equals(userIdx)).findAny().orElseThrow(FridgeUserNotFoundException::new)).collect(Collectors.toList());
+    getFridgesMainRes.multiFridgeResList = multiFridgeUsers.stream().map(m -> MultiFridgeRes.toDto(m.getMultiFridge(), multiFridgeUserListList)).collect(Collectors.toList());
 
     return getFridgesMainRes;
   }

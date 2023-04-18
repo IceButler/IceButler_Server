@@ -8,16 +8,24 @@ import lombok.*;
 public class MyProfileRes {
 
     private Long userIdx;
-    private String nickName;
+    private String nickname;
     private String profileImgUrl;
     private String email;
 
+    @Builder
+    public MyProfileRes(Long userIdx, String nickname, String profileImgUrl, String email) {
+        this.userIdx = userIdx;
+        this.nickname = nickname;
+        this.profileImgUrl = profileImgUrl;
+        this.email = email;
+    }
+
     public static MyProfileRes toDto(User user) {
-        MyProfileRes myProfileRes = new MyProfileRes();
-        myProfileRes.userIdx = user.getUserIdx();
-        myProfileRes.nickName = user.getNickname();
-        myProfileRes.profileImgUrl = user.getProfileImgKey();
-        myProfileRes.email=user.getEmail();
-        return myProfileRes;
+        return MyProfileRes.builder()
+                .userIdx(user.getUserIdx())
+                .nickname(user.getNickname())
+                .profileImgUrl(user.getProfileImgKey())
+                .email(user.getEmail())
+                .build();
     }
 }

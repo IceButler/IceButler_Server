@@ -3,8 +3,8 @@ package com.example.icebutler_server.fridge.service;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.food.entity.FoodCategory;
-import com.example.icebutler_server.fridge.dto.fridge.response.GetFridgeMainRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.GetFridgesMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.SelectFridgesMainRes;
 import com.example.icebutler_server.fridge.dto.fridge.assembler.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -198,12 +197,12 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   //냉장고 선택 화면 전체 조회
-  public GetFridgesMainRes getFridges(Long fridgeIdx, Long userIdx) {
+  public SelectFridgesMainRes getFridges(Long fridgeIdx, Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-    return GetFridgesMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user, true), multiFridgeUserRepository.findByUserAndIsEnable(user, true));
+    return SelectFridgesMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user, true), multiFridgeUserRepository.findByUserAndIsEnable(user, true));
   }
 
-  public GetFridgeMainRes myFridge(Long userIdx) {
+  public GetFridgesMainRes myFridge(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     // 가정용 냉장고 조회
@@ -216,7 +215,7 @@ public class FridgeServiceImpl implements FridgeService {
     List<MultiFridge> multiFridges = multiFridgeUsers.stream().map(m -> multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(m.getMultiFridge().getMultiFridgeIdx(), true).orElseThrow(FridgeNotFoundException::new)).collect(Collectors.toList());
     List<List<MultiFridgeUser>> multiFridgeUserListList = multiFridges.stream().map(m -> multiFridgeUserRepository.findByMultiFridgeAndIsEnable(m, true)).collect(Collectors.toList());
 
-    return GetFridgeMainRes.toDto(fridgeUserListList, multiFridgeUserListList, userIdx);
+    return GetFridgesMainRes.toDto(fridgeUserListList, multiFridgeUserListList, userIdx);
 
   }
 }

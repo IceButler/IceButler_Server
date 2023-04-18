@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,13 +16,17 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetFridgesMainRes {
-  List<FridgesRes> fridgeList;
-  List<MultiFridgesRes> multiFridgeList;
+
+  private static final String FRIDGE = "fridge";
+  private static final String MULTI_FRIDGE = "multi";
+  List<SelectFridgeRes> fridgeList;
 
   public static GetFridgesMainRes toDto(List<FridgeUser> fridgeUsers, List<MultiFridgeUser> multiFridgeUsers) {
     GetFridgesMainRes getFridgesMainRes = new GetFridgesMainRes();
-    getFridgesMainRes.fridgeList = fridgeUsers.stream().map(ff -> FridgesRes.toDto(ff.getFridge())).collect(Collectors.toList());
-    getFridgesMainRes.multiFridgeList = multiFridgeUsers.stream().map(ff -> MultiFridgesRes.toDto(ff.getMultiFridge())).collect(Collectors.toList());
+
+    getFridgesMainRes.fridgeList = fridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getFridge().getFridgeName(), m.getFridge().getFridgeIdx(), FRIDGE)).collect(Collectors.toList());
+    getFridgesMainRes.fridgeList.addAll(multiFridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getMultiFridge().getFridgeName(), m.getMultiFridge().getMultiFridgeIdx(), MULTI_FRIDGE)).collect(Collectors.toList()));
+
     return getFridgesMainRes;
   }
 }

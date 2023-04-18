@@ -1,7 +1,5 @@
 package com.example.icebutler_server.fridge.repository.multiFridge;
 
-import com.example.icebutler_server.fridge.dto.fridge.response.MultiFridgesRes;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
 import com.example.icebutler_server.global.entity.FridgeRole;

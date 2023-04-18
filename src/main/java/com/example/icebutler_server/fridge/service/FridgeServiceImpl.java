@@ -1,6 +1,7 @@
 package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
+import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.dto.fridge.response.GetFridgesMainRes;
@@ -14,6 +15,7 @@ import com.example.icebutler_server.fridge.repository.fridge.*;
 import com.example.icebutler_server.fridge.exception.*;
 import com.example.icebutler_server.fridge.entity.fridge.*;
 import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.fridge.repository.fridge.FridgeFood.FridgeFoodRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -28,6 +30,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
@@ -192,8 +195,19 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   @Override
-  public FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month) {
-    return null;
+  public FridgeFoodsStatistics getFridgeFoodStatistics(Long fridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month) {
+    User user = this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
+    Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
+    this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
+
+    Map<FoodCategory, Long> deleteStatusList = new HashMap<>();
+
+    for(FoodCategory category: FoodCategory.values()){
+      Long foodSize = this.fridgeFoodRepository.findByDeleteCategoryForStatistics(FoodDeleteStatus.getFoodCategoryByName(deleteCategory), fridge, category, year, month);
+      deleteStatusList.put(category, foodSize);
+    }
+
+    return this.fridgeFoodAssembler.toFoodStatisticsByDeleteStatus(deleteStatusList);
   }
 
   //냉장고 선택 화면 전체 조회

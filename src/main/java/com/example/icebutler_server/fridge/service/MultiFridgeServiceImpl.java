@@ -6,6 +6,7 @@ import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
@@ -125,9 +126,15 @@ public class MultiFridgeServiceImpl implements FridgeService {
         User owner = this.userRepository.findByUserIdxAndIsEnable(fridgeFoodReq.getOwnerIdx(), true).orElseThrow(UserNotFoundException::new);
         MultiFridgeUser foodOwner = this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
 
-        Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName());
-        if(food == null) food = foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq));
+        Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
+                .orElse(foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));
         this.multiFridgeFoodRepository.save(this.multiFridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
+    }
+
+    @Transactional
+    @Override
+    public void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeIdx, Long userIdx) {
+
     }
 
     // 냉장고 식품 수정
@@ -141,8 +148,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
         // todo: foodName은 isEnable을 확인할 필요가 없나ㅇ,,
         if(!modifyMultiFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
-            Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName());
-            if(food == null) food = foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq));
+            Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
+                    .orElse(foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));
             this.multiFridgeFoodAssembler.toUpdateMultiFridgeFoodInfo(modifyMultiFridgeFood, food);
         }
 

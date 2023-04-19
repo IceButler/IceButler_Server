@@ -1,6 +1,7 @@
 package com.example.icebutler_server.fridge.controller;
 
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
@@ -73,10 +74,10 @@ public class FridgeController {
   // 냉장고 내 식품 추가
   @Auth
   @PostMapping("/{fridgeIdx}/food")
-  public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
+  public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodsReq fridgeFoodsReq,
                                          @PathVariable Long fridgeIdx,
                                          @IsLogin LoginStatus loginStatus) {
-    fridgeService.addFridgeFood(fridgeFoodReq, fridgeIdx, loginStatus.getUserIdx());
+    fridgeService.addFridgeFood(fridgeFoodsReq, fridgeIdx, loginStatus.getUserIdx());
     return ResponseCustom.OK();
   }
 

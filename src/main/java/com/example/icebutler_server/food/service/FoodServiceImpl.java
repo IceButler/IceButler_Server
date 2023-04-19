@@ -48,17 +48,8 @@ public class FoodServiceImpl implements FoodService{
 
     @Override
     public BarcodeFoodRes searchByBarcode(String barcodeNum) throws IOException, org.json.simple.parser.ParseException {
-        JSONObject data = callBarcodeApi(barcodeNum);
-        if (data == null) throw new BarcodeFoodNotFoundException();
-        String foodDetailName = (String) data.get("PRDT_NM");
-        String apiCategory = (String) data.get("PRDLST_NM");
-
-//        String foodName = callGPTOneWord(foodDetailName);
-//        String foodCategory = callGPTCategory(apiCategory);
-
-        String foodName = null;
-        String foodCategory = null;
-        return BarcodeFoodRes.toDto(foodName, foodDetailName, foodCategory);
+        String foodDetailName = callBarcodeApi(barcodeNum);
+        return BarcodeFoodRes.toDto(foodDetailName);
     }
 
     @Override
@@ -74,7 +65,7 @@ public class FoodServiceImpl implements FoodService{
                 .stream().map(FoodRes::toDto).collect(Collectors.toList());
     }
 
-    private JSONObject callBarcodeApi(String barcodeNum) throws IOException, ParseException {
+    private String callBarcodeApi(String barcodeNum) throws IOException, ParseException {
         String serviceKey = "5b44035a29544b54aa72";
         URL url = new URL("https://openapi.foodsafetykorea.go.kr/api/" + serviceKey +
                 "/I2570/json/1/5/BRCD_NO=" + barcodeNum);
@@ -83,24 +74,9 @@ public class FoodServiceImpl implements FoodService{
         JSONObject obj = getJsonObjectByParser(sb);
         JSONObject result = (JSONObject) obj.get("I2570");
         JSONArray row = (JSONArray) result.get("row");
-        if (row == null) return null;
-        return (JSONObject) row.get(0);
-    }
-
-    private String callGPTOneWord(String foodDetailName) throws IOException, ParseException {
-        String encFoodDetailName = URLEncoder.encode(foodDetailName, StandardCharsets.UTF_8); /**/
-        URL oneWordGPTUrl = new URL("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-oneword?keyword="+encFoodDetailName);
-        StringBuilder sb = callAPI(oneWordGPTUrl);
-
-        return (String) getJsonObjectByParser(sb).get("oneword");
-    }
-
-    private String callGPTCategory(String word) throws IOException, ParseException {
-        String encWord = URLEncoder.encode(word, StandardCharsets.UTF_8);
-        URL categoryGPTUrl = new URL("https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/chatgpt-category?keyword="+encWord);
-        StringBuilder sb = callAPI(categoryGPTUrl);
-
-        return (String) getJsonObjectByParser(sb).get("category");
+        if (row == null) throw new BarcodeFoodNotFoundException();
+        JSONObject data =  (JSONObject) row.get(0);
+        return (String) data.get("PRDT_NM");
     }
 
     private JSONObject getJsonObjectByParser(StringBuilder sb) throws ParseException {

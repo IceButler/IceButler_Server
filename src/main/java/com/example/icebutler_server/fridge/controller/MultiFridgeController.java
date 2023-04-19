@@ -1,6 +1,7 @@
 package com.example.icebutler_server.fridge.controller;
 
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.service.MultiFridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -34,10 +35,10 @@ public class MultiFridgeController {
      */
     @Auth
     @PostMapping("/{multiFridgeIdx}/food")
-    public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
+    public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodsReq fridgeFoodsReq,
                                            @PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
                                            @IsLogin LoginStatus loginStatus){
-        this.multiFridgeService.addFridgeFood(fridgeFoodReq, multiFridgeIdx, loginStatus.getUserIdx());
+        this.multiFridgeService.addFridgeFood(fridgeFoodsReq, multiFridgeIdx, loginStatus.getUserIdx());
         return ResponseCustom.OK();
     }
     /**

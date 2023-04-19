@@ -16,7 +16,6 @@ public interface FridgeService {
   ResponseCustom<Long> removeFridge(Long fridgeIdx, Long userIdx);
   List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName);
   FridgeFoodRes getFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, Long userIdx);
-  void addFridgeFood(FridgeFoodReq fridgeFoodReq, Long fridgeIdx, Long userIdx);
   void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeIdx, Long userIdx);
   void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx);
   FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx);

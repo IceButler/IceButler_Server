@@ -8,16 +8,16 @@ import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
-import com.example.icebutler_server.fridge.dto.fridge.response.*;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsStatistics;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeUserMainRes;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
-import com.example.icebutler_server.fridge.exception.FridgeNameEmptyException;
-import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
 import com.example.icebutler_server.fridge.exception.*;
-import com.example.icebutler_server.fridge.exception.InvalidFridgeUserRoleException;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFood.MultiFridgeFoodRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
@@ -31,7 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
@@ -117,24 +120,23 @@ public class MultiFridgeServiceImpl implements FridgeService {
     // 냉장고 내 식품 추가
     @Transactional
     @Override
-    public void addFridgeFood(FridgeFoodReq fridgeFoodReq, Long fridgeIdx, Long userIdx) {
-        User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-        MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
-        MultiFridgeUser fridgeUser = this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
-
-
-        User owner = this.userRepository.findByUserIdxAndIsEnable(fridgeFoodReq.getOwnerIdx(), true).orElseThrow(UserNotFoundException::new);
-        MultiFridgeUser foodOwner = this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
-
-        Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
-                .orElse(foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));
-        this.multiFridgeFoodRepository.save(this.multiFridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
-    }
-
-    @Transactional
-    @Override
     public void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeIdx, Long userIdx) {
+        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
 
+        List<MultiFridgeFood> fridgeFoods = new ArrayList<>();
+        for (FridgeFoodReq fridgeFoodReq : fridgeFoodsReq.getFridgeFoods()){
+            User owner = null;
+            if(fridgeFoodReq.getOwnerIdx() != null) {
+                owner = userRepository.findByUserIdxAndIsEnable(fridgeFoodReq.getOwnerIdx(), true).orElseThrow(UserNotFoundException::new);
+                multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
+            }
+            Food food = foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
+                    .orElseGet(() -> foodRepository.save(foodAssembler.toEntity(fridgeFoodReq)));
+            fridgeFoods.add(multiFridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
+        }
+        multiFridgeFoodRepository.saveAll(fridgeFoods);
     }
 
     // 냉장고 식품 수정
@@ -146,7 +148,6 @@ public class MultiFridgeServiceImpl implements FridgeService {
         this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
         MultiFridgeFood modifyMultiFridgeFood = this.multiFridgeFoodRepository.findByMultiFridgeFoodIdxAndOwnerAndMultiFridgeAndIsEnable(fridgeFoodIdx, user, fridge, true).orElseThrow(FridgeFoodNotFoundException::new);
 
-        // todo: foodName은 isEnable을 확인할 필요가 없나ㅇ,,
         if(!modifyMultiFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
             Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
                     .orElse(foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));

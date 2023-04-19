@@ -158,12 +158,11 @@ public class FridgeServiceImpl implements FridgeService {
         fridgeUserRepository.findByUserAndFridgeAndIsEnable(owner, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
       }
       Food food = foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
-              .orElse(foodRepository.save(foodAssembler.toEntity(fridgeFoodReq)));
+              .orElseGet(()->foodRepository.save(foodAssembler.toEntity(fridgeFoodReq)));
       fridgeFoods.add(fridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
     }
     fridgeFoodRepository.saveAll(fridgeFoods);
   }
-
 
   public void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx) {
     User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true)
@@ -177,7 +176,7 @@ public class FridgeServiceImpl implements FridgeService {
 
     if(!modifyFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
       Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
-              .orElse(foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));
+              .orElseGet(()->foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));
       this.fridgeFoodAssembler.toUpdateFridgeFoodInfo(modifyFridgeFood, food);
     }
 

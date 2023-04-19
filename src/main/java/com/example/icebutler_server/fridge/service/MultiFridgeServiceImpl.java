@@ -150,7 +150,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
         if(!modifyMultiFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
             Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
-                    .orElse(foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));
+                    .orElseGet(()->foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));
             this.multiFridgeFoodAssembler.toUpdateMultiFridgeFoodInfo(modifyMultiFridgeFood, food);
         }
 

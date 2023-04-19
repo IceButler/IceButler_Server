@@ -32,10 +32,5 @@ public class Food {
         this.foodCategory = foodCategory;
     }
 
-    @Builder
-    public Food(String foodName, FoodCategory foodCategory) {
-        this.foodName = foodName;
-        this.foodCategory = foodCategory;
-    }
 }
 

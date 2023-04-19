@@ -10,6 +10,7 @@ import com.example.icebutler_server.cart.entity.multiCart.MultiCartFood;
 import com.example.icebutler_server.cart.exception.CartNotFoundException;
 import com.example.icebutler_server.cart.repository.multiCart.MultiCartFoodRepository;
 import com.example.icebutler_server.cart.repository.multiCart.MultiCartRepository;
+import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.repository.FoodRepository;
@@ -43,6 +44,7 @@ public class MultiCartServiceImpl implements CartService {
     private final MultiCartRepository multiCartRepository;
     private final FoodRepository foodRepository;
     private final MultiCartFoodAssembler multiCartFoodAssembler;
+    private final FoodAssembler foodAssembler;
 
     @Override
     public ResponseCustom<?> getFoodsFromCart(Long fridgeIdx, Long userIdx) {
@@ -76,7 +78,7 @@ public class MultiCartServiceImpl implements CartService {
         List<Food> foodRequests = new ArrayList<>();
         for(AddFoodRequest foodRequest : request.getFoodRequests()) {
             Food food = this.foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
-            if(food == null) food = this.foodRepository.save(new Food(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory())));
+            if(food == null) food = this.foodRepository.save(foodAssembler.toEntity(foodRequest));
             foodRequests.add(food);
         }
 

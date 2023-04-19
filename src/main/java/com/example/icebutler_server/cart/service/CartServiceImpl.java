@@ -8,6 +8,7 @@ import com.example.icebutler_server.cart.dto.cart.response.CartResponse;
 import com.example.icebutler_server.cart.entity.cart.Cart;
 import com.example.icebutler_server.cart.entity.cart.CartFood;
 import com.example.icebutler_server.cart.repository.cart.CartFoodRepository;
+import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
@@ -39,6 +40,7 @@ public class CartServiceImpl implements CartService {
     private final FridgeRepository fridgeRepository;
     private final CartFoodAssembler cartFoodAssembler;
     private final FridgeUserRepository fridgeUserRepository;
+    private final FoodAssembler foodAssembler;
 
 
     @Override
@@ -75,7 +77,7 @@ public class CartServiceImpl implements CartService {
         List<Food> foodRequests = new ArrayList<>();
         for(AddFoodRequest foodRequest : request.getFoodRequests()) {
             Food food = this.foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
-            if(food == null) food = this.foodRepository.save(new Food(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory())));
+            if(food == null) food = this.foodRepository.save(foodAssembler.toEntity(foodRequest));
             foodRequests.add(food);
         }
 

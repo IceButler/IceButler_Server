@@ -179,7 +179,7 @@ public class FridgeServiceImpl implements FridgeService {
             .orElseThrow(FridgeNotFoundException::new);
     this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, user, true)
             .orElseThrow(FridgeUserNotFoundException::new);
-    FridgeFood modifyFridgeFood = this.fridgeFoodRepository.findByFridgeFoodIdxAndOwnerAndFridgeAndIsEnable(fridgeFoodIdx, user, fridge, true)
+    FridgeFood modifyFridgeFood = this.fridgeFoodRepository.findByFridgeFoodIdxAndFridgeAndIsEnable(fridgeFoodIdx, fridge, true)
             .orElseThrow(FridgeFoodNotFoundException::new);
 
     if(!modifyFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {

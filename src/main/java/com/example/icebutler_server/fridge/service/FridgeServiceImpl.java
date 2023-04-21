@@ -72,6 +72,7 @@ public class FridgeServiceImpl implements FridgeService {
     return fridge.getFridgeIdx();
   }
 
+  @Override
   public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
     User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
     Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
@@ -85,6 +86,7 @@ public class FridgeServiceImpl implements FridgeService {
     }
   }
 
+  @Override
   @Transactional
   public void modifyFridge(Long fridgeIdx, FridgeModifyReq updateFridgeReq, Long userIdx) {
     User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
@@ -114,6 +116,7 @@ public class FridgeServiceImpl implements FridgeService {
     }
   }
 
+  @Override
   @Transactional
   public ResponseCustom<Long> removeFridge(Long fridgeIdx, Long userId) {
     User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -126,7 +129,7 @@ public class FridgeServiceImpl implements FridgeService {
     return ResponseCustom.OK(fridge.getFridgeIdx());
   }
 
-  @Transactional
+  @Override
   public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName) {
     User owner = userRepository.findById(ownerIdx).orElseThrow(UserNotFoundException::new);
     Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
@@ -164,6 +167,8 @@ public class FridgeServiceImpl implements FridgeService {
     fridgeFoodRepository.saveAll(fridgeFoods);
   }
 
+  @Override
+  @Transactional
   public void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx) {
     User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true)
             .orElseThrow(UserNotFoundException::new);

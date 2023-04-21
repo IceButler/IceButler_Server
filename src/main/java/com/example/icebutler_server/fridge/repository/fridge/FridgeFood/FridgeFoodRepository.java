@@ -16,6 +16,7 @@ public interface FridgeFoodRepository extends JpaRepository<FridgeFood, Long>, F
     List<FridgeFood> findByFood_FoodCategoryAndIsEnableOrderByShelfLife(FoodCategory foodCategory, Boolean status);
     List<FridgeFood> findByIsEnableOrderByShelfLife(Boolean status);
     Optional<FridgeFood> findByFridgeFoodIdxAndOwnerAndFridgeAndIsEnable(Long fridgeFoodIdx, User owner, Fridge fridge, Boolean isEnable);
+    Optional<FridgeFood> findByFridgeFoodIdxAndFridgeAndIsEnable(Long fridgeFoodIdx,  Fridge fridge, Boolean isEnable);
     List<FridgeFood> findByFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(Fridge fridge, FoodCategory foodCategory, Boolean status);
     List<FridgeFood> findByFridgeAndIsEnableOrderByShelfLife(Fridge fridge, Boolean status);
 }

@@ -120,8 +120,9 @@ public class FridgeServiceImpl implements FridgeService {
     Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
     FridgeUser owner = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
     List<FridgeUser> fridgeUsers = fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
+    List<FridgeFood> fridgeFoods = fridgeFoodRepository.findByFridgeAndIsEnableOrderByShelfLife(fridge, true);
 
-    fridgeAssembler.removeFridge(owner, fridge, fridgeUsers);
+    fridgeAssembler.removeFridge(owner, fridge, fridgeUsers, fridgeFoods);
 
     return fridge.getFridgeIdx();
   }

@@ -4,6 +4,7 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.exception.FridgeRemoveException;
 import com.example.icebutler_server.fridge.exception.PermissionDeniedException;
@@ -84,15 +85,11 @@ public class FridgeAssembler {
     return null;
   }
 
-  public void removeFridge(FridgeUser owner, Fridge fridge, List<FridgeUser> fridgeUsers) {
-    long cnt = fridgeUsers.stream().filter(f -> f.getRole() != FridgeRole.OWNER).count();
-
+  public void removeFridge(FridgeUser owner, Fridge fridge, List<FridgeUser> fridgeUsers, List<FridgeFood> fridgeFoods) {
     if (owner.getRole() != FridgeRole.OWNER) throw new PermissionDeniedException();
-    if(cnt > 0) throw new FridgeRemoveException();
+    if(fridgeUsers.size() > 1 || fridgeFoods.size() > 0) throw new FridgeRemoveException();
 
+    fridgeUsers.forEach(FridgeUser::remove);
     fridge.remove();
-    for (FridgeUser fridgeUser : fridgeUsers) {
-      fridgeUser.remove();
-    }
   }
 }

@@ -104,12 +104,11 @@ public class FridgeController {
 
   //냉장고 선택
   @Auth
-  @GetMapping("{fridgeIdx}")
-  public ResponseCustom<?> getFridges(
-          @PathVariable(name = "fridgeIdx") Long fridgeIdx,
+  @GetMapping("/select")
+  public ResponseCustom<?> selectFridges(
           @IsLogin LoginStatus loginStatus
   ) {
-    return ResponseCustom.OK(fridgeService.getFridges(fridgeIdx, loginStatus.getUserIdx()));
+    return ResponseCustom.OK(fridgeService.selectFridges(loginStatus.getUserIdx()));
   }
 
   //마이 냉장고 전체 조회

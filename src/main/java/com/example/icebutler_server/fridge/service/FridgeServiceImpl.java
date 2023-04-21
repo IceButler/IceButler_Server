@@ -224,8 +224,7 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   //냉장고 선택 화면 전체 조회
-  //TODO: fridgeIdx 사용안하는데 빼는건 어떤지...
-  public SelectFridgesMainRes getFridges(Long fridgeIdx, Long userIdx) {
+  public SelectFridgesMainRes selectFridges(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
     return SelectFridgesMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user, true), multiFridgeUserRepository.findByUserAndIsEnable(user, true));
   }

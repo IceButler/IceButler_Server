@@ -39,11 +39,8 @@ public class User extends BaseEntity {
         this.loginStatus = false;
     }
 
-    public void modifyNickname(String nickname) {
+    public void modifyProfile(String nickname, String profileImgKey) {
         this.nickname = nickname;
-    }
-
-    public void modifyProfileImgKey(String profileImgKey) {
         this.profileImgKey = profileImgKey;
     }
 }

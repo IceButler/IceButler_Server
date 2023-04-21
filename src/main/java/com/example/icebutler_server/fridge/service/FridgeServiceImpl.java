@@ -124,7 +124,6 @@ public class FridgeServiceImpl implements FridgeService {
     FridgeUser fridgeUser = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
 
     // todo 냉장고 자체 삭제, 멤버가 속해있는 냉장고 삭제
-    // TODO: isenable만 false로 수정하는거로 바꾸기
     if (fridgeUser.getRole() != FridgeRole.OWNER) fridgeUser.updateFridgeUser(null, user, null);
 
     return ResponseCustom.OK(fridge.getFridgeIdx());

@@ -70,9 +70,8 @@ public class UserServiceImpl implements UserService {
   public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
-    if (!StringUtils.hasText(patchProfileReq.getNickname())) user.modifyNickname(patchProfileReq.getNickname());
-    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey()))
-      user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
+    if (StringUtils.hasText(patchProfileReq.getNickname())) user.modifyNickname(patchProfileReq.getNickname());
+    if (StringUtils.hasText(patchProfileReq.getProfileImgKey())) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
   }
 
   // 닉네임 중복 확인

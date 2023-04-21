@@ -94,6 +94,7 @@ public class UserServiceImpl implements UserService {
 
   //유저 로그아웃
   @Override
+  @Transactional
   public void logout(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 //        redisTemplateService.deleteUserRefreshToken(userIdx)

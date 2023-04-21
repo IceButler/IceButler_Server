@@ -18,7 +18,6 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.repository.fridge.FridgeFood.FridgeFoodRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
-import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.entity.User;
@@ -114,16 +113,30 @@ public class FridgeServiceImpl implements FridgeService {
     }
   }
 
+  // 냉장고 자체 삭제
   @Transactional
-  public ResponseCustom<Long> removeFridge(Long fridgeIdx, Long userId) {
-    User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-    Fridge fridge = fridgeRepository.findById(fridgeIdx).orElseThrow(FridgeNotFoundException::new);
+  public Long removeFridge(Long fridgeIdx, Long userId) {
+    User user = userRepository.findByUserIdxAndIsEnable(userId, true).orElseThrow(UserNotFoundException::new);
+    Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+    FridgeUser owner = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
+    List<FridgeUser> fridgeUsers = fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
+
+    fridgeAssembler.removeFridge(owner, fridge, fridgeUsers);
+
+    return fridge.getFridgeIdx();
+  }
+
+  // 냉장고 개별 삭제
+  @Transactional
+  public Long removeFridgeUser(Long fridgeIdx, Long userIdx) {
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
     FridgeUser fridgeUser = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
 
-    // todo 냉장고 자체 삭제, 멤버가 속해있는 냉장고 삭제
-    if (fridgeUser.getRole() != FridgeRole.OWNER) fridgeUser.updateFridgeUser(null, user, null);
+    if(fridgeUser.getRole() == FridgeRole.OWNER) throw new PermissionDeniedException();
+    fridgeUser.remove(false);
 
-    return ResponseCustom.OK(fridge.getFridgeIdx());
+    return fridge.getFridgeIdx();
   }
 
   @Transactional
@@ -215,10 +228,9 @@ public class FridgeServiceImpl implements FridgeService {
 
     return this.fridgeFoodAssembler.toFoodStatisticsByDeleteStatus(deleteStatusList);
   }
-
   //냉장고 선택 화면 전체 조회
-  //TODO: fridgeIdx 사용안하는데 빼는건 어떤지...
-  public SelectFridgesMainRes getFridges(Long fridgeIdx, Long userIdx) {
+
+  public SelectFridgesMainRes selectFridges(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
     return SelectFridgesMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user, true), multiFridgeUserRepository.findByUserAndIsEnable(user, true));
   }

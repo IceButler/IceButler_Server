@@ -44,6 +44,13 @@ public class FridgeController {
     return ResponseCustom.OK(fridgeService.removeFridge(fridgeIdx, loginStatus.getUserIdx()));
   }
 
+  @Auth
+  @PatchMapping("/{fridgeIdx}/remove/each")
+  public ResponseCustom<?> removeFridgeUser(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
+                                            @IsLogin LoginStatus loginStatus) {
+    return ResponseCustom.OK(fridgeService.removeFridgeUser(fridgeIdx, loginStatus.getUserIdx()));
+  }
+
   // [Get] 냉장고 식품 전체 조회
   @Auth
   @GetMapping("/{fridgeIdx}/foods")
@@ -104,12 +111,11 @@ public class FridgeController {
 
   //냉장고 선택
   @Auth
-  @GetMapping("{fridgeIdx}")
-  public ResponseCustom<?> getFridges(
-          @PathVariable(name = "fridgeIdx") Long fridgeIdx,
+  @GetMapping("/select")
+  public ResponseCustom<?> selectFridges(
           @IsLogin LoginStatus loginStatus
   ) {
-    return ResponseCustom.OK(fridgeService.getFridges(fridgeIdx, loginStatus.getUserIdx()));
+    return ResponseCustom.OK(fridgeService.selectFridges(loginStatus.getUserIdx()));
   }
 
   //마이 냉장고 전체 조회

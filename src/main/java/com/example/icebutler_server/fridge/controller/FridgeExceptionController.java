@@ -1,9 +1,6 @@
 package com.example.icebutler_server.fridge.controller;
 
-import com.example.icebutler_server.fridge.exception.FridgeFoodNotFoundException;
-import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
-import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
-import com.example.icebutler_server.fridge.exception.InvalidFridgeUserRoleException;
+import com.example.icebutler_server.fridge.exception.*;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,6 +35,12 @@ public class FridgeExceptionController {
 
     @ExceptionHandler(InvalidFridgeUserRoleException.class)
     public ResponseCustom<?> catchInvalidFridgeUserRoleException(InvalidFridgeUserRoleException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.FORBIDDEN(e.getMessage());
+    }
+
+    @ExceptionHandler(PermissionDeniedException.class)
+    public ResponseCustom<?> catchPermissionDeniedException(PermissionDeniedException e) {
         log.error(e.getMessage());
         return ResponseCustom.FORBIDDEN(e.getMessage());
     }

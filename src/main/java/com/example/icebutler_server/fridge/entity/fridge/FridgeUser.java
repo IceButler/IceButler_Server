@@ -36,16 +36,14 @@ public class FridgeUser extends BaseEntity {
         this.role = role;
     }
 
-    public void updateFridgeUser(Fridge fridge, User user, FridgeRole role) {
-        this.fridge = fridge;
-        this.user = user;
-        this.role = role;
-    }
-
     public void changeFridgeOwner(User user){
         this.role = FridgeRole.OWNER;
     }
     public void changeFridgeMember(User user){
         this.role = FridgeRole.MEMBER;
+    }
+
+    public void remove(Boolean status) {
+        this.setIsEnable(status);
     }
 }

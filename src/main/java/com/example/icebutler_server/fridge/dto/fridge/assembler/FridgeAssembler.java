@@ -10,6 +10,8 @@ import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
+import com.example.icebutler_server.fridge.exception.InvalidFridgeUserRoleException;
+import com.example.icebutler_server.fridge.exception.PermissionDeniedException;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -85,5 +87,14 @@ public class FridgeAssembler {
 ////    if (searchFood.size() == 0) throw new BaseException(NULL_SEARCH_FOOD);
 //    return searchFood;
     return null;
+  }
+
+  public void removeFridge(FridgeUser owner, Fridge fridge, List<FridgeUser> fridgeUsers) {
+    if (owner.getRole() != FridgeRole.OWNER) throw new PermissionDeniedException();
+
+    fridge.removeFridge(false);
+    for (FridgeUser fridgeUser : fridgeUsers) {
+      fridgeUser.remove(false);
+    }
   }
 }

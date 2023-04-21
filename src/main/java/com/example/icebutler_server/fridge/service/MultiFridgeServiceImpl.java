@@ -146,7 +146,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
         User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
-        MultiFridgeFood modifyMultiFridgeFood = this.multiFridgeFoodRepository.findByMultiFridgeFoodIdxAndOwnerAndMultiFridgeAndIsEnable(fridgeFoodIdx, user, fridge, true).orElseThrow(FridgeFoodNotFoundException::new);
+        MultiFridgeFood modifyMultiFridgeFood = this.multiFridgeFoodRepository.findByMultiFridgeFoodIdxAndMultiFridgeAndIsEnable(fridgeFoodIdx, fridge, true).orElseThrow(FridgeFoodNotFoundException::new);
 
         if(!modifyMultiFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
             Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())

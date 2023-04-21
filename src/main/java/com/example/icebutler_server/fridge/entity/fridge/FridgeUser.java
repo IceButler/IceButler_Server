@@ -43,7 +43,7 @@ public class FridgeUser extends BaseEntity {
         this.role = FridgeRole.MEMBER;
     }
 
-    public void remove(Boolean status) {
-        this.setIsEnable(status);
+    public void remove() {
+        this.setIsEnable(false);
     }
 }

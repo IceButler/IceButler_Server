@@ -1,16 +1,11 @@
 package com.example.icebutler_server.fridge.dto.fridge.assembler;
 
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeRes;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
-import com.example.icebutler_server.fridge.exception.InvalidFridgeUserRoleException;
+import com.example.icebutler_server.fridge.exception.FridgeRemoveException;
 import com.example.icebutler_server.fridge.exception.PermissionDeniedException;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;
@@ -90,11 +85,14 @@ public class FridgeAssembler {
   }
 
   public void removeFridge(FridgeUser owner, Fridge fridge, List<FridgeUser> fridgeUsers) {
-    if (owner.getRole() != FridgeRole.OWNER) throw new PermissionDeniedException();
+    long cnt = fridgeUsers.stream().filter(f -> f.getRole() != FridgeRole.OWNER).count();
 
-    fridge.removeFridge(false);
+    if (owner.getRole() != FridgeRole.OWNER) throw new PermissionDeniedException();
+    if(cnt > 0) throw new FridgeRemoveException();
+
+    fridge.remove();
     for (FridgeUser fridgeUser : fridgeUsers) {
-      fridgeUser.remove(false);
+      fridgeUser.remove();
     }
   }
 }

@@ -44,4 +44,10 @@ public class FridgeExceptionController {
         log.error(e.getMessage());
         return ResponseCustom.FORBIDDEN(e.getMessage());
     }
+
+    @ExceptionHandler(FridgeRemoveException.class)
+    public ResponseCustom<?> catchFridgeRemoveException(FridgeRemoveException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.FORBIDDEN(e.getMessage());
+    }
 }

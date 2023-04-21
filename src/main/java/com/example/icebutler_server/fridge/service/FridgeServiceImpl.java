@@ -134,7 +134,7 @@ public class FridgeServiceImpl implements FridgeService {
     FridgeUser fridgeUser = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
 
     if(fridgeUser.getRole() == FridgeRole.OWNER) throw new PermissionDeniedException();
-    fridgeUser.remove(false);
+    fridgeUser.remove();
 
     return fridge.getFridgeIdx();
   }

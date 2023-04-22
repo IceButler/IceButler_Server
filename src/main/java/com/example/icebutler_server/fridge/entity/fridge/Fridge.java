@@ -33,4 +33,8 @@ public class Fridge extends BaseEntity {
         this.fridgeName = fridgeName;
         this.fridgeComment = fridgeComment;
     }
+
+    public void remove() {
+        this.setIsEnable(false);
+    }
 }

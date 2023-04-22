@@ -21,7 +21,6 @@ import com.example.icebutler_server.fridge.exception.*;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFood.MultiFridgeFoodRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
-import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
@@ -97,7 +96,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
     }
 
     @Override
-    public ResponseCustom<Long> removeFridge(Long fridgeIdx, Long userIdx) {
+    public Long removeFridge(Long fridgeIdx, Long userIdx) {
         return null;
     }
 

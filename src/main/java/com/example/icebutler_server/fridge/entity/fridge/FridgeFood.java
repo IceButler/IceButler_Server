@@ -65,4 +65,8 @@ public class FridgeFood extends BaseEntity {
   public void updateMultiFridgeFoodOwner(User newOwner) {
     this.owner = newOwner;
   }
+
+  public void remove() {
+    this.setIsEnable(false);
+  }
 }

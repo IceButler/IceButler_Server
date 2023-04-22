@@ -1,15 +1,13 @@
 package com.example.icebutler_server.fridge.dto.fridge.assembler;
 
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeRes;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
+import com.example.icebutler_server.fridge.exception.FridgeRemoveException;
+import com.example.icebutler_server.fridge.exception.PermissionDeniedException;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -85,5 +83,13 @@ public class FridgeAssembler {
 ////    if (searchFood.size() == 0) throw new BaseException(NULL_SEARCH_FOOD);
 //    return searchFood;
     return null;
+  }
+
+  public void removeFridge(FridgeUser owner, Fridge fridge, List<FridgeUser> fridgeUsers, List<FridgeFood> fridgeFoods) {
+    if (owner.getRole() != FridgeRole.OWNER) throw new PermissionDeniedException();
+    if(fridgeUsers.size() > 1 || fridgeFoods.size() > 0) throw new FridgeRemoveException();
+
+    fridgeUsers.forEach(FridgeUser::remove);
+    fridge.remove();
   }
 }

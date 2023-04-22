@@ -37,6 +37,12 @@ public class UserExceptionController {
         return ResponseCustom.BAD_REQUEST(e.getMessage());
     }
 
+    @ExceptionHandler(InvalidUserProfileImgKeyException.class)
+    public ResponseCustom<?> catchInvalidUserProfileException(InvalidUserProfileImgKeyException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.BAD_REQUEST(e.getMessage());
+    }
+
     @ExceptionHandler(TokenExpirationException.class)
     public ResponseCustom<?> catchTokenExpirationException(TokenExpirationException e) {
         log.error(e.getMessage());

@@ -34,8 +34,7 @@ public class UserServiceImpl implements UserService {
   // 소셜로그인
   @Transactional
   public PostUserRes join(PostUserReq postUserReq) {
-    if (Provider.getProviderByName(postUserReq.getProvider()) == null) throw new ProviderMissingValueException();
-    User user = userRepository.findByEmailAndProvider(postUserReq.getEmail(), Provider.getProviderByName(postUserReq.getProvider()));
+    User user = checkUserInfo(postUserReq.getEmail(), postUserReq.getProvider());
 
     if (user == null) user = saveUser(postUserReq);
     if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
@@ -47,12 +46,20 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   public PostUserRes login(LoginUserReq loginUserReq) {
-    User user = userRepository.findByEmailAndProvider(loginUserReq.getEmail(), Provider.getProviderByName(loginUserReq.getProvider()));
+    User user = checkUserInfo(loginUserReq.getEmail(), loginUserReq.getProvider());
+
     if (user != null) {
       user.login();
       return PostUserRes.toDto(tokenUtils.createToken(user));
     }
     return null;
+  }
+
+  public User checkUserInfo(String email, String provider) {
+    if(Provider.getProviderByName(provider) == null) throw new ProviderMissingValueException();
+    if(!StringUtils.hasText(email)) throw new UserEmailMissingValueException();
+
+    return userRepository.findByEmailAndProvider(email, Provider.getProviderByName(provider));
   }
 
   @Transactional
@@ -70,8 +77,10 @@ public class UserServiceImpl implements UserService {
   public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
-    if (StringUtils.hasText(patchProfileReq.getNickname())) user.modifyNickname(patchProfileReq.getNickname());
-    if (StringUtils.hasText(patchProfileReq.getProfileImgKey())) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
+    if (!StringUtils.hasText(patchProfileReq.getNickname())) throw new InvalidUserNickNameException();
+    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
+
+    user.modifyProfile(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
   }
 
   // 닉네임 중복 확인

@@ -1,6 +1,7 @@
 package com.example.icebutler_server.user.service;
 
 
+import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.LoginUserReq;
@@ -29,6 +30,8 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final UserAssembler userAssembler;
   private final TokenUtils tokenUtils;
+
+  private final RecipeServerEventPublisherImpl recipeServerEventPublisher;
   // private final RedisTemplateService redisTemplateService;
 
   // 소셜로그인
@@ -40,7 +43,7 @@ public class UserServiceImpl implements UserService {
     if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
 
     user.login();
-
+    this.recipeServerEventPublisher.addUser(user);
     return PostUserRes.toDto(tokenUtils.createToken(user));
   }
 

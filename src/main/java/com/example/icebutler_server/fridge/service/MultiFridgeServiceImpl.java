@@ -145,7 +145,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
         User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
-        MultiFridgeFood modifyMultiFridgeFood = this.multiFridgeFoodRepository.findByMultiFridgeFoodIdxAndOwnerAndMultiFridgeAndIsEnable(fridgeFoodIdx, user, fridge, true).orElseThrow(FridgeFoodNotFoundException::new);
+        MultiFridgeFood modifyMultiFridgeFood = this.multiFridgeFoodRepository.findByMultiFridgeFoodIdxAndMultiFridgeAndIsEnable(fridgeFoodIdx, fridge, true).orElseThrow(FridgeFoodNotFoundException::new);
 
         if(!modifyMultiFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
             Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
@@ -155,8 +155,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
         this.multiFridgeFoodAssembler.toUpdateBasicMultiFridgeFoodInfo(modifyMultiFridgeFood, fridgeFoodReq);
 
-        // todo: controller domain 별로 나뉘어지면 exception 변경 예정 -> 충돌 땜시
-        if(!modifyMultiFridgeFood.getOwner().getUserIdx().equals(fridgeFoodReq.getOwnerIdx())){
+        if(!modifyMultiFridgeFood.getOwner().getUserIdx().equals(fridgeFoodReq.getOwnerIdx()) && fridgeFoodReq.getOwnerIdx() != null){
             User newOwner = this.userRepository.findByUserIdxAndIsEnable(fridgeFoodReq.getOwnerIdx(), true).orElseThrow(UserNotFoundException::new);
             this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, newOwner, true).orElseThrow(FridgeUserNotFoundException::new);
             this.multiFridgeFoodAssembler.toUpdateMultiFridgeFoodOwner(modifyMultiFridgeFood, newOwner);

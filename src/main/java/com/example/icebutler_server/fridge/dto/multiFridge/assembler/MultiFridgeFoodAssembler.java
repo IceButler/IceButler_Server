@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.icebutler_server.global.util.Constant.FridgeFood.IMG_FOLDER;
+
 @Component
 @RequiredArgsConstructor
 public class MultiFridgeFoodAssembler {
@@ -28,7 +30,7 @@ public class MultiFridgeFoodAssembler {
                 .shelfLife(LocalDate.parse(fridgeFoodReq.getShelfLife()))
                 .owner(owner)
                 .memo(fridgeFoodReq.getMemo())
-                .fridgeFoodImgKey(fridgeFoodReq.getImgUrl())
+                .fridgeFoodImgKey(IMG_FOLDER + fridgeFoodReq.getImgKey())
                 .build();
     }
 
@@ -37,7 +39,7 @@ public class MultiFridgeFoodAssembler {
                 fridgeFoodReq.getFoodDetailName(),
                 fridgeFoodReq.getMemo(),
                 LocalDate.parse(fridgeFoodReq.getShelfLife()),
-                fridgeFoodReq.getImgUrl());
+                IMG_FOLDER + fridgeFoodReq.getImgKey());
     }
 
     public void toUpdateMultiFridgeFoodInfo(MultiFridgeFood modifyFood, Food food) {

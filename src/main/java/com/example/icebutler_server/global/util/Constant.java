@@ -8,4 +8,7 @@ public final class Constant {
     public static final String IMG_FOLDER = "food/";
     public static final String ICON_EXTENSION = ".png";
   }
+  public static class FridgeFood {
+    public static final String IMG_FOLDER = "fridge-food/";
+  }
 }

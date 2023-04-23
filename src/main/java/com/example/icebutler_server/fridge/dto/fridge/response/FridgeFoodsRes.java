@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class FridgeFoodsRes {
   private Long fridgeFoodIdx;
   private String foodName;
-  private String foodIconName;
+  private String foodImgUrl;
   private int shelfLife;
 }

@@ -22,7 +22,7 @@ public class FoodRes {
                 .foodIdx(food.getFoodIdx())
                 .foodName(food.getFoodName())
                 .foodCategory(food.getFoodCategory().getName())
-                .foodIconName(food.getIconKey())
+                .foodIconName(food.getFoodImgKey())
                 .build();
     }
 }

@@ -15,20 +15,12 @@ import static com.example.icebutler_server.global.util.Constant.Food.*;
 @RequiredArgsConstructor
 public class FoodAssembler {
 
-  public Food toEntity(FridgeFoodReq fridgeFoodReq){
+  public Food toEntity(FridgeFoodReq request){
+    String foodImageKey = IMG_FOLDER + request.getFoodCategory()+ ICON_EXTENSION;
     return Food.builder()
-            .foodName(fridgeFoodReq.getFoodName())
-            .foodCategory(FoodCategory.getFoodCategoryByName(fridgeFoodReq.getFoodCategory()))
-            .foodImgKey(fridgeFoodReq.getFoodCategory())
-            .build();
-  }
-
-  public FoodRes toDto(Food food) {
-    return FoodRes.builder()
-            .foodIdx(food.getFoodIdx())
-            .foodName(food.getFoodName())
-            .foodCategory(food.getFoodCategory().getName())
-            .foodIconName(food.getFoodImgKey())
+            .foodName(request.getFoodName())
+            .foodCategory(FoodCategory.getFoodCategoryByName(request.getFoodCategory()))
+            .foodImgKey(foodImageKey)
             .build();
   }
 
@@ -36,7 +28,7 @@ public class FoodAssembler {
     String foodImageKey = IMG_FOLDER + request.getFoodCategory()+ ICON_EXTENSION;
     return Food.builder()
             .foodName(request.getFoodName())
-            .foodImgKey(AwsS3ImageUrlUtil.toUrl(foodImageKey))
+            .foodImgKey(foodImageKey)
             .foodCategory(FoodCategory.getFoodCategoryByName(request.getFoodCategory()))
             .build();
   }

@@ -1,5 +1,6 @@
 package com.example.icebutler_server.user.dto.response;
 
+import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import com.example.icebutler_server.user.entity.User;
 import lombok.*;
 
@@ -24,7 +25,7 @@ public class MyProfileRes {
         return MyProfileRes.builder()
                 .userIdx(user.getUserIdx())
                 .nickname(user.getNickname())
-                .profileImgUrl(user.getProfileImgKey())
+                .profileImgUrl(AwsS3ImageUrlUtil.toUrl(user.getProfileImgKey()))
                 .email(user.getEmail())
                 .build();
     }

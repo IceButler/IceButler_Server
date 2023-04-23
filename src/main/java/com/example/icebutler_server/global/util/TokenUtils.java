@@ -30,8 +30,8 @@ public class TokenUtils {
     ACCESS
   }
 
-  //    private final RedisTemplateService redisTemplateService;
-  private final RedisTemplateServiceMock redisTemplateService;
+      private final RedisTemplateService redisTemplateService;
+//  private final RedisTemplateServiceMock redisTemplateService;
 
   public static String secretKey;
   public static String tokenType;

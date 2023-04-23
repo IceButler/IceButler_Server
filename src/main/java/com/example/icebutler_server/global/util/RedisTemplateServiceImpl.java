@@ -27,4 +27,9 @@
 //        ValueOperations<Long, String> valueOperations = redisTemplate.opsForValue();
 //        return valueOperations.get(userIdx);
 //    }
+//
+//    public void setUserRefreshToken(@NotNull Long userIdx, String refreshToken) {
+//        ValueOperations<Long, String> valueOperations = redisTemplate.opsForValue();
+//        valueOperations.set(userIdx, refreshToken);
+//    }
 //}

@@ -8,6 +8,7 @@ import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodStatist
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsStatistics;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
+import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.icebutler_server.global.util.Constant.FridgeFood.IMG_FOLDER;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +32,7 @@ public class FridgeFoodAssembler {
                 .shelfLife(LocalDate.parse(fridgeFoodReq.getShelfLife()))
                 .owner(owner)
                 .memo(fridgeFoodReq.getMemo())
-                .fridgeFoodImgKey(fridgeFoodReq.getImgUrl())
+                .fridgeFoodImgKey(IMG_FOLDER + fridgeFoodReq.getImgKey())
                 .build();
     }
 
@@ -49,7 +52,7 @@ public class FridgeFoodAssembler {
                 .day(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))
                 .owner(owner)
                 .memo(fridgeFood.getMemo())
-                .imgUrl(fridgeFood.getFridgeFoodImgKey())
+                .imgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFridgeFoodImgKey()))
                 .build();
     }
 
@@ -62,7 +65,7 @@ public class FridgeFoodAssembler {
                 fridgeFoodReq.getFoodDetailName(),
                 fridgeFoodReq.getMemo(),
                 LocalDate.parse(fridgeFoodReq.getShelfLife()),
-                fridgeFoodReq.getImgUrl()
+                IMG_FOLDER + fridgeFoodReq.getImgKey()
         );
     }
 

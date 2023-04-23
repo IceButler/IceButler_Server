@@ -44,7 +44,7 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public ResponseCustom<?> getFoodsFromCart(Long fridgeIdx, Long userIdx) {
+    public ResponseCustom<List<CartResponse>> getFoodsFromCart(Long fridgeIdx, Long userIdx) {
         User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);

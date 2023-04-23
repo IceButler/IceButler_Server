@@ -47,7 +47,7 @@ public class MultiCartServiceImpl implements CartService {
     private final FoodAssembler foodAssembler;
 
     @Override
-    public ResponseCustom<?> getFoodsFromCart(Long fridgeIdx, Long userIdx) {
+    public ResponseCustom<List<CartResponse> > getFoodsFromCart(Long fridgeIdx, Long userIdx) {
         User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         MultiFridge fridge = multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         MultiFridgeUser fridgeUser = multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);

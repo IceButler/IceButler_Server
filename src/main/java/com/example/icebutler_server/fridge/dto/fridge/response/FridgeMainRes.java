@@ -18,13 +18,13 @@ public class FridgeMainRes {
 
   public static FridgeMainRes toFridgeDto(List<FridgeFood> fridgeFoods) {
     return new FridgeMainRes(fridgeFoods.stream()
-            .map(ff -> new FridgeFoodsRes(ff.getFridgeFoodIdx(), ff.getFood().getFoodName(), ff.getFood().getFoodIconName(), FridgeUtils.calShelfLife(ff.getShelfLife())))
+            .map(ff -> new FridgeFoodsRes(ff.getFridgeFoodIdx(), ff.getFood().getFoodName(), ff.getFood().getIconKey(), FridgeUtils.calShelfLife(ff.getShelfLife())))
             .collect(Collectors.toList()));
   }
 
   public static FridgeMainRes toMultiDto(List<MultiFridgeFood> fridgeFoods) {
     return new FridgeMainRes(fridgeFoods.stream()
-            .map(ff -> new FridgeFoodsRes(ff.getMultiFridgeFoodIdx(), ff.getFood().getFoodName(), ff.getFood().getFoodIconName(), FridgeUtils.calShelfLife(ff.getShelfLife())))
+            .map(ff -> new FridgeFoodsRes(ff.getMultiFridgeFoodIdx(), ff.getFood().getFoodName(), ff.getFood().getIconKey(), FridgeUtils.calShelfLife(ff.getShelfLife())))
             .collect(Collectors.toList()));
   }
 }

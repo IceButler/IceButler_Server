@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     if (!StringUtils.hasText(patchProfileReq.getNickname())) throw new InvalidUserNickNameException();
-    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
+//    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
 
     user.modifyProfile(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
   }

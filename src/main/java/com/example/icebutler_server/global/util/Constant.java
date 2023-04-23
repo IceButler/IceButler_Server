@@ -5,6 +5,7 @@ public final class Constant {
   public static final String MULTI_FRIDGE = "multi";
   public static final String COMMA = ",";
   public static class Food {
+    public static final String IMG_FOLDER = "food/";
     public static final String ICON_EXTENSION = ".png";
   }
 }

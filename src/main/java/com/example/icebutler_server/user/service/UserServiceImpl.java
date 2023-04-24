@@ -3,6 +3,7 @@ package com.example.icebutler_server.user.service;
 
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;
+import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import com.example.icebutler_server.global.util.RedisTemplateService;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.LoginUserReq;
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
             .provider(Provider.getProviderByName(postUserReq.getProvider()))
             .email(postUserReq.getEmail())
             .nickname(postUserReq.getNickname())
-            .profileImgKey(postUserReq.getProfileImgKey())
+            .profileImgKey(AwsS3ImageUrlUtil.toProfileImgKey(postUserReq.getProfileImgKey()))
             .build());
   }
 
@@ -82,8 +83,9 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     if (!StringUtils.hasText(patchProfileReq.getNickname())) throw new InvalidUserNickNameException();
-//    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
-    user.modifyProfile(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
+    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
+
+    user.modifyProfile(patchProfileReq.getNickname(), AwsS3ImageUrlUtil.toProfileImgKey(patchProfileReq.getProfileImgKey()));
     recipeServerEventPublisher.changeUserProfile(user);
   }
 

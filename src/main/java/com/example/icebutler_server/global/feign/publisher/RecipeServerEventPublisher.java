@@ -4,4 +4,6 @@ import com.example.icebutler_server.user.entity.User;
 
 public interface RecipeServerEventPublisher {
     void addUser(User user);
+
+    void changeUserProfile(User user);
 }

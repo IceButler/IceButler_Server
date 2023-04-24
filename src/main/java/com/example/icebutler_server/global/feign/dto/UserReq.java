@@ -7,12 +7,12 @@ import lombok.Data;
 public class UserReq {
     private Long userIdx;
     private String nickname;
-    private String profileImg;
+    private String profileImgKey;
 
     @Builder
-    public UserReq(Long userIdx, String nickname, String profileImg) {
+    public UserReq(Long userIdx, String nickname, String profileImgKey) {
         this.userIdx = userIdx;
         this.nickname = nickname;
-        this.profileImg = profileImg;
+        this.profileImgKey = profileImgKey;
     }
 }

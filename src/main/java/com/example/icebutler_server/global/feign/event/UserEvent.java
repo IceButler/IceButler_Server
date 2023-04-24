@@ -8,13 +8,13 @@ import lombok.Getter;
 public class UserEvent {
     private Long userIdx;
     private String nickname;
-    private String profileImg;
+    private String profileImgKey;
 
     public static UserEvent toEvent(User user){
         UserEvent userJoinEvent = new UserEvent();
         userJoinEvent.userIdx = user.getUserIdx();
         userJoinEvent.nickname = user.getNickname();
-        userJoinEvent.profileImg = user.getProfileImgKey();
+        userJoinEvent.profileImgKey = user.getProfileImgKey();
         return userJoinEvent;
     }
 
@@ -22,6 +22,6 @@ public class UserEvent {
         return UserReq.builder()
                 .userIdx(this.userIdx)
                 .nickname(this.nickname)
-                .profileImg(this.profileImg).build();
+                .profileImgKey(this.profileImgKey).build();
     }
 }

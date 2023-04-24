@@ -3,10 +3,7 @@ package com.example.icebutler_server.global.feign.feignClient;
 import com.example.icebutler_server.global.feign.dto.UserReq;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Component
 @FeignClient(name="recipe-server", url = "${server.recipe.url}")
@@ -16,4 +13,7 @@ public interface RecipeServerClient {
 
     @PatchMapping("/users")
     void changeUser(@RequestBody UserReq userReq);
+
+    @DeleteMapping("/users")
+    void deleteUser(@RequestBody UserReq userReq);
 }

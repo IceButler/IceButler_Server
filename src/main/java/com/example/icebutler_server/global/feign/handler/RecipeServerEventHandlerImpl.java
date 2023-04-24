@@ -36,4 +36,11 @@ public class RecipeServerEventHandlerImpl implements RecipeServerEventHandler{
             log.error(e.getMessage());
         }
     }
+
+    @Async
+    @EventListener
+    @Override
+    public void deleteUser(UserEvent userEvent) {
+        recipeServerClient.deleteUser(userEvent.toDto());
+    }
 }

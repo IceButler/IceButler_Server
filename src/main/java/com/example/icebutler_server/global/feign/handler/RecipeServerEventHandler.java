@@ -6,4 +6,6 @@ public interface RecipeServerEventHandler {
     void addUser(UserEvent userEvent);
 
     void changeUserProfile(UserEvent userEvent);
+
+    void deleteUser(UserEvent userEvent);
 }

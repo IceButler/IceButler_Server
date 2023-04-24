@@ -1,12 +1,11 @@
 package com.example.icebutler_server.food.dto.assembler;
 
 import com.example.icebutler_server.cart.dto.cart.request.AddFoodRequest;
-import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
-import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import static com.example.icebutler_server.global.util.Constant.Food.*;
@@ -15,8 +14,9 @@ import static com.example.icebutler_server.global.util.Constant.Food.*;
 @RequiredArgsConstructor
 public class FoodAssembler {
 
-  public Food toEntity(FridgeFoodReq request){
-    String foodImageKey = IMG_FOLDER + request.getFoodCategory()+ ICON_EXTENSION;
+  public Food toEntity(FridgeFoodReq request) {
+    FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(request.getFoodCategory());
+    String foodImageKey = IMG_FOLDER + foodCategory.toString() + ICON_EXTENSION;
     return Food.builder()
             .foodName(request.getFoodName())
             .foodCategory(FoodCategory.getFoodCategoryByName(request.getFoodCategory()))
@@ -25,11 +25,12 @@ public class FoodAssembler {
   }
 
   public Food toEntity(AddFoodRequest request) {
-    String foodImageKey = IMG_FOLDER + request.getFoodCategory()+ ICON_EXTENSION;
+    FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(request.getFoodCategory());
+    String foodImageKey = IMG_FOLDER + foodCategory.toString() + ICON_EXTENSION;
     return Food.builder()
             .foodName(request.getFoodName())
             .foodImgKey(foodImageKey)
-            .foodCategory(FoodCategory.getFoodCategoryByName(request.getFoodCategory()))
+            .foodCategory(foodCategory)
             .build();
   }
 }

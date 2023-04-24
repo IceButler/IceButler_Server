@@ -104,6 +104,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         redisTemplateService.deleteUserRefreshToken(userIdx);
     user.setIsEnable(false);
+    recipeServerEventPublisher.deleteUser(user);
   }
 
   //유저 로그아웃

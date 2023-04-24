@@ -21,4 +21,9 @@ public class RecipeServerEventPublisherImpl implements RecipeServerEventPublishe
     public void changeUserProfile(User user) {
         publisher.publishEvent(UserEvent.toEvent(user));
     }
+
+    @Override
+    public void deleteUser(User user) {
+        publisher.publishEvent(UserEvent.toEvent(user));
+    }
 }

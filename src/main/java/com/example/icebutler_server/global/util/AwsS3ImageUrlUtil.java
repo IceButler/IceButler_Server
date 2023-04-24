@@ -20,17 +20,8 @@ public class AwsS3ImageUrlUtil {
     public void setBucket(String value) {
         bucket = value;
     }
-    @Value("${aws.s3.profile}")
-    public void setProfile(String value) {
-        profile = value;
-    }
-
 
     public static String toUrl(String imageKey) {
         return "https://"+bucket+".s3."+region+".amazonaws.com/"+imageKey;
-    }
-
-    public static String toProfileImgKey(String imageKey) {
-        return profile + imageKey;
     }
 }

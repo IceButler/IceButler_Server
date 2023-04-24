@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
             .provider(Provider.getProviderByName(postUserReq.getProvider()))
             .email(postUserReq.getEmail())
             .nickname(postUserReq.getNickname())
-            .profileImgKey(AwsS3ImageUrlUtil.toProfileImgKey(postUserReq.getProfileImgKey()))
+            .profileImgKey(postUserReq.getProfileImgKey())
             .build());
   }
 
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
     if (!StringUtils.hasText(patchProfileReq.getNickname())) throw new InvalidUserNickNameException();
     if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
 
-    user.modifyProfile(patchProfileReq.getNickname(), AwsS3ImageUrlUtil.toProfileImgKey(patchProfileReq.getProfileImgKey()));
+    user.modifyProfile(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
     recipeServerEventPublisher.changeUserProfile(user);
   }
 

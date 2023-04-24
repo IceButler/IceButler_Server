@@ -1,42 +1,36 @@
 package com.example.icebutler_server.food.dto.assembler;
 
 import com.example.icebutler_server.cart.dto.cart.request.AddFoodRequest;
-import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
-import com.example.icebutler_server.global.util.Constant;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
-import static com.example.icebutler_server.global.util.Constant.Food.ICON_EXTENSION;
+import static com.example.icebutler_server.global.util.Constant.Food.*;
 
 @Component
 @RequiredArgsConstructor
 public class FoodAssembler {
 
-  public Food toEntity(FridgeFoodReq fridgeFoodReq){
+  public Food toEntity(FridgeFoodReq request) {
+    FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(request.getFoodCategory());
+    String foodImageKey = IMG_FOLDER + foodCategory.toString() + ICON_EXTENSION;
     return Food.builder()
-            .foodName(fridgeFoodReq.getFoodName())
-            .foodCategory(FoodCategory.getFoodCategoryByName(fridgeFoodReq.getFoodCategory()))
-            .foodIconName(fridgeFoodReq.getFoodCategory())
-            .build();
-  }
-
-  public FoodRes toDto(Food food) {
-    return FoodRes.builder()
-            .foodIdx(food.getFoodIdx())
-            .foodName(food.getFoodName())
-            .foodCategory(food.getFoodCategory().getName())
-            .foodIconName(food.getFoodIconName())
+            .foodName(request.getFoodName())
+            .foodCategory(FoodCategory.getFoodCategoryByName(request.getFoodCategory()))
+            .foodImgKey(foodImageKey)
             .build();
   }
 
   public Food toEntity(AddFoodRequest request) {
+    FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(request.getFoodCategory());
+    String foodImageKey = IMG_FOLDER + foodCategory.toString() + ICON_EXTENSION;
     return Food.builder()
             .foodName(request.getFoodName())
-            .foodIconName(request.getFoodCategory()+ ICON_EXTENSION)
-            .foodCategory(FoodCategory.getFoodCategoryByName(request.getFoodCategory()))
+            .foodImgKey(foodImageKey)
+            .foodCategory(foodCategory)
             .build();
   }
 }

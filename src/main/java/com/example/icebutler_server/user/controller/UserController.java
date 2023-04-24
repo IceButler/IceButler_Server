@@ -26,7 +26,7 @@ public class UserController {
   }
 
   @ResponseBody
-  @GetMapping("/login")
+  @PostMapping("/login")
   public ResponseCustom<?> login(@RequestBody LoginUserReq loginUserReq) {
     return ResponseCustom.OK(userService.login(loginUserReq));
   }

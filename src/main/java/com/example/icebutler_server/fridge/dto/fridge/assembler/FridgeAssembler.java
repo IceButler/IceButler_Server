@@ -87,9 +87,10 @@ public class FridgeAssembler {
 
   public void removeFridge(FridgeUser owner, Fridge fridge, List<FridgeUser> fridgeUsers, List<FridgeFood> fridgeFoods) {
     if (owner.getRole() != FridgeRole.OWNER) throw new PermissionDeniedException();
-    if(fridgeUsers.size() > 1 || fridgeFoods.size() > 0) throw new FridgeRemoveException();
+    if(fridgeUsers.size() > 1) throw new FridgeRemoveException();
 
     fridgeUsers.forEach(FridgeUser::remove);
+//    fridgeFoods.forEach(FridgeFood::remove);
     fridge.remove();
   }
 }

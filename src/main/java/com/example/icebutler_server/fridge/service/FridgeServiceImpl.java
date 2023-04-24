@@ -125,6 +125,7 @@ public class FridgeServiceImpl implements FridgeService {
     List<FridgeFood> fridgeFoods = fridgeFoodRepository.findByFridgeAndIsEnableOrderByShelfLife(fridge, true);
 
     fridgeAssembler.removeFridge(owner, fridge, fridgeUsers, fridgeFoods);
+    fridgeFoodRepository.removeFridgeFoodByFridge(false, fridge);
 
     return fridge.getFridgeIdx();
   }

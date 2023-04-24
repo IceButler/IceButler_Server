@@ -3,6 +3,7 @@ package com.example.icebutler_server.user.service;
 
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;
+import com.example.icebutler_server.global.util.RedisTemplateService;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.LoginUserReq;
 import com.example.icebutler_server.user.dto.assembler.UserAssembler;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
   private final TokenUtils tokenUtils;
 
   private final RecipeServerEventPublisherImpl recipeServerEventPublisher;
-  // private final RedisTemplateService redisTemplateService;
+  private final RedisTemplateService redisTemplateService;
 
   // 소셜로그인
   @Transactional
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     if (!StringUtils.hasText(patchProfileReq.getNickname())) throw new InvalidUserNickNameException();
-    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
+//    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
 
     user.modifyProfile(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
   }
@@ -99,7 +100,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void deleteUser(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-//        redisTemplateService.deleteUserRefreshToken(userIdx);
+        redisTemplateService.deleteUserRefreshToken(userIdx);
     user.setIsEnable(false);
   }
 
@@ -108,7 +109,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void logout(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-//        redisTemplateService.deleteUserRefreshToken(userIdx)
+        redisTemplateService.deleteUserRefreshToken(userIdx);
     user.logout();
   }
 

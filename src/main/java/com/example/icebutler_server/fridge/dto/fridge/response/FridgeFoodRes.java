@@ -20,7 +20,7 @@ public class FridgeFoodRes {
   private String foodDetailName;
   private String foodCategory;
   private String shelfLife;
-  private String day;
+  private int day;
   private String owner;
   private String memo;
   private String imgUrl;

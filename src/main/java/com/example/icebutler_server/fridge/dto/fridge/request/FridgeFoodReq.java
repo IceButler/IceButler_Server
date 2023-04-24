@@ -16,5 +16,5 @@ public class FridgeFoodReq {
   private String shelfLife;
   private Long ownerIdx;
   private String memo;
-  private String imgUrl;
+  private String imgKey;
 }

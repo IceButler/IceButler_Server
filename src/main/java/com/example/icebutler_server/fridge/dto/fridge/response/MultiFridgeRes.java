@@ -18,27 +18,27 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MultiFridgeRes {
-  private Long multiFridgeIdx;
-  private String multiFridgeName;
-  private String comment;
-  private List<FridgeUserRes> users;
-  private Integer userCnt;
+    private Long multiFridgeIdx;
+    private String multiFridgeName;
+    private String comment;
+    private List<FridgeUserRes> users;
+    private Integer userCnt;
 
-  public static MultiFridgeRes toDto(MultiFridge multiFridge, List<List<MultiFridgeUser>> multiFridgeUserList) {
-    List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
-    for (List<MultiFridgeUser> multiFridgeUserArr : multiFridgeUserList) {
-      for (MultiFridgeUser multiFridgeUser : multiFridgeUserArr) {
-        if (multiFridgeUser.getMultiFridge().getMultiFridgeIdx().equals(multiFridge.getMultiFridgeIdx())) multiFridgeUsers.add(multiFridgeUser);
-      }
+    public static MultiFridgeRes toDto(MultiFridge multiFridge, List<List<MultiFridgeUser>> multiFridgeUserList) {
+        List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
+        for (List<MultiFridgeUser> multiFridgeUserArr : multiFridgeUserList) {
+            for (MultiFridgeUser multiFridgeUser : multiFridgeUserArr) {
+                if (multiFridgeUser.getMultiFridge().getMultiFridgeIdx().equals(multiFridge.getMultiFridgeIdx())) multiFridgeUsers.add(multiFridgeUser);
+            }
+        }
+
+        MultiFridgeRes multiFridgeRes = new MultiFridgeRes();
+        multiFridgeRes.multiFridgeIdx = multiFridge.getMultiFridgeIdx();
+        multiFridgeRes.multiFridgeName = multiFridge.getFridgeName();
+        multiFridgeRes.comment = multiFridge.getFridgeComment();
+        multiFridgeRes.users = multiFridgeUsers.stream().map(m -> FridgeUserRes.toDto(m.getUser(), m.getRole())).collect(Collectors.toList());
+        multiFridgeRes.userCnt = multiFridgeUsers.size();
+
+        return multiFridgeRes;
     }
-
-    MultiFridgeRes multiFridgeRes = new MultiFridgeRes();
-    multiFridgeRes.multiFridgeIdx = multiFridge.getMultiFridgeIdx();
-    multiFridgeRes.multiFridgeName = multiFridge.getFridgeName();
-    multiFridgeRes.comment = multiFridge.getFridgeComment();
-    multiFridgeRes.users = multiFridgeUsers.stream().map(m -> FridgeUserRes.toDto(m.getUser(), m.getRole())).collect(Collectors.toList());
-    multiFridgeRes.userCnt = multiFridgeUsers.size();
-
-    return multiFridgeRes;
-  }
 }

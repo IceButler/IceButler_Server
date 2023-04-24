@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
     if (!StringUtils.hasText(patchProfileReq.getNickname())) throw new InvalidUserNickNameException();
 //    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
-
+    recipeServerEventPublisher.changeUserProfile(user);
     user.modifyProfile(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
   }
 

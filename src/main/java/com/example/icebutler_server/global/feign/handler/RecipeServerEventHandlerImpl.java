@@ -37,6 +37,8 @@ public class RecipeServerEventHandlerImpl implements RecipeServerEventHandler{
         }
     }
 
+    @Async
+    @EventListener
     @Override
     public void deleteUser(UserEvent userEvent) {
         recipeServerClient.deleteUser(userEvent.toDto());

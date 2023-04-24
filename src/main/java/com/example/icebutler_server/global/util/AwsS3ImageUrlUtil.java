@@ -10,6 +10,7 @@ public class AwsS3ImageUrlUtil {
 
     public static String bucket;
     public static String region;
+    public static String profile;
 
     @Value("${aws.s3.region}")
     public void setRegion(String value) {
@@ -19,8 +20,17 @@ public class AwsS3ImageUrlUtil {
     public void setBucket(String value) {
         bucket = value;
     }
+    @Value("${aws.s3.profile}")
+    public void setProfile(String value) {
+        profile = value;
+    }
+
 
     public static String toUrl(String imageKey) {
         return "https://"+bucket+".s3."+region+".amazonaws.com/"+imageKey;
+    }
+
+    public static String toProfileImgKey(String imageKey) {
+        return profile + imageKey;
     }
 }

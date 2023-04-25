@@ -10,6 +10,7 @@ public class AwsS3ImageUrlUtil {
 
     public static String bucket;
     public static String region;
+    public static String profile;
 
     @Value("${aws.s3.region}")
     public void setRegion(String value) {

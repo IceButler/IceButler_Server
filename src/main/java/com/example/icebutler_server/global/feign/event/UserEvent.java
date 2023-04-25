@@ -1,27 +1,27 @@
 package com.example.icebutler_server.global.feign.event;
 
-import com.example.icebutler_server.global.feign.dto.AddUserReq;
+import com.example.icebutler_server.global.feign.dto.UserReq;
 import com.example.icebutler_server.user.entity.User;
 import lombok.Getter;
 
 @Getter
-public class UserJoinEvent {
+public class UserEvent {
     private Long userIdx;
     private String nickname;
-    private String profileImg;
+    private String profileImgKey;
 
-    public static UserJoinEvent toEvent(User user){
-        UserJoinEvent userJoinEvent = new UserJoinEvent();
+    public static UserEvent toEvent(User user){
+        UserEvent userJoinEvent = new UserEvent();
         userJoinEvent.userIdx = user.getUserIdx();
         userJoinEvent.nickname = user.getNickname();
-        userJoinEvent.profileImg = user.getProfileImgKey();
+        userJoinEvent.profileImgKey = user.getProfileImgKey();
         return userJoinEvent;
     }
 
-    public AddUserReq toDto() {
-        return AddUserReq.builder()
+    public UserReq toDto() {
+        return UserReq.builder()
                 .userIdx(this.userIdx)
                 .nickname(this.nickname)
-                .profileImg(this.profileImg).build();
+                .profileImgKey(this.profileImgKey).build();
     }
 }

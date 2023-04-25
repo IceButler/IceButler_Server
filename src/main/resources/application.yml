@@ -44,6 +44,7 @@ aws:
   s3:
     region: ap-northeast-2
     bucket: ice-bulter-iamge-bucket
+    profile: profile/
 
 jwt:
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
@@ -55,9 +56,3 @@ jwt:
   access-name: ACCESS-TOKEN
   refresh-name: REFRESH-TOKEN
 
-
-
-
-server:
-  recipe:
-    url: https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev

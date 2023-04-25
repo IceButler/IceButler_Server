@@ -1,7 +1,9 @@
 package com.example.icebutler_server.user.service;
 
 
+import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;
+import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import com.example.icebutler_server.global.util.RedisTemplateService;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.LoginUserReq;
@@ -30,7 +32,9 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final UserAssembler userAssembler;
   private final TokenUtils tokenUtils;
-   private final RedisTemplateService redisTemplateService;
+
+  private final RecipeServerEventPublisherImpl recipeServerEventPublisher;
+  private final RedisTemplateService redisTemplateService;
 
   // 소셜로그인
   @Transactional
@@ -41,7 +45,7 @@ public class UserServiceImpl implements UserService {
     if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
 
     user.login();
-
+    this.recipeServerEventPublisher.addUser(user);
     return PostUserRes.toDto(tokenUtils.createToken(user));
   }
 
@@ -79,9 +83,10 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     if (!StringUtils.hasText(patchProfileReq.getNickname())) throw new InvalidUserNickNameException();
-//    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
+    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
 
     user.modifyProfile(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
+    recipeServerEventPublisher.changeUserProfile(user);
   }
 
   // 닉네임 중복 확인
@@ -99,6 +104,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         redisTemplateService.deleteUserRefreshToken(userIdx);
     user.setIsEnable(false);
+    recipeServerEventPublisher.deleteUser(user);
   }
 
   //유저 로그아웃

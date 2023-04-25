@@ -4,6 +4,8 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
+import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListsRes;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.Auth;
@@ -141,4 +143,14 @@ public class FridgeController {
     return ResponseCustom.OK(fridgeService.getFridgeFoodStatistics(fridgeIdx, deleteCategory, status.getUserIdx(), year, month));
   }
 
+
+  // 레시피 정보 전달 api
+
+  /**
+   * [Get] 사용자가 속한 가정용/공용 냉장고 food list
+   */
+  @GetMapping("/{userIdx}/food-lists")
+  public ResponseCustom<RecipeFridgeFoodListsRes> getFridgeUserFoodList(@PathVariable(name = "userIdx") Long userIdx){
+    return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(userIdx));
+  }
 }

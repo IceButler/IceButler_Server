@@ -260,8 +260,17 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   //  사용자가 속한 가정용/공용 냉장고 food list
-  public RecipeFridgeFoodListsRes getFridgeUserFoodList(Long userIdx) {
+  public RecipeFridgeFoodListsRes getFridgeUserFoodList(Long userIdx, Long fridgeIdx, Long multiFridgeIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-    return RecipeFridgeFoodListsRes.toDto(this.fridgeFoodRepository.findByUserForRecipeFridgeFoodList(user));
+    if(fridgeIdx != null){
+      // todo: 사용자가 냉장고에 속했는지 필요한 에러처리가 있어야 하는지?
+      Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
+      return RecipeFridgeFoodListsRes.toDto(this.fridgeFoodRepository.findByUserForFridgeRecipeFoodList(fridge));
+    }else if(multiFridgeIdx != null){
+      MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(multiFridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+      return RecipeFridgeFoodListsRes.toDto(this.fridgeFoodRepository.findByUserForMultiFridgeRecipeFoodList(fridge));
+    }else{
+      return RecipeFridgeFoodListsRes.toDto(this.fridgeFoodRepository.findByUserForRecipeFoodList(user));
+    }
   }
 }

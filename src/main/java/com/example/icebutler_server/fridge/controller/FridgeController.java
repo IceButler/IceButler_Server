@@ -150,7 +150,9 @@ public class FridgeController {
    * [Get] 사용자가 속한 가정용/공용 냉장고 food list
    */
   @GetMapping("/{userIdx}/food-lists")
-  public ResponseCustom<RecipeFridgeFoodListsRes> getFridgeUserFoodList(@PathVariable(name = "userIdx") Long userIdx){
-    return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(userIdx));
+  public ResponseCustom<RecipeFridgeFoodListsRes> getFridgeUserFoodList(@PathVariable(name = "userIdx") Long userIdx,
+                                                                        @RequestParam(name = "fridgeIdx", required = false) Long fridgeIdx,
+                                                                        @RequestParam(name = "multiFridgeIdx", required = false) Long multiFridgeIdx){
+    return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(userIdx, fridgeIdx, multiFridgeIdx));
   }
 }

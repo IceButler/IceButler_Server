@@ -4,6 +4,7 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.user.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
      * group by food.food_idx;
      */
     @Override
-    public List<Food> findByUserForRecipeFridgeFoodList(User userEntity) {
+    public List<Food> findByUserForRecipeFoodList(User userEntity) {
         return jpaQueryFactory.selectFrom(food)
                 .leftJoin(fridgeFood).on(food.eq(fridgeFood.food))
                 .leftJoin(fridge).on(fridgeFood.fridge.eq(fridge))
@@ -58,6 +59,30 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                         (fridgeUser.user.eq(userEntity)).and(fridgeFood.isEnable.eq(true)).and(fridge.isEnable.eq(true)).and(fridgeUser.isEnable.eq(true))
                          // multifridge
                         .or(multiFridgeUser.user.eq(userEntity).and(multiFridgeFood.isEnable.eq(true)).and(multiFridge.isEnable.eq(true)).and(multiFridgeUser.isEnable.eq(true))))
+                .groupBy(food.foodIdx)
+                .fetch();
+    }
+
+    @Override
+    public List<Food> findByUserForFridgeRecipeFoodList(Fridge fridgeEntity) {
+        return jpaQueryFactory.selectFrom(food)
+                .leftJoin(fridgeFood).on(food.eq(fridgeFood.food))
+                .leftJoin(fridge).on(fridgeFood.fridge.eq(fridge))
+                .leftJoin(fridgeUser).on(fridgeUser.fridge.eq(fridge))
+                .where((fridge.eq(fridgeEntity)).
+                        and(fridgeFood.isEnable.eq(true)).and(fridge.isEnable.eq(true)).and(fridgeUser.isEnable.eq(true)))
+                .groupBy(food.foodIdx)
+                .fetch();
+    }
+
+    @Override
+    public List<Food> findByUserForMultiFridgeRecipeFoodList(MultiFridge fridgeEntity) {
+        return jpaQueryFactory.selectFrom(food)
+                .leftJoin(multiFridgeFood).on(food.eq(multiFridgeFood.food))
+                .leftJoin(multiFridge).on(multiFridgeFood.multiFridge.eq(multiFridge))
+                .leftJoin(multiFridgeUser).on(multiFridgeUser.multiFridge.eq(multiFridge))
+                .where((multiFridge.eq(fridgeEntity)).
+                        and(multiFridgeFood.isEnable.eq(true)).and(multiFridge.isEnable.eq(true)).and(multiFridgeUser.isEnable.eq(true)))
                 .groupBy(food.foodIdx)
                 .fetch();
     }

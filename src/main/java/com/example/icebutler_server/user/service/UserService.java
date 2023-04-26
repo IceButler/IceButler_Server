@@ -23,5 +23,5 @@ public interface UserService {
   void logout(Long userIdx);
   //마이페이지 조회
 
-  MyProfileRes myProfile(Long userIdx);
+  MyProfileRes checkProfile(Long userIdx);
 }

@@ -151,7 +151,8 @@ public class FridgeController {
    */
   @GetMapping("/food-lists")
   public ResponseCustom<RecipeFridgeFoodListsRes> getFridgeUserFoodList(@RequestParam(name = "fridgeIdx", required = false) Long fridgeIdx,
-                                                                        @RequestParam(name = "multiFridgeIdx", required = false) Long multiFridgeIdx){
-    return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, multiFridgeIdx));
+                                                                        @RequestParam(name = "multiFridgeIdx", required = false) Long multiFridgeIdx,
+                                                                        @IsLogin LoginStatus loginStatus){
+    return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, multiFridgeIdx, loginStatus.getUserIdx()));
   }
 }

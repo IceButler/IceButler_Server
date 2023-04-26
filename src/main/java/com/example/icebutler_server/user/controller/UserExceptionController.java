@@ -48,4 +48,10 @@ public class UserExceptionController {
         log.error(e.getMessage());
         return ResponseCustom.BAD_REQUEST(e.getMessage());
     }
+
+    @ExceptionHandler(AuthAnnotationIsNowhereException.class)
+    public ResponseCustom<?> catchAuthAnnotationIsNowhereException(AuthAnnotationIsNowhereException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.BAD_REQUEST(e.getMessage());
+    }
 }

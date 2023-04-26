@@ -24,6 +24,15 @@ spring:
       hibernate:
         format_sql: true
 
+  redis:
+    pool:
+      min-idle: 0
+      max-idle: 8
+      max-active: 8
+    port: 6379
+    host: 13.125.164.38
+    password: tmdgkr0802!
+
 # TODO: 배포 재설정 후 수정
 #  profiles:
 #    include: API-KEY
@@ -47,7 +56,3 @@ jwt:
   access-name: ACCESS-TOKEN
   refresh-name: REFRESH-TOKEN
 
-
-server:
-  recipe:
-    url: https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/dev-ice-bulter-recipe

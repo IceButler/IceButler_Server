@@ -149,9 +149,11 @@ public class FridgeController {
   /**
    * [Get] 사용자가 속한 가정용/공용 냉장고 food list
    */
+  // todo: 토큰 추가하기
   @GetMapping("/food-lists")
   public ResponseCustom<RecipeFridgeFoodListsRes> getFridgeUserFoodList(@RequestParam(name = "fridgeIdx", required = false) Long fridgeIdx,
-                                                                        @RequestParam(name = "multiFridgeIdx", required = false) Long multiFridgeIdx){
-    return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, multiFridgeIdx));
+                                                                        @RequestParam(name = "multiFridgeIdx", required = false) Long multiFridgeIdx,
+                                                                        @RequestParam(name = "userIdx") Long userIdx){
+    return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, multiFridgeIdx, userIdx));
   }
 }

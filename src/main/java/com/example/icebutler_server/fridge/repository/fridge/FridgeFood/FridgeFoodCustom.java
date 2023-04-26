@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface FridgeFoodCustom {
     Long findByDeleteCategoryForStatistics(FoodDeleteStatus deleteCategory, Fridge fridge, FoodCategory category, Integer year, Integer month);
-    List<Food> findByUserForRecipeFoodList(User user);
     List<Food> findByUserForFridgeRecipeFoodList(Fridge fridge);
     List<Food> findByUserForMultiFridgeRecipeFoodList(MultiFridge fridge);
 }

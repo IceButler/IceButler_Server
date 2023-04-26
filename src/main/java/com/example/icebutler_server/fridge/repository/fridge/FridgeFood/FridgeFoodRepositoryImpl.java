@@ -46,22 +46,6 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
      *       and (mfu.user_idx = 369 and mff.is_enable = true and mf.is_enable = true and mfu.is_enable = true))
      * group by food.food_idx;
      */
-    @Override
-    public List<Food> findByUserForRecipeFoodList(User userEntity) {
-        return jpaQueryFactory.selectFrom(food)
-                .leftJoin(fridgeFood).on(food.eq(fridgeFood.food))
-                .leftJoin(fridge).on(fridgeFood.fridge.eq(fridge))
-                .leftJoin(fridgeUser).on(fridgeUser.fridge.eq(fridge))
-                .leftJoin(multiFridgeFood).on(food.eq(multiFridgeFood.food))
-                .leftJoin(multiFridge).on(multiFridgeFood.multiFridge.eq(multiFridge))
-                .leftJoin(multiFridgeUser).on(multiFridgeUser.multiFridge.eq(multiFridge))
-                .where( // fridge
-                        (fridgeUser.user.eq(userEntity)).and(fridgeFood.isEnable.eq(true)).and(fridge.isEnable.eq(true)).and(fridgeUser.isEnable.eq(true))
-                         // multifridge
-                        .or(multiFridgeUser.user.eq(userEntity).and(multiFridgeFood.isEnable.eq(true)).and(multiFridge.isEnable.eq(true)).and(multiFridgeUser.isEnable.eq(true))))
-                .groupBy(food.foodIdx)
-                .fetch();
-    }
 
     @Override
     public List<Food> findByUserForFridgeRecipeFoodList(Fridge fridgeEntity) {

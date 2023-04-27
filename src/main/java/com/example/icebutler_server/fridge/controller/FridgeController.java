@@ -4,7 +4,6 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
-import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListsRes;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -65,10 +64,10 @@ public class FridgeController {
   // 냉장고 내 식품 검색 조회
   @Auth
   @GetMapping("/{fridgeIdx}/search")
-  public ResponseCustom<?> findFoodByName(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                          @RequestParam(value = "foodName") String foodName,
-                                          @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.findFoodByName(fridgeIdx, loginStatus.getUserIdx(), foodName));
+  public ResponseCustom<?> searchFridgeFood(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
+                                            @RequestParam(value = "keyword") String keyword,
+                                            @IsLogin LoginStatus loginStatus) {
+    return ResponseCustom.OK(fridgeService.searchFridgeFood(fridgeIdx, loginStatus.getUserIdx(), keyword));
   }
 
   // 냉장고 내 식품 상세 조회

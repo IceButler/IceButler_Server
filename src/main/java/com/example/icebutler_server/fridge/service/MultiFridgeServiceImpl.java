@@ -8,10 +8,7 @@ import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsStatistics;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeUserMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
@@ -102,7 +99,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
 
     @Override
-    public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName){
+    public SearchFridgeFoodRes searchFridgeFood(Long fridgeIdx, Long ownerIdx, String foodName){
         return null;
     }
 

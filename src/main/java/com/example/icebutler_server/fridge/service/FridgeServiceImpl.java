@@ -144,12 +144,10 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   @Override
-  public List<Food> findFoodByName(Long fridgeIdx, Long ownerIdx, String foodName) {
-    User user = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
+  public SearchFridgeFoodRes searchFridgeFood(Long fridgeIdx, Long userIdx, String keyword) {
     Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
-    fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
-
-    return fridgeAssembler.findFoodByFoodName(user, fridge, foodName);
+    List<FridgeFood> searchFoods = fridgeFoodRepository.findByFoodDetailNameContainingAndFridgeAndIsEnable(keyword, fridge, true);
+    return SearchFridgeFoodRes.toDto(searchFoods, fridgeIdx, userIdx);
   }
 
   @Override

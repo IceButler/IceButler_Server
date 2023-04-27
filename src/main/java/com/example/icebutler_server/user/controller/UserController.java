@@ -7,6 +7,7 @@ import com.example.icebutler_server.user.dto.LoginUserReq;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
+import com.example.icebutler_server.user.dto.response.MyProfileRes;
 import com.example.icebutler_server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -69,10 +70,10 @@ public class UserController {
   // 마이페이지 조회
   @Auth
   @GetMapping("")
-  public ResponseCustom<?> profile(
+  public ResponseCustom<MyProfileRes> profile(
           @IsLogin LoginStatus loginStatus
   ) {
-    return ResponseCustom.OK(userService.myProfile(loginStatus.getUserIdx()));
+    return ResponseCustom.OK(userService.checkProfile(loginStatus.getUserIdx()));
   }
 
 }

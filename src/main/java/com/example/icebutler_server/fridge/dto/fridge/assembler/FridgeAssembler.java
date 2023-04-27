@@ -62,28 +62,10 @@ public class FridgeAssembler {
     return checkNewMember;
 }
 
-  public List<Food> findFoodByFoodName(User owner, Fridge fridge, String foodName) {
-
-//    List<Food> searchFood = new ArrayList<>();
+//  public List<Food> searchFridgeFood(List<FridgeFood> fridgeFoods, String keyword) {
 //
-//    //냉장고 오너가 등록한 음식 중 검색
-//    List<Food> ownerFoods = owner.getFoods();
-//    for (Food food : ownerFoods) {
-//      if (food.getFoodName().equals(foodName)) searchFood.add(food);
-//    }
-//
-//    //냉장고 멤버가 등록한 음식 중 검색
-//    List<FridgeUser> fridgeUsers = fridge.getFridgeUsers();
-//    for (FridgeUser fridgeUser : fridgeUsers) {
-//      for (Food food : fridgeUser.getUser().getFoods()) {
-//        if (food.getFoodName().equals(foodName)) searchFood.add(food);
-//      }
-//    }
-////    검색결과 x -> 예외처리로 해야할지
-////    if (searchFood.size() == 0) throw new BaseException(NULL_SEARCH_FOOD);
-//    return searchFood;
-    return null;
-  }
+//    return null;
+//  }
 
   public void removeFridge(FridgeUser owner, Fridge fridge, List<FridgeUser> fridgeUsers, List<FridgeFood> fridgeFoods) {
     if (owner.getRole() != FridgeRole.OWNER) throw new PermissionDeniedException();

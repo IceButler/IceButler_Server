@@ -3,7 +3,6 @@ package com.example.icebutler_server.map.service;
 import com.example.icebutler_server.map.dto.MapDTO;
 import com.example.icebutler_server.map.exception.NoHeaderException;
 import com.example.icebutler_server.map.exception.NoResponseAPIException;
-import com.example.icebutler_server.map.service.MapService;
 import lombok.RequiredArgsConstructor;
 
 import org.json.JSONObject;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import static com.example.icebutler_server.global.util.Constant.*;
 import static com.example.icebutler_server.global.util.TokenUtils.accessKeyId;
 import static com.example.icebutler_server.global.util.TokenUtils.secretKey;
 
@@ -23,11 +23,11 @@ public class MapServiceImpl implements MapService {
 
     @Override
     public MapDTO.Location enterMap(String roadFullAddr) {
-        String apiUrl = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode";;
+        String apiUrl = API_URL;
         RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("726nwzjyd7", accessKeyId);
-        headers.add("UlPo60Xf0LuYOmzZTcT7N2w6YV7Hx9WS9cHGVDU5", secretKey);
+        headers.add(ACCESS_KEYID, accessKeyId);
+        headers.add(SECRET_KEY, secretKey);
         String body = "";
         String query = roadFullAddr;
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);

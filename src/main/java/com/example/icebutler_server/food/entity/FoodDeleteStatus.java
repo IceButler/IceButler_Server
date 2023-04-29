@@ -16,7 +16,7 @@ public enum FoodDeleteStatus {
         this.name=name;
     }
 
-    public static FoodDeleteStatus getFoodCategoryByName(String name){
+    public static FoodDeleteStatus getFoodDeleteStatusByName(String name){
         return Arrays.stream(FoodDeleteStatus.values())
                 .filter(r -> r.getName().equals(name))
                 .findAny().orElseThrow(FoodDeleteStatusNotFoundException::new);

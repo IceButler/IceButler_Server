@@ -1,9 +1,6 @@
 package com.example.icebutler_server.fridge.controller;
 
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
+import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListsRes;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -97,6 +94,17 @@ public class FridgeController {
                                             @PathVariable Long fridgeFoodIdx,
                                             @IsLogin LoginStatus loginStatus) {
     fridgeService.modifyFridgeFood(fridgeIdx, fridgeFoodIdx, fridgeFoodReq, loginStatus.getUserIdx());
+    return ResponseCustom.OK();
+  }
+
+  // 냉장고 내 식품 삭제(폐기/섭취)
+  @Auth
+  @DeleteMapping("/{fridgeIdx}/foods")
+  public ResponseCustom<?> deleteFridgeFood(@RequestBody DeleteFridgeFoodsReq deleteFridgeFoodsReq,
+                                            @RequestParam String type,
+                                            @PathVariable Long fridgeIdx,
+                                            @IsLogin LoginStatus loginStatus) {
+    fridgeService.deleteFridgeFood(deleteFridgeFoodsReq, type, fridgeIdx, loginStatus.getUserIdx());
     return ResponseCustom.OK();
   }
 

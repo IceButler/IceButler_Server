@@ -69,4 +69,9 @@ public class FridgeFood extends BaseEntity {
   public void remove() {
     this.setIsEnable(false);
   }
+
+  public void removeWithStatus(FoodDeleteStatus deleteStatus) {
+    this.setIsEnable(false);
+    this.foodDeleteStatus = deleteStatus;
+  }
 }

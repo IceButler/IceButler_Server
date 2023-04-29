@@ -7,12 +7,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE fridge_user SET is_enable = false, last_modified_date = current_timestamp WHERE fridge_user_idx = ?")
 public class FridgeUser extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -27,6 +29,7 @@ public class FridgeUser extends BaseEntity {
     private Fridge fridge;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private FridgeRole role;
 
     @Builder

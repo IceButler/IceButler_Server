@@ -5,24 +5,23 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.persistence.CascadeType.ALL;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE multi_fridge SET is_enable = false, last_modified_date = current_timestamp WHERE multi_fridge_idx = ?")
 public class MultiFridge extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
   private Long multiFridgeIdx;
 
+  @Column(nullable = false)
   private String fridgeName;
+
   private String fridgeComment;
 
   @Builder

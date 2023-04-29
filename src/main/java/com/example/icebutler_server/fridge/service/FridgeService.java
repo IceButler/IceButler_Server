@@ -1,5 +1,6 @@
 package com.example.icebutler_server.fridge.service;
 
+import com.example.icebutler_server.fridge.dto.fridge.request.DeleteFridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
@@ -14,8 +15,8 @@ public interface FridgeService {
   FridgeFoodRes getFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, Long userIdx);
   void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeIdx, Long userIdx);
   void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx);
+  void deleteFridgeFood(DeleteFridgeFoodsReq deleteFridgeFoodsReq, String deleteType, Long fridgeIdx, Long userIdx);
   FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx);
   FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month);
-
 
 }

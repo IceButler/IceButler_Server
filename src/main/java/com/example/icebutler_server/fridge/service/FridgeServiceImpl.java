@@ -211,12 +211,30 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   @Override
+  @Transactional
+  public void deleteFridgeFood(DeleteFridgeFoodsReq deleteFridgeFoodsReq, String type, Long fridgeIdx, Long userIdx) {
+    FoodDeleteStatus deleteStatus = FoodDeleteStatus.getFoodDeleteStatusByName(type);
+    User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true)
+            .orElseThrow(UserNotFoundException::new);
+    Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true)
+            .orElseThrow(FridgeNotFoundException::new);
+    this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, user, true)
+            .orElseThrow(FridgeUserNotFoundException::new);
+
+    List<FridgeFood> deleteFridgeFoods = deleteFridgeFoodsReq.getDeleteFoods().stream()
+            .map(foodIdx -> this.fridgeFoodRepository.findByFridgeFoodIdxAndFridgeAndIsEnable(foodIdx, fridge, true)
+                    .orElseThrow(FridgeFoodNotFoundException::new))
+            .collect(Collectors.toList());
+
+    deleteFridgeFoods.forEach(food -> food.removeWithStatus(deleteStatus));
+  }
+
+  @Override
   //냉장고 내 유저 조회
   public FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx){
-    Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
-
+    Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true)
+            .orElseThrow(FridgeNotFoundException::new);
     return FridgeUserMainRes.doDto(fridgeUserRepository.findByFridgeAndIsEnable(fridge,true));
-
   }
 
   @Override
@@ -228,7 +246,7 @@ public class FridgeServiceImpl implements FridgeService {
     Map<FoodCategory, Long> deleteStatusList = new HashMap<>();
 
     for(FoodCategory category: FoodCategory.values()){
-      Long foodSize = this.fridgeFoodRepository.findByDeleteCategoryForStatistics(FoodDeleteStatus.getFoodCategoryByName(deleteCategory), fridge, category, year, month);
+      Long foodSize = this.fridgeFoodRepository.findByDeleteCategoryForStatistics(FoodDeleteStatus.getFoodDeleteStatusByName(deleteCategory), fridge, category, year, month);
       deleteStatusList.put(category, foodSize);
     }
 

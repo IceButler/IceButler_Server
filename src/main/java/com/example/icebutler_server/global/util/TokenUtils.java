@@ -33,12 +33,19 @@ public class TokenUtils {
       private final RedisTemplateService redisTemplateService;
 //  private final RedisTemplateServiceMock redisTemplateService;
 
+  public static String accessKeyId;
   public static String secretKey;
   public static String tokenType;
   public static String accessName;
   public static String refreshName;
   public static String accessExTime;
   public static String refreshExTime;
+
+
+  @Value("${jwt.secret}")
+  public void accessKeyId(String value) {
+    accessKeyId = value;
+  }
 
   @Value("${jwt.secret}")
   public void setSecretKey(String value) {

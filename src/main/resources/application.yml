@@ -49,8 +49,8 @@ aws:
 jwt:
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   admin-secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
-  access-expired-time: 604800000
-  refresh-expired-time: 31600000000
+  access-expired-time: 1209600000
+  refresh-expired-time: 63200000000
   auth-header: Authorization
   token-type: Bearer
   access-name: ACCESS-TOKEN

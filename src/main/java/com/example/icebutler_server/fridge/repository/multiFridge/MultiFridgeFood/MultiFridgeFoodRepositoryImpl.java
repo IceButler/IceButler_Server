@@ -2,15 +2,10 @@ package com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFo
 
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
-import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
-import static com.example.icebutler_server.fridge.entity.fridge.QFridgeFood.fridgeFood;
 import static com.example.icebutler_server.fridge.entity.multiFridge.QMultiFridgeFood.multiFridgeFood;
 
 @RequiredArgsConstructor

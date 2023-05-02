@@ -18,6 +18,7 @@ import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.*;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -33,6 +34,8 @@ public class UserServiceImpl implements UserService {
 
   private final RecipeServerEventPublisherImpl recipeServerEventPublisher;
   private final RedisTemplateService redisTemplateService;
+
+
 
   // 소셜로그인
   @Transactional

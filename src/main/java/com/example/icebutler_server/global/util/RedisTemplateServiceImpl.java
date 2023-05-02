@@ -13,9 +13,9 @@ public class RedisTemplateServiceImpl implements RedisTemplateService {
 
     private final RedisTemplate<Long, String> redisTemplate;
 
-    public void deleteUserRefreshToken(@NotNull Long userIdx){
-        ValueOperations<Long, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.getAndDelete(userIdx);
+    public void deleteUserRefreshToken(Long userIdx){
+        String key=String.valueOf(userIdx);
+        if(redisTemplate.opsForValue().get(key)!=null) redisTemplate.delete(userIdx);
     }
 
 //    @Nullable

@@ -2,6 +2,7 @@ package com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFo
 
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
+import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import static com.example.icebutler_server.fridge.entity.fridge.QFridgeFood.fridgeFood;
 import static com.example.icebutler_server.fridge.entity.multiFridge.QMultiFridgeFood.multiFridgeFood;
 
 @RequiredArgsConstructor
@@ -25,5 +27,19 @@ public class MultiFridgeFoodRepositoryImpl implements MultiFridgeFoodCustom{
                         .and(multiFridgeFood.shelfLife.month().eq(month))
                         .and(multiFridgeFood.isEnable.eq(false)))
                 .fetchOne();
+    }
+
+    @Override
+    public FoodCategory findByMultiFridgeForDisCardFood(MultiFridge fridge) {
+        return jpaQueryFactory.select(multiFridgeFood.food.foodCategory)
+                .from(multiFridgeFood)
+                .where(multiFridgeFood.multiFridge.eq(fridge)
+                        .and(multiFridgeFood.foodDeleteStatus.eq(FoodDeleteStatus.DISCARD))
+                        .and(multiFridgeFood.isEnable.eq(false)))
+                .groupBy(multiFridgeFood.food.foodCategory)
+                .having(multiFridgeFood.food.foodCategory.count().goe(1L))
+                .orderBy(multiFridgeFood.food.foodIdx.count().desc())
+                .limit(1)
+                .fetchFirst();
     }
 }

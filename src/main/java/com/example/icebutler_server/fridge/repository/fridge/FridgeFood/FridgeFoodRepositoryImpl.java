@@ -35,6 +35,20 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                 .fetchOne();
     }
 
+    @Override
+    public FoodCategory findByFridgeForDisCardFood(Fridge fridge) {
+        return jpaQueryFactory.select(fridgeFood.food.foodCategory)
+                .from(fridgeFood)
+                .where(fridgeFood.fridge.eq(fridge)
+                        .and(fridgeFood.foodDeleteStatus.eq(FoodDeleteStatus.DISCARD))
+                        .and(fridgeFood.isEnable.eq(false)))
+                .groupBy(fridgeFood.food.foodCategory)
+                .having(fridgeFood.food.foodCategory.count().goe(1L))
+                .orderBy(fridgeFood.food.foodIdx.count().desc())
+                .limit(1)
+                .fetchFirst();
+    }
+
     /**
      * select food.food_idx, food.food_name
      * from food,

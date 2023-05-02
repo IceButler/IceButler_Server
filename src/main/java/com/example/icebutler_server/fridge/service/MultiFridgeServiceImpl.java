@@ -56,10 +56,10 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
         if(category == null){
             // 값이 없으면 전체 조회
-            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeAndIsEnableOrderByShelfLife(multiFridge, true));
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeForDisCardFood(multiFridge), this.multiFridgeFoodRepository.findByMultiFridgeAndIsEnableOrderByShelfLife(multiFridge, true));
         }else {
             // 값이 있으면 특정 값을 불러온 조회
-            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(multiFridge, FoodCategory.getFoodCategoryByName(category), true));
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeForDisCardFood(multiFridge), this.multiFridgeFoodRepository.findByMultiFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(multiFridge, FoodCategory.getFoodCategoryByName(category), true));
         }
     }
 

@@ -3,6 +3,7 @@ package com.example.icebutler_server.fridge.controller;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
 import com.example.icebutler_server.fridge.service.MultiFridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.Auth;
@@ -46,9 +47,9 @@ public class MultiFridgeController {
      */
     @Auth
     @GetMapping("/{multiFridgeIdx}/foods")
-    public ResponseCustom<?> getFoods(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
-                                      @IsLogin LoginStatus loginStatus,
-                                      @RequestParam(required = false) String category) {
+    public ResponseCustom<FridgeMainRes> getFoods(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
+                                                  @IsLogin LoginStatus loginStatus,
+                                                  @RequestParam(required = false) String category) {
         return ResponseCustom.OK(multiFridgeService.getFoods(multiFridgeIdx, loginStatus.getUserIdx(), category));
     }
 

@@ -4,7 +4,6 @@ import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.user.entity.User;
-import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

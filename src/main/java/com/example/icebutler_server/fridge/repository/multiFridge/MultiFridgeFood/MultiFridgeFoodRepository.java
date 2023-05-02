@@ -3,7 +3,6 @@ package com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFo
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
-import com.example.icebutler_server.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

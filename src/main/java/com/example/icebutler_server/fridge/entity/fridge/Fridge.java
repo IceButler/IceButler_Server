@@ -2,7 +2,10 @@ package com.example.icebutler_server.fridge.entity.fridge;
 
 import com.example.icebutler_server.cart.entity.cart.Cart;
 import com.example.icebutler_server.global.entity.BaseEntity;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 

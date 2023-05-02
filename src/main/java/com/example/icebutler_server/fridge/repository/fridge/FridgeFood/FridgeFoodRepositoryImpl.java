@@ -5,7 +5,6 @@ import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
-import com.example.icebutler_server.user.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +32,20 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                         .and(fridgeFood.shelfLife.month().eq(month))
                         .and(fridgeFood.isEnable.eq(false)))
                 .fetchOne();
+    }
+
+    @Override
+    public FoodCategory findByFridgeForDisCardFood(Fridge fridge) {
+        return jpaQueryFactory.select(fridgeFood.food.foodCategory)
+                .from(fridgeFood)
+                .where(fridgeFood.fridge.eq(fridge)
+                        .and(fridgeFood.foodDeleteStatus.eq(FoodDeleteStatus.DISCARD))
+                        .and(fridgeFood.isEnable.eq(false)))
+                .groupBy(fridgeFood.food.foodCategory)
+                .having(fridgeFood.food.foodCategory.count().goe(1L))
+                .orderBy(fridgeFood.food.foodIdx.count().desc())
+                .limit(1)
+                .fetchFirst();
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.example.icebutler_server.fridge.controller;
 
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListsRes;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -52,9 +53,9 @@ public class FridgeController {
   // [Get] 냉장고 식품 전체 조회
   @Auth
   @GetMapping("/{fridgeIdx}/foods")
-  public ResponseCustom<?> getFoods(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                    @IsLogin LoginStatus loginStatus,
-                                    @RequestParam(required = false) String category) {
+  public ResponseCustom<FridgeMainRes> getFoods(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
+                                                @IsLogin LoginStatus loginStatus,
+                                                @RequestParam(required = false) String category) {
     return ResponseCustom.OK(fridgeService.getFoods(fridgeIdx, loginStatus.getUserIdx(), category));
   }
 

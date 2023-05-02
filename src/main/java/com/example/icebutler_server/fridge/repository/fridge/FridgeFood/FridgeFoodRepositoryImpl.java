@@ -3,11 +3,14 @@ package com.example.icebutler_server.fridge.repository.fridge.FridgeFood;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeDiscardRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.QFridgeDiscardRes;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.example.icebutler_server.food.entity.QFood.food;
@@ -28,19 +31,22 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                 .where(fridgeFood.foodDeleteStatus.eq(deleteCategory)
                         .and(fridgeFood.fridge.eq(fridge))
                         .and(fridgeFood.food.foodCategory.eq(category))
-                        .and(fridgeFood.shelfLife.year().eq(year))
-                        .and(fridgeFood.shelfLife.month().eq(month))
+                        .and(fridgeFood.updateAt.year().eq(year))
+                        .and(fridgeFood.updateAt.month().eq(month))
                         .and(fridgeFood.isEnable.eq(false)))
                 .fetchOne();
     }
 
     @Override
-    public FoodCategory findByFridgeForDisCardFood(Fridge fridge) {
-        return jpaQueryFactory.select(fridgeFood.food.foodCategory)
+    public FridgeDiscardRes findByFridgeForDisCardFood(Fridge fridge) {
+        LocalDate beginTimePath = LocalDate.now();
+        return jpaQueryFactory.select(new QFridgeDiscardRes(fridgeFood.food.foodCategory, fridgeFood.food.foodImgKey))
                 .from(fridgeFood)
                 .where(fridgeFood.fridge.eq(fridge)
                         .and(fridgeFood.foodDeleteStatus.eq(FoodDeleteStatus.DISCARD))
-                        .and(fridgeFood.isEnable.eq(false)))
+                        .and(fridgeFood.isEnable.eq(false))
+                        .and(fridgeFood.updateAt.year().eq(beginTimePath.getYear()))
+                        .and(fridgeFood.updateAt.month().eq(beginTimePath.getMonth().getValue())))
                 .groupBy(fridgeFood.food.foodCategory)
                 .having(fridgeFood.food.foodCategory.count().goe(1L))
                 .orderBy(fridgeFood.food.foodIdx.count().desc())

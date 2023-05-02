@@ -3,6 +3,8 @@ package com.example.icebutler_server.fridge.repository.fridge.FridgeFood;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeDiscardRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.QFridgeDiscardRes;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -35,8 +37,8 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
     }
 
     @Override
-    public FoodCategory findByFridgeForDisCardFood(Fridge fridge) {
-        return jpaQueryFactory.select(fridgeFood.food.foodCategory)
+    public FridgeDiscardRes findByFridgeForDisCardFood(Fridge fridge) {
+        return jpaQueryFactory.select(new QFridgeDiscardRes(fridgeFood.food.foodCategory, fridgeFood.food.foodImgKey))
                 .from(fridgeFood)
                 .where(fridgeFood.fridge.eq(fridge)
                         .and(fridgeFood.foodDeleteStatus.eq(FoodDeleteStatus.DISCARD))

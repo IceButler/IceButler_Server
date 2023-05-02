@@ -2,6 +2,8 @@ package com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFo
 
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeDiscardRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.QFridgeDiscardRes;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +27,8 @@ public class MultiFridgeFoodRepositoryImpl implements MultiFridgeFoodCustom{
     }
 
     @Override
-    public FoodCategory findByMultiFridgeForDisCardFood(MultiFridge fridge) {
-        return jpaQueryFactory.select(multiFridgeFood.food.foodCategory)
+    public FridgeDiscardRes findByMultiFridgeForDisCardFood(MultiFridge fridge) {
+        return jpaQueryFactory.select(new QFridgeDiscardRes(multiFridgeFood.food.foodCategory, multiFridgeFood.food.foodImgKey))
                 .from(multiFridgeFood)
                 .where(multiFridgeFood.multiFridge.eq(fridge)
                         .and(multiFridgeFood.foodDeleteStatus.eq(FoodDeleteStatus.DISCARD))

@@ -18,6 +18,6 @@ public class Cart extends BaseEntity {
     private Long cartIdx;
 
     @OneToOne
-    @JoinColumn(name = "fridgeIdx")
-    private Fridge frodge;
+    @JoinColumn(name = "fridgeIdx", nullable = false)
+    private Fridge fridge;
 }

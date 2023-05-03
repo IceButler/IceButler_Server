@@ -67,6 +67,11 @@ dependencies {
 	//map
 	implementation group: 'org.json', name: 'json', version: '20220924'
 
+	// SQS
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-messaging', version: '2.2.3.RELEASE'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.6'//나중에 메세지 유효성 검사를 위함
+
+
 }
 dependencyManagement {
 	imports {

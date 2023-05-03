@@ -11,6 +11,7 @@ import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
+import com.example.icebutler_server.user.dto.response.NickNameRes;
 import com.example.icebutler_server.user.dto.response.PostNickNameRes;
 import com.example.icebutler_server.user.dto.response.PostUserRes;
 import com.example.icebutler_server.user.entity.Provider;
@@ -124,6 +125,13 @@ public class UserServiceImpl implements UserService {
 
     return MyProfileRes.toDto(user);
 
+  }
+
+  @Override
+  public NickNameRes searchNickname(String nickname) {
+    User user = userRepository.findByNicknameAndIsEnable(nickname, true).orElseThrow(UserNicknameNotFoundException::new);
+
+    return NickNameRes.toDto(user.getNickname());
   }
 
 }

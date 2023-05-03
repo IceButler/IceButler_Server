@@ -19,6 +19,12 @@ public class UserExceptionController {
         return ResponseCustom.NOT_FOUND(e.getMessage());
     }
 
+    @ExceptionHandler(UserNicknameNotFoundException.class)
+    public ResponseCustom<?> catchUserNicknameNotFoundException(UserNicknameNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.NOT_FOUND(e.getMessage());
+    }
+
     @ExceptionHandler(ProviderMissingValueException.class)
     public ResponseCustom<Void> catchProviderMissingValueException(ProviderMissingValueException e) {
         log.error(e.getMessage());

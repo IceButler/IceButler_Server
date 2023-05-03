@@ -12,4 +12,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByUserIdxAndIsEnable(Long userIdx, Boolean isEnable);
   User findByEmailAndProvider(String email, Provider provider);
   Boolean existsByNickname(String nickName);
+  Optional<User> findByNicknameAndIsEnable(String nickname, Boolean isEnable);
 }

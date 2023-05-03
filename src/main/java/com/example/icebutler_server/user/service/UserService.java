@@ -10,6 +10,8 @@ import com.example.icebutler_server.user.dto.response.NickNameRes;
 import com.example.icebutler_server.user.dto.response.PostNickNameRes;
 import com.example.icebutler_server.user.dto.response.PostUserRes;
 
+import java.util.List;
+
 public interface UserService {
   PostUserRes join(PostUserReq postUserReq);
 
@@ -26,5 +28,5 @@ public interface UserService {
 
   MyProfileRes checkProfile(Long userIdx);
 
-  NickNameRes searchNickname(String nickname);
+  List<NickNameRes> searchNickname(String nickname);
 }

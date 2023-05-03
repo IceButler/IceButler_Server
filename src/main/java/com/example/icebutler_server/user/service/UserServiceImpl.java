@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -128,10 +131,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public NickNameRes searchNickname(String nickname) {
-    User user = userRepository.findByNicknameAndIsEnable(nickname, true).orElseThrow(UserNicknameNotFoundException::new);
-
-    return NickNameRes.toDto(user.getNickname());
+  public List<NickNameRes> searchNickname(String nickname) {
+    return userRepository.findByNicknameContains(nickname)
+            .stream().map(NickNameRes::toDto).collect(Collectors.toList());
+//    return NickNameRes.toDto(user.getNickname());
   }
 
 }

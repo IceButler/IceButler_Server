@@ -1,19 +1,21 @@
 package com.example.icebutler_server.user.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import com.example.icebutler_server.user.entity.User;
+import lombok.*;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class NickNameRes {
-    private final String nickname;
+    private  String nickname;
+    private  Long userIdx;
 
 
-    public static NickNameRes toDto(String nickname){
+    public static NickNameRes toDto(User user){
         return NickNameRes.builder()
-                .nickname(nickname)
+                .nickname(user.getNickname())
+                .userIdx(user.getUserIdx())
                 .build();
     }
 }

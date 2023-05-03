@@ -1,6 +1,5 @@
 package com.example.icebutler_server.fridge.entity.fridge;
 
-import com.example.icebutler_server.cart.entity.cart.Cart;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,10 +18,6 @@ public class Fridge extends BaseEntity {
     private Long fridgeIdx;
     private String fridgeName;
     private String fridgeComment;
-
-    @OneToOne
-    @JoinColumn(name = "cartIdx")
-    private Cart cart;
 
     @Builder
     public Fridge(

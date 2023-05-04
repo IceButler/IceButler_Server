@@ -1,5 +1,7 @@
 package com.example.icebutler_server.fridge.service;
 
+import com.example.icebutler_server.cart.entity.cart.Cart;
+import com.example.icebutler_server.cart.repository.cart.CartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
@@ -47,6 +49,7 @@ public class FridgeServiceImpl implements FridgeService {
   private final UserRepository userRepository;
   private final FridgeFoodRepository fridgeFoodRepository;
   private final FoodRepository foodRepository;
+  private final CartRepository cartRepository;
 
   private final FridgeAssembler fridgeAssembler;
   private final FridgeFoodAssembler fridgeFoodAssembler;
@@ -67,8 +70,10 @@ public class FridgeServiceImpl implements FridgeService {
       fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
     }
     fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
-
     fridgeUserRepository.saveAll(fridgeUsers);
+
+    // fridge - cart 연관관계 추가
+    cartRepository.save(Cart.toEntity(fridge));
 
     return fridge.getFridgeIdx();
   }

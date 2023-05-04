@@ -3,6 +3,7 @@ package com.example.icebutler_server.cart.entity.cart;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,4 +21,15 @@ public class Cart extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "fridgeIdx", nullable = false)
     private Fridge fridge;
+
+    @Builder
+    public Cart(Fridge fridge) {
+        this.fridge = fridge;
+    }
+
+    public static Cart toEntity(Fridge fridge) {
+        return Cart.builder()
+                .fridge(fridge)
+                .build();
+    }
 }

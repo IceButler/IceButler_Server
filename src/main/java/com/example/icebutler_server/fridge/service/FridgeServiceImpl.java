@@ -1,5 +1,7 @@
 package com.example.icebutler_server.fridge.service;
 
+import com.example.icebutler_server.cart.entity.cart.Cart;
+import com.example.icebutler_server.cart.repository.cart.CartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
@@ -47,28 +49,31 @@ public class FridgeServiceImpl implements FridgeService {
   private final UserRepository userRepository;
   private final FridgeFoodRepository fridgeFoodRepository;
   private final FoodRepository foodRepository;
+  private final CartRepository cartRepository;
 
   private final FridgeAssembler fridgeAssembler;
   private final FridgeFoodAssembler fridgeFoodAssembler;
   private final FoodAssembler foodAssembler;
 
   @Transactional
-  public Long registerFridge(FridgeRegisterReq registerFridgeReq) {
+  public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
     if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
     Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
     fridgeRepository.save(fridge);
 
     List<FridgeUser> fridgeUsers = new ArrayList<>();
     List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-    User owner = userRepository.findByUserIdxAndIsEnable(registerFridgeReq.getOwner(), true).orElseThrow(UserNotFoundException::new);
+    User owner = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
 
     // fridge - fridgeUser  연관관계 추가
     for (User user : users) {
       fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
     }
     fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
-
     fridgeUserRepository.saveAll(fridgeUsers);
+
+    // fridge - cart 연관관계 추가
+    cartRepository.save(Cart.toEntity(fridge));
 
     return fridge.getFridgeIdx();
   }

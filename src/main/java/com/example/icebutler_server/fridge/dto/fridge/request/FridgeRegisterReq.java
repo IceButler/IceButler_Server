@@ -11,9 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FridgeRegisterReq {
-  private Long owner;
   private String fridgeName;
   private String fridgeComment;
   private List<FridgeRegisterMembersReq> members;
-//  private List<FridgeUser> users;
 }

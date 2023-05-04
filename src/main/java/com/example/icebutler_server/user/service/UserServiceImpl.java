@@ -4,6 +4,7 @@ package com.example.icebutler_server.user.service;
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.util.RedisTemplateService;
+import com.example.icebutler_server.global.util.RedisUtils;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.LoginUserReq;
 import com.example.icebutler_server.user.dto.assembler.UserAssembler;
@@ -35,20 +36,17 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final UserAssembler userAssembler;
   private final TokenUtils tokenUtils;
+  private final RedisUtils redisUtils;
 
   private final RecipeServerEventPublisherImpl recipeServerEventPublisher;
   private final RedisTemplateService redisTemplateService;
-
 
 
   // 소셜로그인
   @Transactional
   public PostUserRes join(PostUserReq postUserReq) {
     User user = checkUserInfo(postUserReq.getEmail(), postUserReq.getProvider());
-
     if (user == null) user = saveUser(postUserReq);
-    if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
-
     user.login();
     this.recipeServerEventPublisher.addUser(user);
     return PostUserRes.toDto(tokenUtils.createToken(user));
@@ -57,17 +55,15 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public PostUserRes login(LoginUserReq loginUserReq) {
     User user = checkUserInfo(loginUserReq.getEmail(), loginUserReq.getProvider());
+    if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
 
-    if (user != null) {
-      user.login();
-      return PostUserRes.toDto(tokenUtils.createToken(user));
-    }
-    return null;
+    user.login();
+    return PostUserRes.toDto(tokenUtils.createToken(user));
   }
 
   public User checkUserInfo(String email, String provider) {
-    if(Provider.getProviderByName(provider) == null) throw new ProviderMissingValueException();
-    if(!StringUtils.hasText(email)) throw new UserEmailMissingValueException();
+    if (Provider.getProviderByName(provider) == null) throw new ProviderMissingValueException();
+    if (!StringUtils.hasText(email)) throw new UserEmailMissingValueException();
 
     return userRepository.findByEmailAndProvider(email, Provider.getProviderByName(provider));
   }
@@ -107,7 +103,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void deleteUser(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-        redisTemplateService.deleteUserRefreshToken(userIdx);
+    redisTemplateService.deleteUserRefreshToken(userIdx);
     user.setIsEnable(false);
     recipeServerEventPublisher.deleteUser(user);
   }
@@ -117,7 +113,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void logout(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-        redisTemplateService.deleteUserRefreshToken(userIdx);
+    redisTemplateService.deleteUserRefreshToken(userIdx);
     user.logout();
   }
 

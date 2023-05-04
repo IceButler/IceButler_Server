@@ -21,8 +21,9 @@ public class FridgeController {
   // 냉장고 추가
   @Auth
   @PostMapping("/register")
-  public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq) {
-    return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq));
+  public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
+                                          @IsLogin LoginStatus loginStatus) {
+    return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
   }
 
   // 냉장고 업데이트

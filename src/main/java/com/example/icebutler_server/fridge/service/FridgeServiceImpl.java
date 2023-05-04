@@ -56,14 +56,14 @@ public class FridgeServiceImpl implements FridgeService {
   private final FoodAssembler foodAssembler;
 
   @Transactional
-  public Long registerFridge(FridgeRegisterReq registerFridgeReq) {
+  public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
     if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
     Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
     fridgeRepository.save(fridge);
 
     List<FridgeUser> fridgeUsers = new ArrayList<>();
     List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-    User owner = userRepository.findByUserIdxAndIsEnable(registerFridgeReq.getOwner(), true).orElseThrow(UserNotFoundException::new);
+    User owner = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
 
     // fridge - fridgeUser  연관관계 추가
     for (User user : users) {

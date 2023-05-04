@@ -5,6 +5,7 @@ import com.example.icebutler_server.map.exception.NoHeaderException;
 import com.example.icebutler_server.map.exception.NoResponseAPIException;
 import lombok.RequiredArgsConstructor;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +24,12 @@ public class MapServiceImpl implements MapService {
 
     @Override
     public MapDTO.Location enterMap(String roadFullAddr) {
-        String apiUrl = API_URL;
+        String apiUrl=API_URL;
         RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add(ACCESS_KEYID, accessKeyId);
-        headers.add(SECRET_KEY, secretKey);
+        headers.add("X-NCP-APIGW-API-KEY-ID",ACCESS_KEYID);
+        headers.add("X-NCP-APIGW-API-KEY",SECRET_KEY);
+//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED); // Content-Type 헤더 추가
         String body = "";
         String query = roadFullAddr;
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
@@ -41,9 +43,8 @@ public class MapServiceImpl implements MapService {
             throw new NoResponseAPIException();
         }
         JSONObject rjson = new JSONObject(responseEntity.getBody());
-        JSONObject documents = (JSONObject) rjson.getJSONArray("documents").get(0);
-        JSONObject address = documents.getJSONObject("address");
-
+        JSONArray addresses = rjson.getJSONArray("addresses");
+        JSONObject address = addresses.getJSONObject(0);
 
         return new MapDTO.Location(address.getString("x"), address.getString("y"));
     }

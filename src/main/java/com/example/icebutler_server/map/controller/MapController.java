@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class MapController {
     private final MapService mapService;
     @ResponseBody
-    @PostMapping("/address")
+    @GetMapping("/address")
     public ResponseCustom<MapDTO.Location> enterMap(@RequestParam String address) {
         return ResponseCustom.OK(mapService.enterMap(address));
     }

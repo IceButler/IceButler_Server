@@ -11,6 +11,7 @@ import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
+import com.example.icebutler_server.user.dto.response.NickNameRes;
 import com.example.icebutler_server.user.dto.response.PostNickNameRes;
 import com.example.icebutler_server.user.dto.response.PostUserRes;
 import com.example.icebutler_server.user.entity.Provider;
@@ -22,6 +23,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -124,6 +128,13 @@ public class UserServiceImpl implements UserService {
 
     return MyProfileRes.toDto(user);
 
+  }
+
+  @Override
+  public List<NickNameRes> searchNickname(String nickname) {
+    return userRepository.findByNicknameContains(nickname)
+            .stream().map(NickNameRes::toDto).collect(Collectors.toList());
+//    return NickNameRes.toDto(user.getNickname());
   }
 
 }

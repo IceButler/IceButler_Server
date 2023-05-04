@@ -15,17 +15,23 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FridgeMainRes {
-  List<FridgeFoodsRes> foodList = new ArrayList<>();
+  private FridgeDiscardRes fridgeDiscard;
+  private List<FridgeFoodsRes> foodList = new ArrayList<>();
 
-  public static FridgeMainRes toFridgeDto(List<FridgeFood> fridgeFoods) {
-    return new FridgeMainRes(fridgeFoods.stream()
+  public static FridgeMainRes toFridgeDto(FridgeDiscardRes fridgeDiscard, List<FridgeFood> fridgeFoods) {
+    return new FridgeMainRes(isNullFoodDiscardRes(fridgeDiscard), fridgeFoods.stream()
             .map(ff -> new FridgeFoodsRes(ff.getFridgeFoodIdx(), ff.getFood().getFoodName(), AwsS3ImageUrlUtil.toUrl(ff.getFood().getFoodImgKey()), FridgeUtils.calShelfLife(ff.getShelfLife())))
             .collect(Collectors.toList()));
   }
 
-  public static FridgeMainRes toMultiDto(List<MultiFridgeFood> fridgeFoods) {
-    return new FridgeMainRes(fridgeFoods.stream()
+  public static FridgeMainRes toMultiDto(FridgeDiscardRes fridgeDiscard, List<MultiFridgeFood> fridgeFoods) {
+    return new FridgeMainRes(isNullFoodDiscardRes(fridgeDiscard), fridgeFoods.stream()
             .map(ff -> new FridgeFoodsRes(ff.getMultiFridgeFoodIdx(), ff.getFood().getFoodName(), AwsS3ImageUrlUtil.toUrl(ff.getFood().getFoodImgKey()), FridgeUtils.calShelfLife(ff.getShelfLife())))
             .collect(Collectors.toList()));
   }
+
+  private static FridgeDiscardRes isNullFoodDiscardRes(FridgeDiscardRes fridgeDiscard){
+    return fridgeDiscard != null ? fridgeDiscard : new FridgeDiscardRes();
+  }
+
 }

@@ -5,6 +5,7 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.food.repository.FoodRepository;
+import com.example.icebutler_server.fridge.dto.fridge.request.DeleteFridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
@@ -55,10 +56,10 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
         if(category == null){
             // 값이 없으면 전체 조회
-            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeAndIsEnableOrderByShelfLife(multiFridge, true));
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeForDisCardFood(multiFridge), this.multiFridgeFoodRepository.findByMultiFridgeAndIsEnableOrderByShelfLife(multiFridge, true));
         }else {
             // 값이 있으면 특정 값을 불러온 조회
-            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(multiFridge, FoodCategory.getFoodCategoryByName(category), true));
+            return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeForDisCardFood(multiFridge), this.multiFridgeFoodRepository.findByMultiFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(multiFridge, FoodCategory.getFoodCategoryByName(category), true));
         }
     }
 
@@ -160,6 +161,11 @@ public class MultiFridgeServiceImpl implements FridgeService {
     }
 
     @Override
+    public void deleteFridgeFood(DeleteFridgeFoodsReq deleteFridgeFoodsReq, String deleteType, Long fridgeIdx, Long userIdx) {
+
+    }
+
+    @Override
     public FridgeUserMainRes searchMembers (Long fridgeIdx, Long userIdx) {
         MultiFridge fridge=this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
         return FridgeUserMainRes.doMultiDto(multiFridgeUserRepository.findByMultiFridgeAndIsEnable(fridge,true));
@@ -174,7 +180,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
         Map<FoodCategory, Long> deleteStatusList = new HashMap<>();
 
         for(FoodCategory category: FoodCategory.values()){
-            Long foodSize = this.multiFridgeFoodRepository.findByDeleteCategoryForStatistics(FoodDeleteStatus.getFoodCategoryByName(deleteCategory), fridge, category, year, month);
+            Long foodSize = this.multiFridgeFoodRepository.findByDeleteCategoryForStatistics(FoodDeleteStatus.getFoodDeleteStatusByName(deleteCategory), fridge, category, year, month);
             deleteStatusList.put(category, foodSize);
         }
 

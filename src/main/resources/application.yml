@@ -8,9 +8,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8??
-    url: jdbc:mysql://icebutler.cwkkfphsqxw5.ap-northeast-2.rds.amazonaws.com:3306/icebutler?serverTimezone=Asia/Seoul
-    username: admin # ??????
-    password: ADMIN123! # ??????
+    url: jdbc:mysql://43.201.148.149:3306/icebulter
+    username: root # ??????
+    password: 1111 #  # ??????
   sql:
     init:
       platform: mysql
@@ -45,12 +45,20 @@ aws:
     region: ap-northeast-2
     bucket: ice-bulter-iamge-bucket
     profile: profile/
+  sqs:
+    accesskey: AKIAZIVVDWFDXIOMYWYT
+    secretkey: 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
+    region:
+      static: ap-northeast-2
+    queue:
+      name: FoodDataQueue.fifo  # AWS에서 생성한 Queue 이름
+      url: https://sqs.ap-northeast-2.amazonaws.com/637108728135/FoodDataQueue.fifo
 
 jwt:
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   admin-secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
-  access-expired-time: 604800000
-  refresh-expired-time: 31600000000
+  access-expired-time: 1209600000
+  refresh-expired-time: 63200000000
   auth-header: Authorization
   token-type: Bearer
   access-name: ACCESS-TOKEN

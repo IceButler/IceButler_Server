@@ -75,9 +75,8 @@ public class UserController {
   ) {
     return ResponseCustom.OK(userService.checkProfile(loginStatus.getUserIdx()));
   }
+
   //유저 닉네임 검색 조회
-
-
   @GetMapping("/search")
   public ResponseCustom<?> searchNickname(
           @RequestParam String nickname

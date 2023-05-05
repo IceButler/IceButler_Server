@@ -1,7 +1,8 @@
 package com.example.icebutler_server.fridge.entity.fridge;
 
-import com.example.icebutler_server.cart.entity.cart.Cart;
 import com.example.icebutler_server.global.entity.BaseEntity;
+import com.example.icebutler_server.global.entityListener.FridgeEntityListener;
+import org.hibernate.annotations.SQLDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,14 +13,19 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE fridge SET is_enable = false, update_at = current_timestamp WHERE fridge_idx = ?")
+@EntityListeners(FridgeEntityListener.class)
 public class Fridge extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(nullable = false)
-  private Long fridgeIdx;
-  private String fridgeName;
-  private String fridgeComment;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
+    private Long fridgeIdx;
+
+    @Column(nullable = false)
+    private String fridgeName;
+
+    private String fridgeComment;
 
   @Builder
   public Fridge(

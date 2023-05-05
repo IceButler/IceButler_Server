@@ -22,9 +22,11 @@ public interface MultiFridgeUserRepository extends JpaRepository<MultiFridgeUser
 
   List<MultiFridgeUser> findByMultiFridgeAndIsEnableOrderByRoleDesc(MultiFridge fridge, Boolean status);
 
-  //  FridgeUser findByOwner(User user);
-
   List<MultiFridgeUser> findByUserAndIsEnable(User user, Boolean status);
 
   Optional<MultiFridgeUser> findByUser_UserIdxAndMultiFridge_MultiFridgeIdxAndIsEnable(Long userIdx, Long multiFridgeIdx, Boolean status);
+
+  void deleteByMultiFridge(MultiFridge multiFridge);
+
+  void deleteByUser(User user);
 }

@@ -5,6 +5,7 @@ import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeDiscardRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.QFridgeDiscardRes;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
+import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -43,5 +44,13 @@ public class MultiFridgeFoodRepositoryImpl implements MultiFridgeFoodCustom{
                 .orderBy(multiFridgeFood.food.foodIdx.count().desc())
                 .limit(1)
                 .fetchFirst();
+    }
+
+    @Override
+    public void deleteOwnerByMultiFridgeUser(MultiFridgeUser multiFridgeUser) {
+        jpaQueryFactory.update(multiFridgeFood)
+                .setNull(multiFridgeFood.owner)
+                .where(multiFridgeFood.owner.eq(multiFridgeUser.getUser()))
+                .execute();
     }
 }

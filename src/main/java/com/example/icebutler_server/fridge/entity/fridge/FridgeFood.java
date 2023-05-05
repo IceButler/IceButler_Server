@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,20 +16,27 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE fridge_food SET is_enable = false, update_at = current_timestamp WHERE fridge_food_idx = ?")
 public class FridgeFood extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
   private Long fridgeFoodIdx;
+
+  @Column(nullable = false)
   private LocalDate shelfLife;
+
   private String fridgeFoodImgKey;
+
   private String memo;
+
+  @Column(nullable = false)
   private String foodDetailName;
 
   @Enumerated(EnumType.STRING)
   private FoodDeleteStatus foodDeleteStatus;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "foodIdx")
   private Food food;
 
@@ -36,7 +44,7 @@ public class FridgeFood extends BaseEntity {
   @JoinColumn(name = "userIdx")
   private User owner;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "fridgeIdx")
   private Fridge fridge;
 

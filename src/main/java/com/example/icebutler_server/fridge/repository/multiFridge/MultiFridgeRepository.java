@@ -9,6 +9,4 @@ import java.util.Optional;
 @Repository
 public interface MultiFridgeRepository extends JpaRepository<MultiFridge, Long> {
     Optional<MultiFridge> findByMultiFridgeIdxAndIsEnable(Long fridgeIdx, Boolean status);
-
-//  Fridge findByFridgeIdxAndOwner(Long fridgeId, User user);
 }

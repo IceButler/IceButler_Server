@@ -1,5 +1,6 @@
 package com.example.icebutler_server.fridge.repository.fridge.FridgeFood;
 
+import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
@@ -22,7 +23,10 @@ public interface FridgeFoodRepository extends JpaRepository<FridgeFood, Long>, F
     List<FridgeFood> findByFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(Fridge fridge, FoodCategory foodCategory, Boolean status);
     List<FridgeFood> findByFridgeAndIsEnableOrderByShelfLife(Fridge fridge, Boolean status);
     List<FridgeFood> findByFoodDetailNameContainingAndFridgeAndIsEnable(String keyword, Fridge fridge, Boolean isEnable);
+    void deleteByFridge(Fridge fridge);
+    void deleteByFood(Food food);
 
+    //TODO: cascade 처리하면 이거 지우기
     @Modifying
     @Query("update FridgeFood f set f.isEnable = :status where f.fridge = :fridge")
     void removeFridgeFoodByFridge(@Param("status") Boolean status, @Param("fridge") Fridge fridge);

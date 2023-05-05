@@ -2,14 +2,19 @@ package com.example.icebutler_server.cart.entity.multiCart;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
+import com.example.icebutler_server.global.entityListener.MultiCartEntityListener;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+
 import javax.persistence.*;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE multi_cart SET is_enable = false, update_at = current_timestamp WHERE multi_cart_idx = ?")
+@EntityListeners(MultiCartEntityListener.class)
 public class MultiCart extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,7 +22,7 @@ public class MultiCart extends BaseEntity {
   private Long multiCartIdx;
 
   @OneToOne
-  @JoinColumn(name = "multiFridgeUserIdx")
+  @JoinColumn(name = "multiFridgeUserIdx", nullable = false)
   private MultiFridgeUser multiFridgeUser;
 
 }

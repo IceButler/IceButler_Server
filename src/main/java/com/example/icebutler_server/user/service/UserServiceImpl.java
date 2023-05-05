@@ -107,12 +107,14 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void deleteUser(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-    List<FridgeUser> fridgeUserList = fridgeUserRepository.findByUserAndRole(user, FridgeRole.OWNER);
-    if (!fridgeUserList.isEmpty()) {
-      for (FridgeUser fridgeUser : fridgeUserList) {
-        Fridge fridge = fridgeUser.getFridge();
-        fridgeRepository.delete(fridge);
+    List<FridgeUser> fridgeOwners = fridgeUserRepository.findByUserAndRoleAndIsEnable(user, FridgeRole.OWNER,true);
+    for (FridgeUser fridgeOwner : fridgeOwners) {
+      Fridge fridge = fridgeOwner.getFridge();
+      List<FridgeUser> fridgeMembers = fridgeUserRepository.findByFridgeAndRoleAndIsEnable(fridge, FridgeRole.MEMBER,true);
+      if (fridgeMembers.size() > 0) {
+        throw new CannotDeleteFridgeException();
       }
+      fridgeRepository.delete(fridge);
     }
     userRepository.delete(user);
     redisTemplateService.deleteUserRefreshToken(userIdx);

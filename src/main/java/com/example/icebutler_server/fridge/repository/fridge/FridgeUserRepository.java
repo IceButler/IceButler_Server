@@ -30,5 +30,6 @@ public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
   void deleteByFridge(Fridge fridge);
 
   void deleteByUser(User user);
+  List<FridgeUser> findByUserAndRole(User user, FridgeRole role);
 
 }

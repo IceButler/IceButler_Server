@@ -1,5 +1,10 @@
 package com.example.icebutler_server.user.service;
 
+import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
+import com.example.icebutler_server.fridge.repository.fridge.FridgeRepository;
+import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepository;
+import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.util.RedisTemplateService;
@@ -31,6 +36,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+  private final FridgeUserRepository fridgeUserRepository;
+  private final FridgeRepository fridgeRepository;
   private final UserAssembler userAssembler;
   private final TokenUtils tokenUtils;
   private final RedisUtils redisUtils;
@@ -100,8 +107,18 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void deleteUser(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    List<FridgeUser> fridgeOwners = fridgeUserRepository.findByUserAndRoleAndIsEnable(user, FridgeRole.OWNER,true);
+    for (FridgeUser fridgeOwner : fridgeOwners) {
+      Fridge fridge = fridgeOwner.getFridge();
+      List<FridgeUser> fridgeMembers = fridgeUserRepository.findByFridgeAndRoleAndIsEnable(fridge, FridgeRole.MEMBER,true);
+      if (fridgeMembers.size() > 0) {
+        throw new CannotDeleteFridgeException();
+      }
+      fridgeRepository.delete(fridge);
+    }
+    userRepository.delete(user);
     redisTemplateService.deleteUserRefreshToken(userIdx);
-    user.setIsEnable(false);
+//    user.setIsEnable(false);
     recipeServerEventPublisher.deleteUser(user);
   }
 

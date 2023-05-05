@@ -25,6 +25,12 @@ public class UserExceptionController {
         return ResponseCustom.NOT_FOUND(e.getMessage());
     }
 
+    @ExceptionHandler(CannotDeleteFridgeException.class)
+    public ResponseCustom<?> CannotDeleteFridgeException(CannotDeleteFridgeException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.NOT_FOUND(e.getMessage());
+    }
+
     @ExceptionHandler(ProviderMissingValueException.class)
     public ResponseCustom<Void> catchProviderMissingValueException(ProviderMissingValueException e) {
         log.error(e.getMessage());

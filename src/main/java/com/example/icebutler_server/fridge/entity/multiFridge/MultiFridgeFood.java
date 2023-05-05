@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE multi_fridge_food SET is_enable = false, last_modified_date = current_timestamp WHERE multi_fridge_food_idx = ?")
+@SQLDelete(sql = "UPDATE multi_fridge_food SET is_enable = false, update_at = current_timestamp WHERE multi_fridge_food_idx = ?")
 public class MultiFridgeFood extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

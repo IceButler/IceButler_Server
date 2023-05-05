@@ -1,6 +1,7 @@
 package com.example.icebutler_server.user.entity;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
+import com.example.icebutler_server.global.entityListener.UserEntityListener;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE user SET is_enable = false, last_modified_date = current_timestamp WHERE user_idx = ?")
+@SQLDelete(sql = "UPDATE user SET is_enable = false, update_at = current_timestamp WHERE user_idx = ?")
+@EntityListeners(UserEntityListener.class)
 public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)

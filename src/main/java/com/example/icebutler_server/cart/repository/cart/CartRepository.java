@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
     Optional<Cart> findByFridge_FridgeIdxAndIsEnable(Long fridgeIdx, boolean status);
+    void deleteByFridge(Fridge fridge);
 }

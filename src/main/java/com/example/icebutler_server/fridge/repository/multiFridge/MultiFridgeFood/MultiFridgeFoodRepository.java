@@ -1,5 +1,6 @@
 package com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFood;
 
+import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
@@ -14,5 +15,6 @@ public interface MultiFridgeFoodRepository extends JpaRepository<MultiFridgeFood
     List<MultiFridgeFood> findByMultiFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(MultiFridge multiFridge,FoodCategory foodCategory, Boolean isEnable);
     List<MultiFridgeFood> findByMultiFridgeAndIsEnableOrderByShelfLife(MultiFridge multiFridge, Boolean status);
     Optional<MultiFridgeFood> findByMultiFridgeFoodIdxAndMultiFridgeAndIsEnable(Long multiFridgeFoodIdx, MultiFridge multiFridge, Boolean isEnable);
-
+    void deleteByMultiFridge(MultiFridge multiFridge);
+    void deleteByFood(Food food);
 }

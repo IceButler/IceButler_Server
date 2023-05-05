@@ -27,4 +27,8 @@ public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
 
   Optional<FridgeUser> findByFridgeAndUserAndIsEnable(Fridge fridge, User user, Boolean isEnable);
 
+  void deleteByFridge(Fridge fridge);
+
+  void deleteByUser(User user);
+
 }

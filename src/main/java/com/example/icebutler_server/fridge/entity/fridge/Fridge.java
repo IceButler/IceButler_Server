@@ -1,6 +1,7 @@
 package com.example.icebutler_server.fridge.entity.fridge;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
+import com.example.icebutler_server.global.entityListener.FridgeEntityListener;
 import org.hibernate.annotations.SQLDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE fridge SET is_enable = false, last_modified_date = current_timestamp WHERE fridge_idx = ?")
+@SQLDelete(sql = "UPDATE fridge SET is_enable = false, update_at = current_timestamp WHERE fridge_idx = ?")
+@EntityListeners(FridgeEntityListener.class)
 public class Fridge extends BaseEntity {
 
     @Id

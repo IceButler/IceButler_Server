@@ -1,6 +1,8 @@
 package com.example.icebutler_server.cart.entity.cart;
 
+import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.global.entity.BaseEntity;
+import com.example.icebutler_server.global.entityListener.CartEntityListener;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +14,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE cart SET is_enable = false, last_modified_date = current_timestamp WHERE cart_idx = ?")
+@SQLDelete(sql = "UPDATE cart SET is_enable = false, update_at = current_timestamp WHERE cart_idx = ?")
+@EntityListeners(CartEntityListener.class)
 public class Cart extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)

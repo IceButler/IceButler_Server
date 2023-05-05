@@ -1,8 +1,8 @@
 package com.example.icebutler_server.fridge.entity.multiFridge;
 
-
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.entity.FridgeRole;
+import com.example.icebutler_server.global.entityListener.MultiFridgeUserEntityListener;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +15,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE multi_fridge_user SET is_enable = false, last_modified_date = current_timestamp WHERE multi_fridge_user_idx = ?")
+@SQLDelete(sql = "UPDATE multi_fridge_user SET is_enable = false, update_at = current_timestamp WHERE multi_fridge_user_idx = ?")
+@EntityListeners(MultiFridgeUserEntityListener.class)
 public class MultiFridgeUser extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

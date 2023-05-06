@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
   public PostUserRes join(PostUserReq postUserReq) {
     User user = checkUserInfo(postUserReq.getEmail(), postUserReq.getProvider());
     if (user == null) user = saveUser(postUserReq);
+    if (user.getIsEnable().equals(false)) user.setIsEnable(true);
     user.login();
     this.recipeServerEventPublisher.addUser(user);
     return PostUserRes.toDto(tokenUtils.createToken(user));

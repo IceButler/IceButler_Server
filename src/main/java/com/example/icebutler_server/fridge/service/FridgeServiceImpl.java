@@ -137,7 +137,8 @@ public class FridgeServiceImpl implements FridgeService {
     return fridge.getFridgeIdx();
   }
 
-  // 냉장고 개별 삭제
+  // 냉장고 개별
+  @Override
   @Transactional
   public Long removeFridgeUser(Long fridgeIdx, Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);

@@ -12,6 +12,8 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
+import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
@@ -93,6 +95,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
         }
     }
 
+    // 냉장고 삭제
+    @Transactional
     @Override
     public Long removeFridge(Long fridgeIdx, Long userIdx) {
         User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
@@ -102,6 +106,18 @@ public class MultiFridgeServiceImpl implements FridgeService {
         if(!users.isEmpty()) throw new FridgeRemoveException();
         this.multiFridgeRepository.delete(fridge);
         return fridge.getMultiFridgeIdx();
+    }
+
+    // 냉장고 개별 삭제
+    @Override
+    public Long removeFridgeUser(Long fridgeIdx, Long userIdx) {
+        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        MultiFridge fridge = multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        MultiFridgeUser fridgeUser = multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
+        if(fridgeUser.getRole().equals(FridgeRole.OWNER))throw new PermissionDeniedException();
+
+        multiFridgeUserRepository.delete(fridgeUser);
+        return fridgeUser.getMultiFridgeUserIdx();
     }
 
 
@@ -178,6 +194,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
     }
 
+    // 통계
     public FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month) {
         User user = this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
         MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(multiFridgeIdx,true).orElseThrow(FridgeNotFoundException::new);

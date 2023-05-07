@@ -109,6 +109,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
     }
 
     // 냉장고 개별 삭제
+    @Transactional
     @Override
     public Long removeFridgeUser(Long fridgeIdx, Long userIdx) {
         User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);

@@ -71,7 +71,7 @@ public class MultiFridgeController {
      */
     @Auth
     @GetMapping("/{multiFridgeIdx}/statistics")
-public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
+    public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "multiFridgeIdx") Long multiFridgeIdx,
                                                  @RequestParam String deleteCategory,
                                                  @RequestParam Integer year,
                                                  @RequestParam Integer month,
@@ -100,14 +100,14 @@ public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "multiFrid
 
     // 냉장고 삭제
     @Auth
-    @DeleteMapping("/{multiFridgeIdx}/remove")
+    @DeleteMapping("/{multiFridgeIdx}")
     public ResponseCustom<Long> removeFridge(@PathVariable(name = "multiFridgeIdx") Long fridgeIdx,
                                           @IsLogin LoginStatus loginStatus) {
         return ResponseCustom.OK(multiFridgeService.removeFridge(fridgeIdx, loginStatus.getUserIdx()));
     }
 
     @Auth
-    @DeleteMapping("/{multiFridgeIdx}/remove/each")
+    @DeleteMapping("/{multiFridgeIdx}/each")
     public ResponseCustom<?> removeFridgeUser(@PathVariable(name = "multiFridgeIdx") Long fridgeIdx,
                                               @IsLogin LoginStatus loginStatus) {
         return ResponseCustom.OK(multiFridgeService.removeFridgeUser(fridgeIdx, loginStatus.getUserIdx()));

@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/purchase")
+@RequestMapping(value = "/purchases")
 @RequiredArgsConstructor
 public class PurchaseController {
 }

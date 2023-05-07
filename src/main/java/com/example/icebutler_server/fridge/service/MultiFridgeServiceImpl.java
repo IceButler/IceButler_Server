@@ -95,7 +95,13 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
     @Override
     public Long removeFridge(Long fridgeIdx, Long userIdx) {
-        return null;
+        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        MultiFridge fridge = multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        multiFridgeUserRepository.findByMultiFridgeAndUserAndRoleAndIsEnable(fridge, user, FridgeRole.OWNER, true).orElseThrow(InvalidFridgeUserRoleException::new);
+        List<MultiFridgeUser> users = multiFridgeUserRepository.findByMultiFridgeAndRoleAndIsEnable(fridge, FridgeRole.MEMBER, true);
+        if(!users.isEmpty()) throw new FridgeRemoveException();
+        this.multiFridgeRepository.delete(fridge);
+        return fridge.getMultiFridgeIdx();
     }
 
 

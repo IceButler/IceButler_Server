@@ -5,6 +5,7 @@ import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListsRes;
 import com.example.icebutler_server.fridge.exception.FridgeTypeNotFoundException;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
+import com.example.icebutler_server.fridge.service.MultiFridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class FridgeController {
 
   private final FridgeServiceImpl fridgeService;
+  private final MultiFridgeServiceImpl multiFridgeService;
 
   // 냉장고 추가
   @Auth
@@ -29,7 +31,7 @@ public class FridgeController {
     if(fridgeType.equals(Constant.FRIDGE)){
       return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
     } else if(fridgeType.equals(Constant.MULTI_FRIDGE)){
-      return ResponseCustom.OK(fridgeService.registerMultiFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
+      return ResponseCustom.OK(multiFridgeService.registerMultiFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
     } else {
       throw new FridgeTypeNotFoundException();
     }

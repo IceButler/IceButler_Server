@@ -84,29 +84,6 @@ public class FridgeServiceImpl implements FridgeService {
       return fridge.getFridgeIdx();
   }
 
-  @Transactional
-  public Long registerMultiFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
-      if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
-      MultiFridge multiFridge = multiFridgeAssembler.toEntity(registerFridgeReq);
-      multiFridgeRepository.save(multiFridge);
-
-      List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
-      List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-      User owner = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
-
-      // multiFridge - multiFridgeUser  연관관계 추가
-      for (User user : users) {
-        multiFridgeUsers.add(MultiFridgeUser.builder().multiFridge(multiFridge).user(user).role(FridgeRole.MEMBER).build());
-      }
-      multiFridgeUsers.add(MultiFridgeUser.builder().multiFridge(multiFridge).user(owner).role(FridgeRole.OWNER).build());
-      multiFridgeUserRepository.saveAll(multiFridgeUsers);
-
-      // multiFridge - multiCart 연관관계 추가
-      multiCartRepository.saveAll(multiFridgeAssembler.multiCartToEntity(multiFridgeUsers));
-
-      return multiFridge.getMultiFridgeIdx();
-  }
-
   @Override
   public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
     User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);

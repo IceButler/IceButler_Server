@@ -35,6 +35,9 @@ public class User extends BaseEntity {
 
     private Boolean loginStatus;
 
+    @Column(length = 300)
+    private String fcmToken;
+
     @Builder
     public User(Provider provider, String email, String nickname, String profileImgKey) {
         this.provider = provider;

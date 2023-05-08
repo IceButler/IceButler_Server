@@ -40,3 +40,4 @@ out/
 
 ### firebase ###
 firebase_service_key.json
+*.json

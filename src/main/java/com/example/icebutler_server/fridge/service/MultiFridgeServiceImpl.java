@@ -62,8 +62,9 @@ public class MultiFridgeServiceImpl implements FridgeService {
         }
     }
 
+    @Override
     @Transactional
-    public Long registerMultiFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
+    public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
         if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
         MultiFridge multiFridge = multiFridgeAssembler.toEntity(registerFridgeReq);
         multiFridgeRepository.save(multiFridge);

@@ -31,7 +31,7 @@ public class FridgeController {
     if(fridgeType.equals(Constant.FRIDGE)){
       return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
     } else if(fridgeType.equals(Constant.MULTI_FRIDGE)){
-      return ResponseCustom.OK(multiFridgeService.registerMultiFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
+      return ResponseCustom.OK(multiFridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
     } else {
       throw new FridgeTypeNotFoundException();
     }

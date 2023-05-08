@@ -54,35 +54,10 @@ public class FridgeServiceImpl implements FridgeService {
   private final FridgeFoodRepository fridgeFoodRepository;
   private final FoodRepository foodRepository;
   private final CartRepository cartRepository;
-  private final MultiCartRepository multiCartRepository;
 
   private final FridgeAssembler fridgeAssembler;
   private final FridgeFoodAssembler fridgeFoodAssembler;
   private final FoodAssembler foodAssembler;
-  private final MultiFridgeAssembler multiFridgeAssembler;
-
-  @Transactional
-  public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
-      if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
-      Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
-      fridgeRepository.save(fridge);
-
-      List<FridgeUser> fridgeUsers = new ArrayList<>();
-      List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-      User owner = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
-
-      // fridge - fridgeUser  연관관계 추가
-      for (User user : users) {
-        fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
-      }
-      fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
-      fridgeUserRepository.saveAll(fridgeUsers);
-
-      // fridge - cart 연관관계 추가
-      cartRepository.save(Cart.toEntity(fridge));
-
-      return fridge.getFridgeIdx();
-  }
 
   @Override
   public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
@@ -96,6 +71,30 @@ public class FridgeServiceImpl implements FridgeService {
       // 값이 있으면 특정 값을 불러온 조회
       return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByFridgeForDisCardFood(fridge),this.fridgeFoodRepository.findByFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(fridge, FoodCategory.getFoodCategoryByName(category), true));
     }
+  }
+
+  @Override
+  @Transactional
+  public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
+    if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
+    Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
+    fridgeRepository.save(fridge);
+
+    List<FridgeUser> fridgeUsers = new ArrayList<>();
+    List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
+    User owner = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
+
+    // fridge - fridgeUser  연관관계 추가
+    for (User user : users) {
+      fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
+    }
+    fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
+    fridgeUserRepository.saveAll(fridgeUsers);
+
+    // fridge - cart 연관관계 추가
+    cartRepository.save(Cart.toEntity(fridge));
+
+    return fridge.getFridgeIdx();
   }
 
   @Override

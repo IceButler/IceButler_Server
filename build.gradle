@@ -70,6 +70,10 @@ dependencies {
 	// SQS
 	implementation "io.awspring.cloud:spring-cloud-starter-aws-messaging:2.3.0"
 	implementation "io.awspring.cloud:spring-cloud-aws-dependencies:2.3.0"
+
+	// firebase
+	implementation 'com.google.firebase:firebase-admin:6.8.1'
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 }
 
 dependencyManagement {

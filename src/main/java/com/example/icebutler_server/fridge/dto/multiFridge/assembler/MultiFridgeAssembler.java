@@ -1,6 +1,8 @@
 package com.example.icebutler_server.fridge.dto.multiFridge.assembler;
 
+import com.example.icebutler_server.cart.entity.multiCart.MultiCart;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
+import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
 import com.example.icebutler_server.global.entity.FridgeRole;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -49,5 +52,18 @@ public class MultiFridgeAssembler {
             }
         }
         return checkNewMember;
+    }
+
+    public MultiFridge toEntity(FridgeRegisterReq registerFridgeReq) {
+        return MultiFridge.builder()
+                .fridgeName(registerFridgeReq.getFridgeName())
+                .fridgeComment(registerFridgeReq.getFridgeComment())
+                .build();
+    }
+
+    public List<MultiCart> multiCartToEntity(List<MultiFridgeUser> multiFridgeUsers) {
+        return multiFridgeUsers.stream()
+                .map(m -> MultiCart.builder().multiFridgeUser(m).build())
+                .collect(Collectors.toList());
     }
 }

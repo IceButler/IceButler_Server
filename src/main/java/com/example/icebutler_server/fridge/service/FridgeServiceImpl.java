@@ -1,7 +1,9 @@
 package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.cart.entity.cart.Cart;
+import com.example.icebutler_server.cart.entity.multiCart.MultiCart;
 import com.example.icebutler_server.cart.repository.cart.CartRepository;
+import com.example.icebutler_server.cart.repository.multiCart.MultiCartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
@@ -11,6 +13,7 @@ import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeAssembler;
 import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeFoodAssembler;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
+import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
@@ -23,6 +26,7 @@ import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepositor
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
 import com.example.icebutler_server.global.entity.FridgeRole;
+import com.example.icebutler_server.global.util.Constant;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
@@ -50,32 +54,56 @@ public class FridgeServiceImpl implements FridgeService {
   private final FridgeFoodRepository fridgeFoodRepository;
   private final FoodRepository foodRepository;
   private final CartRepository cartRepository;
+  private final MultiCartRepository multiCartRepository;
 
   private final FridgeAssembler fridgeAssembler;
   private final FridgeFoodAssembler fridgeFoodAssembler;
   private final FoodAssembler foodAssembler;
+  private final MultiFridgeAssembler multiFridgeAssembler;
 
   @Transactional
-  public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
-    if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
-    Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
-    fridgeRepository.save(fridge);
+  public Long registerFridge(FridgeRegisterReq registerFridgeReq, String fridgeType, Long ownerIdx) {
+    if(fridgeType.equals(Constant.FRIDGE)){
+      if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
+      Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
+      fridgeRepository.save(fridge);
 
-    List<FridgeUser> fridgeUsers = new ArrayList<>();
-    List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-    User owner = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
+      List<FridgeUser> fridgeUsers = new ArrayList<>();
+      List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
+      User owner = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
 
-    // fridge - fridgeUser  연관관계 추가
-    for (User user : users) {
-      fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
+      // fridge - fridgeUser  연관관계 추가
+      for (User user : users) {
+        fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
+      }
+      fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
+      fridgeUserRepository.saveAll(fridgeUsers);
+
+      // fridge - cart 연관관계 추가
+      cartRepository.save(Cart.toEntity(fridge));
+
+      return fridge.getFridgeIdx();
+    } else {
+      if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
+      MultiFridge multiFridge = multiFridgeAssembler.toEntity(registerFridgeReq);
+      multiFridgeRepository.save(multiFridge);
+
+      List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
+      List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
+      User owner = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
+
+      // multiFridge - multiFridgeUser  연관관계 추가
+      for (User user : users) {
+        multiFridgeUsers.add(MultiFridgeUser.builder().multiFridge(multiFridge).user(user).role(FridgeRole.MEMBER).build());
+      }
+      multiFridgeUsers.add(MultiFridgeUser.builder().multiFridge(multiFridge).user(owner).role(FridgeRole.OWNER).build());
+      multiFridgeUserRepository.saveAll(multiFridgeUsers);
+
+      // multiFridge - multiCart 연관관계 추가
+      multiCartRepository.saveAll(multiFridgeAssembler.multiCartToEntity(multiFridgeUsers));
+
+      return multiFridge.getMultiFridgeIdx();
     }
-    fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
-    fridgeUserRepository.saveAll(fridgeUsers);
-
-    // fridge - cart 연관관계 추가
-    cartRepository.save(Cart.toEntity(fridge));
-
-    return fridge.getFridgeIdx();
   }
 
   @Override

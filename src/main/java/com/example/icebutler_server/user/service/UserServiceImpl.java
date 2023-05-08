@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
     User user = checkUserInfo(postUserReq.getEmail(), postUserReq.getProvider());
     if (user == null) user = saveUser(postUserReq);
     if (user.getIsEnable().equals(false)) user.setIsEnable(true);
+    if(user.getIsDenied().equals(true)) throw new AccessDeniedUserException();
     user.login();
     this.recipeServerEventPublisher.addUser(user);
     return PostUserRes.toDto(tokenUtils.createToken(user));

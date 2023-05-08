@@ -25,6 +25,12 @@ public class UserExceptionController {
         return ResponseCustom.NOT_FOUND(e.getMessage());
     }
 
+    @ExceptionHandler(AccessDeniedUserException.class)
+    public ResponseCustom<?> catchAccessDeniedUserException(AccessDeniedUserException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.FORBIDDEN(e.getMessage());
+    }
+
     @ExceptionHandler(CannotDeleteFridgeException.class)
     public ResponseCustom<?> CannotDeleteFridgeException(CannotDeleteFridgeException e) {
         log.error(e.getMessage());

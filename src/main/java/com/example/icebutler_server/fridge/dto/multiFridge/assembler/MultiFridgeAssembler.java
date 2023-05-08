@@ -31,9 +31,13 @@ public class MultiFridgeAssembler {
             boolean hasMember = false;
 
             for(MultiFridgeUser members : multiFridgeUsers){
-                if(user.equals(members.getUser()) || members.getRole().equals(FridgeRole.OWNER)) {
+                if(user.equals(members.getUser())) {
                     members.setIsEnable(true);
                     hasMember = true;
+                }
+
+                if(members.getRole().equals(FridgeRole.OWNER)){
+                    members.setIsEnable(true);
                 }
             }
             if(!hasMember) {
@@ -44,7 +48,6 @@ public class MultiFridgeAssembler {
                         .build());
             }
         }
-
         return checkNewMember;
     }
 }

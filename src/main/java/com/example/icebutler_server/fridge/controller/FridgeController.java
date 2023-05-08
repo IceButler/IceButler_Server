@@ -26,7 +26,6 @@ public class FridgeController {
   public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
                                           @RequestParam(value = "fridgeType") String fridgeType,
                                           @IsLogin LoginStatus loginStatus) {
-//    return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, fridgeType, loginStatus.getUserIdx()));
     if(fridgeType.equals(Constant.FRIDGE)){
       return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
     } else if(fridgeType.equals(Constant.MULTI_FRIDGE)){

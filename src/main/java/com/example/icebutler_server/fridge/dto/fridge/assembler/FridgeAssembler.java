@@ -45,9 +45,12 @@ public class FridgeAssembler {
       boolean hasMember = false;
 
       for (FridgeUser members : fridgeUsers) {
-        if (user.equals(members.getUser()) || members.getRole().equals(FridgeRole.OWNER)) {
+        if (user.equals(members.getUser())) {
           members.setIsEnable(true);
           hasMember = true;
+        }
+        if(members.getRole().equals(FridgeRole.OWNER)){
+          members.setIsEnable(true);
         }
       }
       if (!hasMember) {

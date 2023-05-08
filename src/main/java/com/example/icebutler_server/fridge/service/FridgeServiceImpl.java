@@ -62,8 +62,7 @@ public class FridgeServiceImpl implements FridgeService {
   private final MultiFridgeAssembler multiFridgeAssembler;
 
   @Transactional
-  public Long registerFridge(FridgeRegisterReq registerFridgeReq, String fridgeType, Long ownerIdx) {
-    if(fridgeType.equals(Constant.FRIDGE)){
+  public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
       if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
       Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
       fridgeRepository.save(fridge);
@@ -83,7 +82,10 @@ public class FridgeServiceImpl implements FridgeService {
       cartRepository.save(Cart.toEntity(fridge));
 
       return fridge.getFridgeIdx();
-    } else {
+  }
+
+  @Transactional
+  public Long registerMultiFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
       if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
       MultiFridge multiFridge = multiFridgeAssembler.toEntity(registerFridgeReq);
       multiFridgeRepository.save(multiFridge);
@@ -103,7 +105,6 @@ public class FridgeServiceImpl implements FridgeService {
       multiCartRepository.saveAll(multiFridgeAssembler.multiCartToEntity(multiFridgeUsers));
 
       return multiFridge.getMultiFridgeIdx();
-    }
   }
 
   @Override

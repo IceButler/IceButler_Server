@@ -24,6 +24,12 @@ public class FridgeExceptionController {
         return ResponseCustom.NOT_FOUND(e.getMessage());
     }
 
+    @ExceptionHandler(FridgeTypeNotFoundException.class)
+    public ResponseCustom<Void> catchFridgeTypeNotFoundException(FridgeTypeNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseCustom.NOT_FOUND(e.getMessage());
+    }
+
     /**
      * FridgeUser Exceptions
      */

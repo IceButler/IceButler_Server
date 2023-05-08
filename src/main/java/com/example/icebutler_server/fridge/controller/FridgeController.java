@@ -3,11 +3,13 @@ package com.example.icebutler_server.fridge.controller;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListsRes;
+import com.example.icebutler_server.fridge.exception.FridgeTypeNotFoundException;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
+import com.example.icebutler_server.global.util.Constant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +26,14 @@ public class FridgeController {
   public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
                                           @RequestParam(value = "fridgeType") String fridgeType,
                                           @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, fridgeType, loginStatus.getUserIdx()));
+//    return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, fridgeType, loginStatus.getUserIdx()));
+    if(fridgeType.equals(Constant.FRIDGE)){
+      return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
+    } else if(fridgeType.equals(Constant.MULTI_FRIDGE)){
+      return ResponseCustom.OK(fridgeService.registerMultiFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
+    } else {
+      throw new FridgeTypeNotFoundException();
+    }
   }
 
   // 냉장고 업데이트

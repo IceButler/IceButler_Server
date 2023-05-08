@@ -2,6 +2,8 @@ package com.example.icebutler_server.food.controller;
 
 import com.example.icebutler_server.food.service.FoodServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.sqs.AmazonSQSSender;
+import com.example.icebutler_server.global.sqs.FoodData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import java.io.IOException;
 public class FoodController {
 
     private final FoodServiceImpl foodService;
+    private final AmazonSQSSender amazonSQSSender;
 
     // 식품 검색
     @GetMapping("")
@@ -32,5 +35,17 @@ public class FoodController {
     @GetMapping("/barcode")
     public ResponseCustom<?> searchByBarcode(@RequestParam String code_num) throws IOException, org.json.simple.parser.ParseException {
         return ResponseCustom.OK(foodService.searchByBarcode(code_num));
+    }
+
+    @GetMapping("/hihitest")
+    public void hihiTest() {
+        System.out.println("hihi");
+        amazonSQSSender.sendMessage(
+                FoodData.builder()
+                        .foodIdx(1L)
+                        .foodName("asd")
+                        .foodCategory("asd")
+                        .foodImgKey("ad")
+                        .build());
     }
 }

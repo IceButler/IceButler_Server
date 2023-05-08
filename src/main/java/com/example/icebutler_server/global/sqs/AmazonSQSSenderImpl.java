@@ -26,8 +26,8 @@ public class AmazonSQSSenderImpl implements AmazonSQSSender{
         SendMessageRequest sendMessageRequest = null;
         try {
             sendMessageRequest = new SendMessageRequest(url, objectMapper.writeValueAsString(msg))
-                                            .withMessageGroupId("test")
-                                            .withMessageDeduplicationId(UUID.randomUUID().toString());
+                    .withMessageGroupId("sqs-test")
+                    .withMessageDeduplicationId(UUID.randomUUID().toString());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

@@ -1,13 +1,11 @@
 package com.example.icebutler_server.fridge.service;
 
-import com.example.icebutler_server.fridge.dto.fridge.request.DeleteFridgeFoodsReq;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
+import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 
 public interface FridgeService {
   FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category);
+  Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx);
   void modifyFridge(Long fridgeIdx, FridgeModifyReq updateFridgeReq, Long userIdx);
   Long removeFridge(Long fridgeIdx, Long userIdx);
   Long removeFridgeUser(Long fridgeIdx, Long userIdx);

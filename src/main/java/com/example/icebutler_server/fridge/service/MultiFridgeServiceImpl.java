@@ -1,14 +1,12 @@
 package com.example.icebutler_server.fridge.service;
 
+import com.example.icebutler_server.cart.repository.multiCart.MultiCartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.food.repository.FoodRepository;
-import com.example.icebutler_server.fridge.dto.fridge.request.DeleteFridgeFoodsReq;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
+import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
@@ -43,6 +41,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
     private final MultiFridgeUserRepository multiFridgeUserRepository;
     private final MultiFridgeRepository multiFridgeRepository;
     private final MultiFridgeFoodRepository multiFridgeFoodRepository;
+    private final MultiCartRepository multiCartRepository;
 
     private final MultiFridgeAssembler multiFridgeAssembler;
     private final MultiFridgeFoodAssembler multiFridgeFoodAssembler;
@@ -61,6 +60,30 @@ public class MultiFridgeServiceImpl implements FridgeService {
             // 값이 있으면 특정 값을 불러온 조회
             return FridgeMainRes.toMultiDto(this.multiFridgeFoodRepository.findByMultiFridgeForDisCardFood(multiFridge), this.multiFridgeFoodRepository.findByMultiFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(multiFridge, FoodCategory.getFoodCategoryByName(category), true));
         }
+    }
+
+    @Override
+    @Transactional
+    public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
+        if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
+        MultiFridge multiFridge = multiFridgeAssembler.toEntity(registerFridgeReq);
+        multiFridgeRepository.save(multiFridge);
+
+        List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
+        List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
+        User owner = userRepository.findByUserIdxAndIsEnable(ownerIdx, true).orElseThrow(UserNotFoundException::new);
+
+        // multiFridge - multiFridgeUser  연관관계 추가
+        for (User user : users) {
+            multiFridgeUsers.add(MultiFridgeUser.builder().multiFridge(multiFridge).user(user).role(FridgeRole.MEMBER).build());
+        }
+        multiFridgeUsers.add(MultiFridgeUser.builder().multiFridge(multiFridge).user(owner).role(FridgeRole.OWNER).build());
+        multiFridgeUserRepository.saveAll(multiFridgeUsers);
+
+        // multiFridge - multiCart 연관관계 추가
+        multiCartRepository.saveAll(multiFridgeAssembler.multiCartToEntity(multiFridgeUsers));
+
+        return multiFridge.getMultiFridgeIdx();
     }
 
     // 멀티 냉장고 수정
@@ -92,8 +115,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
             }
         }
     }
-
     // 냉장고 삭제
+
     @Transactional
     @Override
     public Long removeFridge(Long fridgeIdx, Long userIdx) {
@@ -105,8 +128,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
         this.multiFridgeRepository.delete(fridge);
         return fridge.getMultiFridgeIdx();
     }
-
     // 냉장고 개별 삭제
+
     @Transactional
     @Override
     public Long removeFridgeUser(Long fridgeIdx, Long userIdx) {
@@ -134,8 +157,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
         return FridgeFoodRes.toDto(fridgeFood);
     }
-
     // 냉장고 내 식품 추가
+
     @Transactional
     @Override
     public void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeIdx, Long userIdx) {
@@ -156,8 +179,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
         }
         multiFridgeFoodRepository.saveAll(fridgeFoods);
     }
-
     // 냉장고 식품 수정
+
     @Transactional
     @Override
     public void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx) {
@@ -192,8 +215,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
         return FridgeUserMainRes.doMultiDto(multiFridgeUserRepository.findByMultiFridgeAndIsEnable(fridge,true));
 
     }
-
     // 통계
+
     public FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month) {
         User user = this.userRepository.findByUserIdxAndIsEnable(userIdx,true).orElseThrow(UserNotFoundException::new);
         MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(multiFridgeIdx,true).orElseThrow(FridgeNotFoundException::new);

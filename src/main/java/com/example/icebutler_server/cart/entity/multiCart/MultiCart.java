@@ -4,6 +4,7 @@ import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
 import com.example.icebutler_server.global.entityListener.MultiCartEntityListener;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -25,4 +26,8 @@ public class MultiCart extends BaseEntity {
   @JoinColumn(name = "multiFridgeUserIdx", nullable = false)
   private MultiFridgeUser multiFridgeUser;
 
+  @Builder
+  public MultiCart(MultiFridgeUser multiFridgeUser) {
+    this.multiFridgeUser = multiFridgeUser;
+  }
 }

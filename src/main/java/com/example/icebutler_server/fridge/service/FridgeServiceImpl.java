@@ -27,6 +27,8 @@ import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRep
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.global.util.Constant;
+import com.example.icebutler_server.global.sqs.AmazonSQSSender;
+import com.example.icebutler_server.global.sqs.FoodData;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
@@ -58,6 +60,7 @@ public class FridgeServiceImpl implements FridgeService {
   private final FridgeAssembler fridgeAssembler;
   private final FridgeFoodAssembler fridgeFoodAssembler;
   private final FoodAssembler foodAssembler;
+  private final AmazonSQSSender amazonSQSSender;
 
   @Override
   public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
@@ -188,7 +191,12 @@ public class FridgeServiceImpl implements FridgeService {
         fridgeUserRepository.findByUserAndFridgeAndIsEnable(owner, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
       }
       Food food = foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
-              .orElseGet(()->foodRepository.save(foodAssembler.toEntity(fridgeFoodReq)));
+              .orElseGet(()->{
+                Food save = foodRepository.save(foodAssembler.toEntity(fridgeFoodReq));
+                amazonSQSSender.sendMessage(FoodData.toDto(save));
+                return save;
+              });
+
       fridgeFoods.add(fridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
     }
     fridgeFoodRepository.saveAll(fridgeFoods);

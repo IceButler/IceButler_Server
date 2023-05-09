@@ -10,6 +10,8 @@ import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
+import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
@@ -205,8 +207,22 @@ public class MultiFridgeServiceImpl implements FridgeService {
     }
 
     @Override
-    public void deleteFridgeFood(DeleteFridgeFoodsReq deleteFridgeFoodsReq, String deleteType, Long fridgeIdx, Long userIdx) {
+    @Transactional
+    public void deleteFridgeFood(DeleteFridgeFoodsReq deleteFridgeFoodsReq, String type, Long multiFridgeIdx, Long userIdx) {
+        FoodDeleteStatus deleteStatus = FoodDeleteStatus.getFoodDeleteStatusByName(type);
+        User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true)
+                .orElseThrow(UserNotFoundException::new);
+        MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(multiFridgeIdx, true)
+                .orElseThrow(FridgeNotFoundException::new);
+        this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true)
+                .orElseThrow(FridgeUserNotFoundException::new);
 
+        List<MultiFridgeFood> deleteFridgeFoods = deleteFridgeFoodsReq.getDeleteFoods().stream()
+                .map(foodIdx -> this.multiFridgeFoodRepository.findByMultiFridgeFoodIdxAndMultiFridgeAndIsEnable(foodIdx, fridge, true)
+                        .orElseThrow(FridgeFoodNotFoundException::new))
+                .collect(Collectors.toList());
+
+        deleteFridgeFoods.forEach(food -> food.removeWithStatus(deleteStatus));
     }
 
     @Override

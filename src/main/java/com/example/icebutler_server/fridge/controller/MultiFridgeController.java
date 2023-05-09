@@ -1,5 +1,6 @@
 package com.example.icebutler_server.fridge.controller;
 
+import com.example.icebutler_server.fridge.dto.fridge.request.DeleteFridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
@@ -111,5 +112,16 @@ public class MultiFridgeController {
     public ResponseCustom<?> removeFridgeUser(@PathVariable(name = "multiFridgeIdx") Long fridgeIdx,
                                               @IsLogin LoginStatus loginStatus) {
         return ResponseCustom.OK(multiFridgeService.removeFridgeUser(fridgeIdx, loginStatus.getUserIdx()));
+    }
+
+    // 공용냉장고 내 식품 삭제(폐기/섭취)
+    @Auth
+    @DeleteMapping("/{multiFridgeIdx}/foods")
+    public ResponseCustom<?> deleteFridgeFood(@RequestBody DeleteFridgeFoodsReq deleteFridgeFoodsReq,
+                                              @RequestParam String type,
+                                              @PathVariable Long multiFridgeIdx,
+                                              @IsLogin LoginStatus loginStatus) {
+        multiFridgeService.deleteFridgeFood(deleteFridgeFoodsReq, type, multiFridgeIdx, loginStatus.getUserIdx());
+        return ResponseCustom.OK();
     }
 }

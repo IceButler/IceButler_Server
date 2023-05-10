@@ -19,6 +19,8 @@ import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
 import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
 import com.example.icebutler_server.fridge.repository.fridge.FridgeRepository;
 import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepository;
+import com.example.icebutler_server.global.sqs.AmazonSQSSender;
+import com.example.icebutler_server.global.sqs.FoodData;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
@@ -39,10 +41,11 @@ public class CartServiceImpl implements CartService {
     private final CartFoodRepository cartFoodRepository;
     private final FoodRepository foodRepository;
     private final FridgeRepository fridgeRepository;
-    private final CartFoodAssembler cartFoodAssembler;
     private final FridgeUserRepository fridgeUserRepository;
-    private final FoodAssembler foodAssembler;
     private final CartRepository cartRepository;
+    private final FoodAssembler foodAssembler;
+    private final CartFoodAssembler cartFoodAssembler;
+    private final AmazonSQSSender amazonSQSSender;
 
     // 장바구니 식품 조회
     @Override
@@ -70,7 +73,10 @@ public class CartServiceImpl implements CartService {
         List<Food> foodRequests = new ArrayList<>();
         for(AddFoodRequest foodRequest : request.getFoodRequests()) {
             Food food = this.foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
-            if(food == null) food = this.foodRepository.save(foodAssembler.toEntity(foodRequest));
+            if(food == null) {
+                food = this.foodRepository.save(foodAssembler.toEntity(foodRequest));
+                amazonSQSSender.sendMessage(FoodData.toDto(food));
+            }
             foodRequests.add(food);
         }
 

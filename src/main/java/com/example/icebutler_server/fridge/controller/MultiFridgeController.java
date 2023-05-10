@@ -12,6 +12,8 @@ import com.example.icebutler_server.global.resolver.LoginStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RequestMapping("/multiFridges")
 @RestController
 @RequiredArgsConstructor

@@ -5,12 +5,15 @@ import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import java.io.IOException;
 
 public interface FridgeService {
   FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category);
   void modifyFridge(Long fridgeIdx, FridgeModifyReq updateFridgeReq, Long userIdx);
   Long removeFridge(Long fridgeIdx, Long userIdx);
-  Long removeFridgeUser(Long fridgeIdx, Long userIdx);
+  Long removeFridgeUser(Long fridgeIdx, Long userIdx) throws IOException;
   SearchFridgeFoodRes searchFridgeFood(Long fridgeIdx, Long ownerIdx, String foodName);
   FridgeFoodRes getFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, Long userIdx);
   void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeIdx, Long userIdx);

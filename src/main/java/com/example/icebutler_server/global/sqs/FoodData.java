@@ -22,6 +22,7 @@ public class FoodData {
         this.foodName = foodName;
         this.foodImgKey = foodImgKey;
         this.foodCategory = foodCategory;
+        this.uuid = uuid;
     }
 
     public static FoodData toDto(Food food) {

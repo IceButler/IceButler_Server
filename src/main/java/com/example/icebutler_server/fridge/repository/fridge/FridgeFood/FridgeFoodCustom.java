@@ -14,6 +14,5 @@ public interface FridgeFoodCustom {
     Long findByDeleteCategoryForStatistics(FoodDeleteStatus deleteCategory, Fridge fridge, FoodCategory category, Integer year, Integer month);
     FridgeDiscardRes findByFridgeForDisCardFood(Fridge fridge);
     List<Food> findByUserForFridgeRecipeFoodList(Fridge fridge);
-    List<Food> findByUserForMultiFridgeRecipeFoodList(MultiFridge fridge);
     void deleteOwnerByFridgeUser(FridgeUser fridgeUser);
 }

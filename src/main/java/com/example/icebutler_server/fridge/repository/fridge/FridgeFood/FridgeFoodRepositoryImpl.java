@@ -79,17 +79,7 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                 .fetch();
     }
 
-    @Override
-    public List<Food> findByUserForMultiFridgeRecipeFoodList(MultiFridge fridgeEntity) {
-        return jpaQueryFactory.selectFrom(food)
-                .leftJoin(multiFridgeFood).on(food.eq(multiFridgeFood.food))
-                .leftJoin(multiFridge).on(multiFridgeFood.multiFridge.eq(multiFridge))
-                .leftJoin(multiFridgeUser).on(multiFridgeUser.multiFridge.eq(multiFridge))
-                .where((multiFridge.eq(fridgeEntity)).
-                        and(multiFridgeFood.isEnable.eq(true)).and(multiFridge.isEnable.eq(true)).and(multiFridgeUser.isEnable.eq(true)))
-                .groupBy(food.foodIdx)
-                .fetch();
-    }
+
 
     @Override
     public void deleteOwnerByFridgeUser(FridgeUser fridgeUser) {

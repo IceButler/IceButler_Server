@@ -7,18 +7,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
 public class FoodData {
-    private Long foodIdx;
     private String foodName;
     private String foodImgKey;
     private String foodCategory;
+    private UUID uuid;
 
     @Builder
-    public FoodData(Long foodIdx, String foodName, String foodImgKey, String foodCategory) {
-        this.foodIdx = foodIdx;
+    public FoodData(String foodName, String foodImgKey, String foodCategory, UUID uuid) {
         this.foodName = foodName;
         this.foodImgKey = foodImgKey;
         this.foodCategory = foodCategory;
@@ -26,10 +26,10 @@ public class FoodData {
 
     public static FoodData toDto(Food food) {
         FoodData foodData = new FoodData();
-        foodData.foodIdx = food.getFoodIdx();
         foodData.foodName = food.getFoodName();
         foodData.foodImgKey = food.getFoodImgKey();
         foodData.foodCategory = food.getFoodCategory().toString();
+        foodData.uuid = food.getUuid();
         return foodData;
     }
 }

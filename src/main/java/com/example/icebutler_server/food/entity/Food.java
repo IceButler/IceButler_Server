@@ -6,9 +6,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
@@ -26,11 +28,16 @@ public class Food extends BaseEntity {
     @Column(nullable = false)
     private FoodCategory foodCategory;
 
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID uuid;
+
     @Builder
-    public Food(String foodName, String foodImgKey, FoodCategory foodCategory) {
+    public Food(String foodName, String foodImgKey, FoodCategory foodCategory, UUID uuid) {
         this.foodName = foodName;
         this.foodImgKey = foodImgKey;
         this.foodCategory = foodCategory;
+        this.uuid = uuid;
     }
 
 }

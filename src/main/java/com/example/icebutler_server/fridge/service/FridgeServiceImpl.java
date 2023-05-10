@@ -1,9 +1,7 @@
 package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.cart.entity.cart.Cart;
-import com.example.icebutler_server.cart.entity.multiCart.MultiCart;
 import com.example.icebutler_server.cart.repository.cart.CartRepository;
-import com.example.icebutler_server.cart.repository.multiCart.MultiCartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
@@ -13,7 +11,6 @@ import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeAssembler;
 import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeFoodAssembler;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
-import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
@@ -26,7 +23,6 @@ import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepositor
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
 import com.example.icebutler_server.global.entity.FridgeRole;
-import com.example.icebutler_server.global.util.Constant;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
 import com.example.icebutler_server.global.sqs.FoodData;
 import com.example.icebutler_server.user.entity.User;
@@ -216,7 +212,11 @@ public class FridgeServiceImpl implements FridgeService {
 
     if(!modifyFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
       Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
-              .orElseGet(()->foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));
+              .orElseGet(()->{
+                Food save = foodRepository.save(foodAssembler.toEntity(fridgeFoodReq));
+                amazonSQSSender.sendMessage(FoodData.toDto(save));
+                return save;
+              });
       this.fridgeFoodAssembler.toUpdateFridgeFoodInfo(modifyFridgeFood, food);
     }
 

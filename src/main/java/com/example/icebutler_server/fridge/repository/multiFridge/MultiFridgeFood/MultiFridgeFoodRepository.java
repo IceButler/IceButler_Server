@@ -2,6 +2,7 @@ package com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFo
 
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,5 @@ public interface MultiFridgeFoodRepository extends JpaRepository<MultiFridgeFood
     Optional<MultiFridgeFood> findByMultiFridgeFoodIdxAndMultiFridgeAndIsEnable(Long multiFridgeFoodIdx, MultiFridge multiFridge, Boolean status);
     void deleteByMultiFridge(MultiFridge multiFridge);
     void deleteByFood(Food food);
+    List<FridgeFood> findByFoodDetailNameContainingAndMultiFridgeAndIsEnable(String keyword, MultiFridge fridge, boolean status);
 }

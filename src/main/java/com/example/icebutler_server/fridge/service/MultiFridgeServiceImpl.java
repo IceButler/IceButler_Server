@@ -11,6 +11,8 @@ import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
+import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
@@ -149,8 +151,10 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
 
     @Override
-    public SearchFridgeFoodRes searchFridgeFood(Long fridgeIdx, Long ownerIdx, String foodName){
-        return null;
+    public SearchFridgeFoodRes searchFridgeFood(Long fridgeIdx, Long userIdx, String keyword){
+        MultiFridge fridge = multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        List<FridgeFood> searchFoods = multiFridgeFoodRepository.findByFoodDetailNameContainingAndMultiFridgeAndIsEnable(keyword, fridge, true);
+        return SearchFridgeFoodRes.toDto(searchFoods, fridgeIdx, userIdx);
     }
 
     @Override

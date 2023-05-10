@@ -126,4 +126,14 @@ public class MultiFridgeController {
         multiFridgeService.deleteFridgeFood(deleteFridgeFoodsReq, type, multiFridgeIdx, loginStatus.getUserIdx());
         return ResponseCustom.OK();
     }
+
+    // 공용 냉장고 내 식품 검색 조회
+    @Auth
+    @GetMapping("/{multiFridgeIdx}/search")
+    public ResponseCustom<?> searchFridgeFood(@PathVariable(name = "multiFridgeIdx") Long fridgeIdx,
+                                              @RequestParam(value = "keyword") String keyword,
+                                              @IsLogin LoginStatus loginStatus) {
+        multiFridgeService.searchFridgeFood(fridgeIdx, loginStatus.getUserIdx(), keyword);
+        return ResponseCustom.OK();
+    }
 }

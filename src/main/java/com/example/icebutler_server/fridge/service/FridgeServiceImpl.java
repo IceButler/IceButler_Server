@@ -212,7 +212,11 @@ public class FridgeServiceImpl implements FridgeService {
 
     if(!modifyFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
       Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
-              .orElseGet(()->foodRepository.save(this.foodAssembler.toEntity(fridgeFoodReq)));
+              .orElseGet(()->{
+                Food save = foodRepository.save(foodAssembler.toEntity(fridgeFoodReq));
+                amazonSQSSender.sendMessage(FoodData.toDto(save));
+                return save;
+              });
       this.fridgeFoodAssembler.toUpdateFridgeFoodInfo(modifyFridgeFood, food);
     }
 

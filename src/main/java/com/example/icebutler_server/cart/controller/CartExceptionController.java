@@ -1,5 +1,6 @@
 package com.example.icebutler_server.cart.controller;
 
+import com.example.icebutler_server.cart.exception.CartFoodNotFoundException;
 import com.example.icebutler_server.cart.exception.CartNotFoundException;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,15 @@ public class CartExceptionController {
      */
     @ExceptionHandler(CartNotFoundException.class)
     public ResponseCustom<Void> catchCartNotFoundException(CartNotFoundException e){
+        log.error(e.getMessage());
+        return ResponseCustom.NOT_FOUND(null);
+    }
+
+    /**
+     * CartFood Exceptions
+     */
+    @ExceptionHandler(CartFoodNotFoundException.class)
+    public ResponseCustom<Void> catchCartNotFoundException(CartFoodNotFoundException e){
         log.error(e.getMessage());
         return ResponseCustom.NOT_FOUND(null);
     }

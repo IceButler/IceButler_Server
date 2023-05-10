@@ -11,6 +11,7 @@ public class MultiCartFoodAssembler {
     public MultiCartFood toEntity(MultiCart cart, Food food) {
         return MultiCartFood.builder()
                 .multiCart(cart)
-                .food(food).build();
+                .food(food)
+                .build();
     }
 }

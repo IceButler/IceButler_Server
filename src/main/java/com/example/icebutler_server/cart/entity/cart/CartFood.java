@@ -34,7 +34,4 @@ public class CartFood extends BaseEntity {
         this.cart = cart;
     }
 
-    public void remove(CartFood cartFood) {
-        this.setIsEnable(false);
-    }
 }

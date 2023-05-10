@@ -31,9 +31,4 @@ public class Cart extends BaseEntity {
         this.fridge = fridge;
     }
 
-    public static Cart toEntity(Fridge fridge) {
-        return Cart.builder()
-                .fridge(fridge)
-                .build();
-    }
 }

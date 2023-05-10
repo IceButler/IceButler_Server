@@ -3,11 +3,12 @@ package com.example.icebutler_server.cart.service;
 import com.example.icebutler_server.cart.dto.cart.request.AddFoodToCartRequest;
 import com.example.icebutler_server.cart.dto.cart.request.RemoveFoodFromCartRequest;
 import com.example.icebutler_server.cart.dto.cart.response.CartResponse;
-import com.example.icebutler_server.global.dto.response.ResponseCustom;
+
+import java.util.List;
 
 public interface CartService {
 
-    ResponseCustom<?> getFoodsFromCart(Long fridgeIdx, Long userIdx);
-    ResponseCustom<?> addFoodsToCart(Long cartIdx, AddFoodToCartRequest request, Long userIdx);
-    ResponseCustom<?> removeFoodsFromCart(Long cartIdx, RemoveFoodFromCartRequest request, Long userIdx);
+    List<CartResponse> getCartFoods(Long fridgeIdx, Long userIdx);
+    void addCartFoods(Long cartIdx, AddFoodToCartRequest request, Long userIdx);
+    void deleteCartFoods(Long cartIdx, RemoveFoodFromCartRequest request, Long userIdx);
 }

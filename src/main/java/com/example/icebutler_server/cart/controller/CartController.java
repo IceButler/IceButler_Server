@@ -25,35 +25,28 @@ public class CartController {
     // 장바구니 식품 조회
     @Auth
     @GetMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<List<CartResponse>> getFoodsFromCart(
-            @PathVariable Long fridgeIdx,
-            @IsLogin LoginStatus loginStatus
-    )
-    {
-        return cartService.getFoodsFromCart(fridgeIdx, loginStatus.getUserIdx());
+    public ResponseCustom<List<CartResponse>> getCartFoods(@PathVariable Long fridgeIdx,
+                                                           @IsLogin LoginStatus loginStatus) {
+        return ResponseCustom.OK(cartService.getCartFoods(fridgeIdx, loginStatus.getUserIdx()));
     }
 
     // 장바구니 식품 추가
     @Auth
     @PostMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<?> addFoodsToCart(
-            @PathVariable Long fridgeIdx,
-            @RequestBody AddFoodToCartRequest request,
-            @IsLogin LoginStatus loginStatus
-    )
-    {
-        return cartService.addFoodsToCart(fridgeIdx, request, loginStatus.getUserIdx());
+    public ResponseCustom<?> addCartFoods(@PathVariable Long fridgeIdx,
+                                          @RequestBody AddFoodToCartRequest request,
+                                          @IsLogin LoginStatus loginStatus) {
+        cartService.addCartFoods(fridgeIdx, request, loginStatus.getUserIdx());
+        return ResponseCustom.OK();
     }
 
     // 장바구니 식품 삭제
     @Auth
     @DeleteMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<?> removeFoodsFromCart(
-            @PathVariable Long fridgeIdx,
-            @RequestBody RemoveFoodFromCartRequest request,
-            @IsLogin LoginStatus loginStatus
-    )
-    {
-        return cartService.removeFoodsFromCart(fridgeIdx, request, loginStatus.getUserIdx());
+    public ResponseCustom<?> deleteCartFoods(@PathVariable Long fridgeIdx,
+                                             @RequestBody RemoveFoodFromCartRequest request,
+                                             @IsLogin LoginStatus loginStatus) {
+        cartService.deleteCartFoods(fridgeIdx, request, loginStatus.getUserIdx());
+        return ResponseCustom.OK();
     }
 }

@@ -19,6 +19,9 @@ public class CartExceptionController {
         return ResponseCustom.NOT_FOUND(null);
     }
 
+    /**
+     * CartFood Exceptions
+     */
     @ExceptionHandler(CartFoodNotFoundException.class)
     public ResponseCustom<Void> catchCartNotFoundException(CartFoodNotFoundException e){
         log.error(e.getMessage());

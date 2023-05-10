@@ -11,6 +11,7 @@ public class CartFoodAssembler {
     public CartFood toEntity(Cart cart, Food food) {
         return CartFood.builder()
                 .cart(cart)
-                .food(food).build();
+                .food(food)
+                .build();
     }
 }

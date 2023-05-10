@@ -1,6 +1,6 @@
 package com.example.icebutler_server.fridge.service;
 
-import com.example.icebutler_server.cart.entity.cart.Cart;
+import com.example.icebutler_server.cart.dto.cart.assembler.CartAssembler;
 import com.example.icebutler_server.cart.repository.cart.CartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
@@ -56,6 +56,7 @@ public class FridgeServiceImpl implements FridgeService {
   private final FridgeAssembler fridgeAssembler;
   private final FridgeFoodAssembler fridgeFoodAssembler;
   private final FoodAssembler foodAssembler;
+  private final CartAssembler cartAssembler;
   private final AmazonSQSSender amazonSQSSender;
 
   @Override
@@ -91,7 +92,7 @@ public class FridgeServiceImpl implements FridgeService {
     fridgeUserRepository.saveAll(fridgeUsers);
 
     // fridge - cart 연관관계 추가
-    cartRepository.save(Cart.toEntity(fridge));
+    cartRepository.save(cartAssembler.toEntity(fridge));
 
     return fridge.getFridgeIdx();
   }

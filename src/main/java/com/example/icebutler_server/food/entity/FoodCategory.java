@@ -7,23 +7,26 @@ import java.util.Arrays;
 
 @Getter
 public enum FoodCategory{
-  MEAT("육류", "meat.png"),
-  FRUIT("과일", "fruit.png"),
-  VEGETABLE("채소", "vegetable.png"),
-  BEVERAGE("음료", "beverage.png"),
-  AQUATIC_PRODUCTS("수산물", "aquatic_products.png"),
-  BANCHAN("반찬", "banchan.png"),
-  SNACK("간식", "snack.png"),
-  CONDIMENT("조미료", "condiment.png"),
-  PROCESSED_FOOD("가공식품", "processed_food.png"),
-  ETC("기타", "etc.png");
+  MEAT("육류"),
+  FRUIT("과일"),
+  VEGETABLE("채소"),
+  BEVERAGE("음료"),
+  AQUATIC_PRODUCTS("수산물"),
+  BANCHAN("반찬"),
+  SNACK("간식"),
+  CONDIMENT("조미료"),
+  PROCESSED_FOOD("가공식품"),
+  ETC("기타");
 
   private final String name;
-  private final String foodCategoryImgUrl;
 
-  private FoodCategory(String name,String foodCategoryImgUrl) {
-    this.foodCategoryImgUrl=foodCategoryImgUrl;
+
+  private FoodCategory(String name) {
+
     this.name = name;
+  }
+  public String getImage() {
+    return name().toLowerCase();
   }
 
   public static FoodCategory getFoodCategoryByName(String name){

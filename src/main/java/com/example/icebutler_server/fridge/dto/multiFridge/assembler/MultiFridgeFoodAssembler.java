@@ -59,7 +59,7 @@ public class MultiFridgeFoodAssembler {
         List<FridgeFoodStatistics> foodStatisticsList = new ArrayList<>();
 
         for(Map.Entry<FoodCategory, Long> deleteStatus: deleteStatusList.entrySet()){
-            foodStatisticsList.add(new FridgeFoodStatistics(deleteStatus.getKey().getName(), AwsS3ImageUrlUtil.toUrl(deleteStatus.getKey().getFoodCategoryImgUrl()) , FridgeUtils.calPercentage(deleteStatus.getValue().intValue(), sum), deleteStatus.getValue().intValue()));
+            foodStatisticsList.add(new FridgeFoodStatistics(deleteStatus.getKey().getName(), AwsS3ImageUrlUtil.toUrl(deleteStatus.getKey().getImage()) , FridgeUtils.calPercentage(deleteStatus.getValue().intValue(), sum), deleteStatus.getValue().intValue()));
         }
         // sorting
         foodStatisticsList.sort((fs1, fs2) -> (fs2.getCount() - fs1.getCount()));

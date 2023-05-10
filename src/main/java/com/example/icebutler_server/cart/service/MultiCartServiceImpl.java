@@ -20,6 +20,8 @@ import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
 import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRepository;
 import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
+import com.example.icebutler_server.global.sqs.AmazonSQSSender;
+import com.example.icebutler_server.global.sqs.FoodData;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
@@ -44,6 +46,7 @@ public class MultiCartServiceImpl implements CartService {
     private final FoodRepository foodRepository;
     private final MultiCartFoodAssembler multiCartFoodAssembler;
     private final FoodAssembler foodAssembler;
+    private final AmazonSQSSender amazonSQSSender;
 
     // 장바구니 식품 조회
     @Override
@@ -71,7 +74,10 @@ public class MultiCartServiceImpl implements CartService {
         List<Food> foodRequests = new ArrayList<>();
         for(AddFoodRequest foodRequest : request.getFoodRequests()) {
             Food food = this.foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
-            if(food == null) food = this.foodRepository.save(foodAssembler.toEntity(foodRequest));
+            if(food == null) {
+                food = this.foodRepository.save(foodAssembler.toEntity(foodRequest));
+                amazonSQSSender.sendMessage(FoodData.toDto(food));
+            }
             foodRequests.add(food);
         }
 

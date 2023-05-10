@@ -73,4 +73,9 @@ public class MultiFridgeFood extends BaseEntity {
     this.owner = owner;
     this.multiFridge = multiFridge;
   }
+
+    public void removeWithStatus(FoodDeleteStatus deleteStatus) {
+      this.setIsEnable(false);
+      this.foodDeleteStatus = deleteStatus;
+    }
 }

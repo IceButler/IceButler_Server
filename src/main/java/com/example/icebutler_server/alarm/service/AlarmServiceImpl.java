@@ -1,12 +1,12 @@
 package com.example.icebutler_server.alarm.service;
 
 import com.example.icebutler_server.alarm.dto.FcmMessage;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.icebutler_server.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
@@ -17,15 +17,20 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class FirebaseCloudMessageService {
-
+public class AlarmServiceImpl implements AlarmService {
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/icebutler-46914/messages:send";
-
     private final ObjectMapper objectMapper;
 
-    public void sendMessageTo(String targetToken, String title, String body) throws IOException {
-        String message = makeMessage(targetToken, title, body);
+    // TODO 냉장고 유저 탈퇴 로직 리팩 후 호출 추가
+    @Override
+    public void sendWithdrawalAlarm(User user, String fridgeName) throws JsonParseException, IOException {
+        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", fridgeName+"에서 탈퇴되었습니다.");
+        Response response = sendMessage(objectMapper.writeValueAsString(message));
+        System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
+    }
 
+    @NotNull
+    private Response sendMessage(String message) throws IOException {
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message,
                 MediaType.get("application/json; charset=utf-8"));
@@ -36,33 +41,14 @@ public class FirebaseCloudMessageService {
                 .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
                 .build();
 
-        Response response = client.newCall(request).execute();
-
-        System.out.println(response.body().string());
-    }
-
-    private String makeMessage(String targetToken, String title, String body) throws JsonParseException, JsonProcessingException {
-        FcmMessage fcmMessage = FcmMessage.builder()
-                .message(FcmMessage.Message.builder()
-                        .token(targetToken)
-                        .notification(FcmMessage.Notification.builder()
-                                .title(title)
-                                .body(body)
-                                .image(null)
-                                .build()
-                        ).build()).validateOnly(false).build();
-
-        return objectMapper.writeValueAsString(fcmMessage);
+        return client.newCall(request).execute();
     }
 
     private String getAccessToken() throws IOException {
         String firebaseConfigPath = "firebase/firebase_service_key.json";
-
-
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
                 .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
-
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken().getTokenValue();
     }

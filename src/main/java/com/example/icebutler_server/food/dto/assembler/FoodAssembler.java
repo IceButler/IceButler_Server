@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 import static com.example.icebutler_server.global.util.Constant.Food.*;
 
 @Component
@@ -21,6 +23,7 @@ public class FoodAssembler {
             .foodName(request.getFoodName())
             .foodCategory(FoodCategory.getFoodCategoryByName(request.getFoodCategory()))
             .foodImgKey(foodImageKey)
+            .uuid(UUID.randomUUID())
             .build();
   }
 
@@ -31,6 +34,7 @@ public class FoodAssembler {
             .foodName(request.getFoodName())
             .foodImgKey(foodImageKey)
             .foodCategory(foodCategory)
+            .uuid(UUID.randomUUID())
             .build();
   }
 }

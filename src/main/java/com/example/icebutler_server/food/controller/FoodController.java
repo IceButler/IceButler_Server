@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,10 +43,10 @@ public class FoodController {
         System.out.println("hihi");
         amazonSQSSender.sendMessage(
                 FoodData.builder()
-                        .foodIdx(1L)
                         .foodName("asd")
                         .foodCategory("asd")
                         .foodImgKey("ad")
+                        .uuid(UUID.randomUUID())
                         .build());
     }
 }

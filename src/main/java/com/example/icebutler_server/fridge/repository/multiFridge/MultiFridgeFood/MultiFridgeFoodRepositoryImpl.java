@@ -1,5 +1,6 @@
 package com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeFood;
 
+import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeDiscardRes;
@@ -10,8 +11,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import static com.example.icebutler_server.food.entity.QFood.food;
+import static com.example.icebutler_server.fridge.entity.multiFridge.QMultiFridge.multiFridge;
 import static com.example.icebutler_server.fridge.entity.multiFridge.QMultiFridgeFood.multiFridgeFood;
+import static com.example.icebutler_server.fridge.entity.multiFridge.QMultiFridgeUser.multiFridgeUser;
 
 @RequiredArgsConstructor
 public class MultiFridgeFoodRepositoryImpl implements MultiFridgeFoodCustom{
@@ -52,5 +57,17 @@ public class MultiFridgeFoodRepositoryImpl implements MultiFridgeFoodCustom{
                 .setNull(multiFridgeFood.owner)
                 .where(multiFridgeFood.owner.eq(multiFridgeUser.getUser()))
                 .execute();
+    }
+
+    @Override
+    public List<Food> findByUserForMultiFridgeRecipeFoodList(MultiFridge fridgeEntity) {
+        return jpaQueryFactory.selectFrom(food)
+                .leftJoin(multiFridgeFood).on(food.eq(multiFridgeFood.food))
+                .leftJoin(multiFridge).on(multiFridgeFood.multiFridge.eq(multiFridge))
+                .leftJoin(multiFridgeUser).on(multiFridgeUser.multiFridge.eq(multiFridge))
+                .where((multiFridge.eq(fridgeEntity)).
+                        and(multiFridgeFood.isEnable.eq(true)).and(multiFridge.isEnable.eq(true)).and(multiFridgeUser.isEnable.eq(true)))
+                .groupBy(food.foodIdx)
+                .fetch();
     }
 }

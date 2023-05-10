@@ -18,7 +18,7 @@ public class RecipeFridgeFoodListsRes {
 
   public static RecipeFridgeFoodListsRes toDto(List<Food> food){
     return new RecipeFridgeFoodListsRes(food.stream()
-            .map(f -> new RecipeFridgeFoodListRes(f.getFoodIdx()))
+            .map(f -> new RecipeFridgeFoodListRes(f.getUuid()))
             .collect(Collectors.toList()));
   }
 

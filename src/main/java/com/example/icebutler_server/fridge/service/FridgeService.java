@@ -19,4 +19,5 @@ public interface FridgeService {
   void deleteFridgeFood(DeleteFridgeFoodsReq deleteFridgeFoodsReq, String deleteType, Long fridgeIdx, Long userIdx);
   FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx);
   FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month);
+  RecipeFridgeFoodListsRes getFridgeUserFoodList(Long fridgeIdx, Long userIdx);
 }

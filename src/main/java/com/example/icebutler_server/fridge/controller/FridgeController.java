@@ -171,9 +171,14 @@ public class FridgeController {
    */
   // todo: 토큰 추가하기
   @GetMapping("/food-lists")
-  public ResponseCustom<RecipeFridgeFoodListsRes> getFridgeUserFoodList(@RequestParam(name = "fridgeIdx", required = false) Long fridgeIdx,
+  public ResponseCustom<?> getFridgeUserFoodList(@RequestParam(name = "fridgeIdx", required = false) Long fridgeIdx,
                                                                         @RequestParam(name = "multiFridgeIdx", required = false) Long multiFridgeIdx,
                                                                         @RequestParam(name = "userIdx") Long userIdx){
-    return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, multiFridgeIdx, userIdx));
+    if(fridgeIdx != null && multiFridgeIdx == null){
+      return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, userIdx));
+    }else if(multiFridgeIdx != null && fridgeIdx == null) {
+      return ResponseCustom.OK(this.multiFridgeService.getFridgeUserFoodList(multiFridgeIdx, userIdx));
+    }else throw new FridgeTypeNotFoundException();
+
   }
 }

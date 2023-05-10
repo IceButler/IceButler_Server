@@ -254,4 +254,13 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
         return this.multiFridgeFoodAssembler.toFoodStatisticsByDeleteStatus(deleteStatusList);
     }
+
+    @Override
+    public RecipeFridgeFoodListsRes getFridgeUserFoodList(Long multiFridgeIdx, Long userIdx) {
+        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+
+        MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(multiFridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
+        return RecipeFridgeFoodListsRes.toDto(this.multiFridgeFoodRepository.findByUserForMultiFridgeRecipeFoodList(fridge));
+    }
 }

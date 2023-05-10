@@ -8,6 +8,7 @@ import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodStatist
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsStatistics;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
+import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -58,7 +59,7 @@ public class MultiFridgeFoodAssembler {
         List<FridgeFoodStatistics> foodStatisticsList = new ArrayList<>();
 
         for(Map.Entry<FoodCategory, Long> deleteStatus: deleteStatusList.entrySet()){
-            foodStatisticsList.add(new FridgeFoodStatistics(deleteStatus.getKey().getName(), FridgeUtils.calPercentage(deleteStatus.getValue().intValue(), sum), deleteStatus.getValue().intValue()));
+            foodStatisticsList.add(new FridgeFoodStatistics(deleteStatus.getKey().getName(), AwsS3ImageUrlUtil.toUrl(deleteStatus.getKey().getFoodCategoryImgUrl()) , FridgeUtils.calPercentage(deleteStatus.getValue().intValue(), sum), deleteStatus.getValue().intValue()));
         }
         // sorting
         foodStatisticsList.sort((fs1, fs2) -> (fs2.getCount() - fs1.getCount()));

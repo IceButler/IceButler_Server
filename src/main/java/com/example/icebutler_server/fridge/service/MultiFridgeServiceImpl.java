@@ -1,5 +1,6 @@
 package com.example.icebutler_server.fridge.service;
 
+import com.example.icebutler_server.alarm.service.AlarmServiceImpl;
 import com.example.icebutler_server.cart.repository.multiCart.MultiCartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +52,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
     private final FoodAssembler foodAssembler;
 
     private final AmazonSQSSender amazonSQSSender;
+    private final AlarmServiceImpl alarmService;
 
 
     @Override
@@ -106,8 +109,6 @@ public class MultiFridgeServiceImpl implements FridgeService {
         if(!StringUtils.hasText(updateFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
         this.multiFridgeAssembler.toUpdateBasicMultiFridgeInfo(fridge, updateFridgeReq);
 
-
-        // todo: 프론트 샘들께 수정 로직 여쭤보고, 다시 코드 작성 필요
         if(updateFridgeReq.getMembers()!=null){
             List<MultiFridgeUser> members = this.multiFridgeUserRepository.findByMultiFridgeAndIsEnable(fridge, true);
             List<User> newMembers = updateFridgeReq.getMembers().stream()
@@ -130,6 +131,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
         List<MultiFridgeUser> users = multiFridgeUserRepository.findByMultiFridgeAndRoleAndIsEnable(fridge, FridgeRole.MEMBER, true);
         if(!users.isEmpty()) throw new FridgeRemoveException();
         this.multiFridgeRepository.delete(fridge);
+
         return fridge.getMultiFridgeIdx();
     }
     // 냉장고 개별 삭제
@@ -141,7 +143,6 @@ public class MultiFridgeServiceImpl implements FridgeService {
         MultiFridge fridge = multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         MultiFridgeUser fridgeUser = multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
         if(fridgeUser.getRole().equals(FridgeRole.OWNER))throw new PermissionDeniedException();
-
         multiFridgeUserRepository.delete(fridgeUser);
         return fridgeUser.getMultiFridgeUserIdx();
     }

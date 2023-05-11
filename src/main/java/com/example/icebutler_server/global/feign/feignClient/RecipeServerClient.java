@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-@Component
+//@Component
 @FeignClient(name="recipe-server", url = "${server.recipe.url}")
 public interface RecipeServerClient {
     @PostMapping("/users")

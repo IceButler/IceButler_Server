@@ -51,8 +51,12 @@ public class UserServiceImpl implements UserService {
   public PostUserRes join(PostUserReq postUserReq) {
     User user = checkUserInfo(postUserReq.getEmail(), postUserReq.getProvider());
     if (user == null) user = saveUser(postUserReq);
-    if (user.getIsEnable().equals(false)) user.setIsEnable(true);
+
+    // 정지된 회원은 재가입 불가
     if(user.getIsDenied().equals(true)) throw new AccessDeniedUserException();
+    // 자진 탈퇴 회원은 재가입 처리
+    if (user.getIsEnable().equals(false)) user.setIsEnable(true);
+
     user.login();
     this.recipeServerEventPublisher.addUser(user);
     return PostUserRes.toDto(tokenUtils.createToken(user));

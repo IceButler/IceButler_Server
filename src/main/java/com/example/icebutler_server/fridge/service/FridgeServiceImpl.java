@@ -39,6 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.example.icebutler_server.global.util.Constant.Food.ICON_EXTENSION;
+import static com.example.icebutler_server.global.util.Constant.Food.IMG_FOLDER;
+
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor

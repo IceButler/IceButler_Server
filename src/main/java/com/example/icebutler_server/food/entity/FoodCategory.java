@@ -5,6 +5,9 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
+import static com.example.icebutler_server.global.util.Constant.Food.ICON_EXTENSION;
+import static com.example.icebutler_server.global.util.Constant.Food.IMG_FOLDER;
+
 @Getter
 public enum FoodCategory{
   MEAT("육류"),
@@ -22,6 +25,9 @@ public enum FoodCategory{
 
   private FoodCategory(String name) {
     this.name = name;
+  }
+  public String getImage() {
+    return IMG_FOLDER + name() + ICON_EXTENSION;
   }
 
   public static FoodCategory getFoodCategoryByName(String name){

@@ -41,5 +41,6 @@ public class Food extends BaseEntity {
         this.uuid = uuid;
     }
 
+
 }
 

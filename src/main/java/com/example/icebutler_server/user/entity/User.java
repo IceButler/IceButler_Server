@@ -2,10 +2,7 @@ package com.example.icebutler_server.user.entity;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.entityListener.UserEntityListener;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
@@ -37,6 +34,10 @@ public class User extends BaseEntity {
 
     @Column(length = 300)
     private String fcmToken;
+
+    @Setter
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isDenied = false;
 
     @Builder
     public User(Provider provider, String email, String nickname, String profileImgKey) {

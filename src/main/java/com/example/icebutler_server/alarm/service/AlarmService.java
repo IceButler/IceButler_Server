@@ -6,5 +6,6 @@ import java.io.IOException;
 
 public interface AlarmService {
     void sendWithdrawalAlarm(User user, String fridgeName) throws IOException;
+    void sendJoinFridgeAlarm(User user, String fridgeName) throws IOException;
 
 }

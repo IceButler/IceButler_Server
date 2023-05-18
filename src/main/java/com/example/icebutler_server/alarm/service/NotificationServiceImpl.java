@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AlarmServiceImpl implements AlarmService {
+public class NotificationServiceImpl implements NotificationService {
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/icebutler-46914/messages:send";
     private final ObjectMapper objectMapper;
 

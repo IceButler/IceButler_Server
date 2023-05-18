@@ -7,13 +7,13 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 @Getter
-public class Alarm {
+public class Notification {
     private String title;
     private String body;
     private String image;
 
-    public static Alarm toEntity(String title, String body) {
-        return Alarm.builder()
+    public static Notification toEntity(String title, String body) {
+        return Notification.builder()
                 .title(title)
                 .body(body)
                 .image(null)

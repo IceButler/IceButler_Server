@@ -4,7 +4,9 @@ import com.example.icebutler_server.fridge.dto.fridge.request.DeleteFridgeFoodsR
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodsReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.SearchFoodRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.SearchFridgeFoodRes;
 import com.example.icebutler_server.fridge.service.MultiFridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequestMapping("/multiFridges")
 @RestController
@@ -131,9 +134,9 @@ public class MultiFridgeController {
     // 공용 냉장고 내 식품 검색 조회
     @Auth
     @GetMapping("/{multiFridgeIdx}/search")
-    public ResponseCustom<SearchFridgeFoodRes> searchFridgeFood(@PathVariable(name = "multiFridgeIdx") Long fridgeIdx,
-                                                                @RequestParam(value = "keyword") String keyword,
-                                                                @IsLogin LoginStatus loginStatus) {
+    public ResponseCustom<List<FridgeFoodsRes>> searchFridgeFood(@PathVariable(name = "multiFridgeIdx") Long fridgeIdx,
+                                                                 @RequestParam(value = "keyword") String keyword,
+                                                                 @IsLogin LoginStatus loginStatus) {
         return ResponseCustom.OK(multiFridgeService.searchFridgeFood(fridgeIdx, loginStatus.getUserIdx(), keyword));
     }
 }

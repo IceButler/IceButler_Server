@@ -28,6 +28,15 @@ public class NotificationServiceImpl implements NotificationService {
         Response response = sendMessage(objectMapper.writeValueAsString(message));
         System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
     }
+    // TODO 냉장고 유저 초대 리펙 후 호출 추가
+
+    @Override
+    public void sendJoinFridgeAlarm(User user, String fridgeName) throws IOException {
+        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", fridgeName+"에 초대 되었습니다.");
+        Response response = sendMessage(objectMapper.writeValueAsString(message));
+        System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
+    }
+
 
     @NotNull
     private Response sendMessage(String message) throws IOException {

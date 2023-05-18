@@ -18,5 +18,5 @@ public interface MultiFridgeFoodRepository extends JpaRepository<MultiFridgeFood
     Optional<MultiFridgeFood> findByMultiFridgeFoodIdxAndMultiFridgeAndIsEnable(Long multiFridgeFoodIdx, MultiFridge multiFridge, Boolean status);
     void deleteByMultiFridge(MultiFridge multiFridge);
     void deleteByFood(Food food);
-    List<FridgeFood> findByFoodDetailNameContainingAndMultiFridgeAndIsEnable(String keyword, MultiFridge fridge, boolean status);
+    List<MultiFridgeFood> findByFoodDetailNameContainingAndMultiFridgeAndIsEnable(String keyword, MultiFridge fridge, boolean status);
 }

@@ -9,12 +9,12 @@ import lombok.Getter;
 @Getter
 public class Message {
     private String token;
-    private Alarm alarm;
+    private Notification notification;
 
     public static Message toEntity(String targetToken, String title, String body) {
         return Message.builder()
                 .token(targetToken)
-                .alarm(Alarm.toEntity(title, body))
+                .notification(Notification.toEntity(title, body))
                 .build();
     }
 }

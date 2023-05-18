@@ -1,6 +1,7 @@
 package com.example.icebutler_server.fridge.controller;
 
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
+import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListsRes;
 import com.example.icebutler_server.fridge.exception.FridgeTypeNotFoundException;
@@ -13,6 +14,8 @@ import com.example.icebutler_server.global.resolver.LoginStatus;
 import com.example.icebutler_server.global.util.Constant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/fridges")
 @RestController
@@ -74,9 +77,9 @@ public class FridgeController {
   // 냉장고 내 식품 검색 조회
   @Auth
   @GetMapping("/{fridgeIdx}/search")
-  public ResponseCustom<?> searchFridgeFood(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                            @RequestParam(value = "keyword") String keyword,
-                                            @IsLogin LoginStatus loginStatus) {
+  public ResponseCustom<List<FridgeFoodsRes>> searchFridgeFood(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
+                                                               @RequestParam(value = "keyword") String keyword,
+                                                               @IsLogin LoginStatus loginStatus) {
     return ResponseCustom.OK(fridgeService.searchFridgeFood(fridgeIdx, loginStatus.getUserIdx(), keyword));
   }
 

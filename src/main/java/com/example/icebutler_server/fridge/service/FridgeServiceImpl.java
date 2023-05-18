@@ -15,6 +15,7 @@ import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
+import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
 import com.example.icebutler_server.fridge.exception.*;
 import com.example.icebutler_server.fridge.repository.fridge.FridgeFood.FridgeFoodRepository;
@@ -160,10 +161,10 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   @Override
-  public SearchFridgeFoodRes searchFridgeFood(Long fridgeIdx, Long userIdx, String keyword) {
+  public List<FridgeFoodsRes> searchFridgeFood(Long fridgeIdx, Long userIdx, String keyword) {
     Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
     List<FridgeFood> searchFoods = fridgeFoodRepository.findByFoodDetailNameContainingAndFridgeAndIsEnable(keyword, fridge, true);
-    return SearchFridgeFoodRes.toDto(searchFoods, fridgeIdx, userIdx);
+    return searchFoods.stream().map(FridgeFoodsRes::toDto).collect(Collectors.toList());
   }
 
   @Override

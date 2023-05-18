@@ -153,8 +153,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
     @Override
     public SearchFridgeFoodRes searchFridgeFood(Long fridgeIdx, Long userIdx, String keyword){
         MultiFridge fridge = multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
-        List<FridgeFood> searchFoods = multiFridgeFoodRepository.findByFoodDetailNameContainingAndMultiFridgeAndIsEnable(keyword, fridge, true);
-        return SearchFridgeFoodRes.toDto(searchFoods, fridgeIdx, userIdx);
+        List<MultiFridgeFood> searchFoods = multiFridgeFoodRepository.findByFoodDetailNameContainingAndMultiFridgeAndIsEnable(keyword, fridge, true);
+        return SearchFridgeFoodRes.toMultiDto(searchFoods, fridgeIdx, userIdx);
     }
 
     @Override

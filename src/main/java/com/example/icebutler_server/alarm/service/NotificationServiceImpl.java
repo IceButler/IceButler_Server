@@ -1,9 +1,9 @@
 package com.example.icebutler_server.alarm.service;
 
-import com.example.icebutler_server.alarm.PushNotificationType;
 import com.example.icebutler_server.alarm.dto.FcmMessage;
 import com.example.icebutler_server.alarm.dto.assembler.NotificationAssembler;
 import com.example.icebutler_server.alarm.repository.PushNotificationRepository;
+import com.example.icebutler_server.global.util.Constant;
 import com.example.icebutler_server.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -33,20 +33,21 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendWithdrawalAlarm(User user, String fridgeName) throws JsonParseException, IOException {
         String messageBody = fridgeName+"에서 탈퇴되었습니다.";
-        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", messageBody);
+        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
         Response response = sendMessage(objectMapper.writeValueAsString(message));
         System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
-        this.notificationRepository.save(this.notificationAssembler.toEntity(PushNotificationType.FRIDGE_WITHDRAW, messageBody, user));
+        this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
     }
     // TODO 냉장고 유저 초대 리펙 후 호출
     @Transactional
     @Override
     public void sendJoinFridgeAlarm(User user, String fridgeName) throws IOException {
+        String messageTitle = "냉장고";
         String messageBody = fridgeName+"에서 초대되었습니다.";
-        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", messageBody);
+        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
         Response response = sendMessage(objectMapper.writeValueAsString(message));
         System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
-        this.notificationRepository.save(this.notificationAssembler.toEntity(PushNotificationType.FRIDGE_JOIN, messageBody, user));
+        this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
     }
 
 

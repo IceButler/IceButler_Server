@@ -42,7 +42,6 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     @Override
     public void sendJoinFridgeAlarm(User user, String fridgeName) throws IOException {
-        String messageTitle = "냉장고";
         String messageBody = fridgeName+"에서 초대되었습니다.";
         FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
         Response response = sendMessage(objectMapper.writeValueAsString(message));

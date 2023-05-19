@@ -22,6 +22,8 @@ import java.util.Objects;
 public class TokenUtils {
   public static final String USER_IDX = "userIdx";
   public static final String NICKNAME = "nickname";
+
+  public static final String EMAIL = "email";
   public static final String ONE_BLOCK = " ";
   public static final String COMMA = ",";
 
@@ -83,6 +85,12 @@ public class TokenUtils {
     return access_token + COMMA + refresh_token;
   }
 
+  public String createToken(Long idx, String email) {
+    String access_token = this.createAccessTokenEmail(idx, email);
+    String refresh_token = this.createRefreshTokenEmail(idx, email);
+    return access_token + COMMA + refresh_token;
+  }
+
   public String createAccessToken(Long userIdx, String nickname) {
     Claims claims = Jwts.claims()
             .setSubject(accessName)
@@ -106,6 +114,41 @@ public class TokenUtils {
             .setIssuedAt(new Date());
     claims.put(USER_IDX, userIdx);
     claims.put(NICKNAME, nickname);
+    Date ext = new Date();
+    ext.setTime(ext.getTime() + Long.parseLong(Objects.requireNonNull(refreshExTime)));
+    String refreshToken = Jwts.builder()
+            .setHeaderParam("typ", "JWT")
+            .setClaims(claims)
+            .setExpiration(ext)
+            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .compact();
+    redisTemplateService.setUserRefreshToken(userIdx, tokenType + ONE_BLOCK + refreshToken);
+    return tokenType + ONE_BLOCK + refreshToken;
+  }
+
+  public String createAccessTokenEmail(Long userIdx, String email) {
+    Claims claims = Jwts.claims()
+            .setSubject(accessName)
+            .setIssuedAt(new Date());
+    claims.put(USER_IDX, userIdx);
+    claims.put(EMAIL, email);
+    Date ext = new Date();
+    ext.setTime(ext.getTime() + Long.parseLong(Objects.requireNonNull(accessExTime)));
+    String accessToken = Jwts.builder()
+            .setHeaderParam("typ", "JWT")
+            .setClaims(claims)
+            .setExpiration(ext)
+            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .compact();
+    return tokenType + ONE_BLOCK + accessToken;
+  }
+
+  public String createRefreshTokenEmail(Long userIdx, String email) {
+    Claims claims = Jwts.claims()
+            .setSubject(refreshName)
+            .setIssuedAt(new Date());
+    claims.put(USER_IDX, userIdx);
+    claims.put(EMAIL, email);
     Date ext = new Date();
     ext.setTime(ext.getTime() + Long.parseLong(Objects.requireNonNull(refreshExTime)));
     String refreshToken = Jwts.builder()

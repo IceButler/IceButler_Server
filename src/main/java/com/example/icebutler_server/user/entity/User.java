@@ -55,6 +55,7 @@ public class User extends BaseEntity {
 
     public void logout() {
         this.loginStatus = false;
+        this.fcmToken = null;
     }
 
     public void modifyProfile(String nickname, String profileImgKey) {

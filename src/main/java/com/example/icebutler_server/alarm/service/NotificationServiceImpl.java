@@ -33,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
         FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", messageBody);
         Response response = sendMessage(objectMapper.writeValueAsString(message));
         System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
-        this.notificationRepository.save(this.notificationAssembler.toEntity(null, PushNotificationType.FRIDGE_WITHDRAW, messageBody, user));
+        this.notificationRepository.save(this.notificationAssembler.toEntity(PushNotificationType.FRIDGE_WITHDRAW, messageBody, user));
     }
     // TODO 냉장고 유저 초대 리펙 후 호출 추가
     @Override
@@ -42,7 +42,7 @@ public class NotificationServiceImpl implements NotificationService {
         FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", messageBody);
         Response response = sendMessage(objectMapper.writeValueAsString(message));
         System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
-        this.notificationRepository.save(this.notificationAssembler.toEntity(null, PushNotificationType.FRIDGE_JOIN, messageBody, user));
+        this.notificationRepository.save(this.notificationAssembler.toEntity(PushNotificationType.FRIDGE_JOIN, messageBody, user));
     }
 
 

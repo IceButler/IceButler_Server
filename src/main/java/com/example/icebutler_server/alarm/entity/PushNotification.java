@@ -18,19 +18,20 @@ public class PushNotification {
     @Column(nullable = false)
     private Long notificationIdx;
 
-    private String notificationId;
-
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PushNotificationType pushNotificationType;
+
+    @Column(nullable = false)
     private String notificationInfo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(nullable = false)
     @JoinColumn(name="userIdx")
     private User user;
 
     @Builder
-    public PushNotification(String notificationId, PushNotificationType pushNotificationType, String notificationInfo, User user) {
-        this.notificationId = notificationId;
+    public PushNotification(PushNotificationType pushNotificationType, String notificationInfo, User user) {
         this.pushNotificationType = pushNotificationType;
         this.notificationInfo = notificationInfo;
         this.user = user;

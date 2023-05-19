@@ -9,9 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class NotificationAssembler {
-    public PushNotification toEntity(String notificationId, PushNotificationType pushNotificationType, String messageBody, User user) {
+    public PushNotification toEntity(PushNotificationType pushNotificationType, String messageBody, User user) {
         return PushNotification.builder()
-                .notificationId(notificationId)
                 .pushNotificationType(pushNotificationType)
                 .notificationInfo(messageBody)
                 .user(user)

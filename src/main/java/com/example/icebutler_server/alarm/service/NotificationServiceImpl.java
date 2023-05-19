@@ -1,6 +1,9 @@
 package com.example.icebutler_server.alarm.service;
 
+import com.example.icebutler_server.alarm.PushNotificationType;
 import com.example.icebutler_server.alarm.dto.FcmMessage;
+import com.example.icebutler_server.alarm.dto.assembler.NotificationAssembler;
+import com.example.icebutler_server.alarm.repository.PushNotificationRepository;
 import com.example.icebutler_server.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -20,20 +23,26 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService {
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/icebutler-46914/messages:send";
     private final ObjectMapper objectMapper;
+    private final PushNotificationRepository notificationRepository;
+    private final NotificationAssembler notificationAssembler;
 
     // TODO 냉장고 유저 탈퇴 로직 리팩 후 호출 추가
     @Override
     public void sendWithdrawalAlarm(User user, String fridgeName) throws JsonParseException, IOException {
-        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", fridgeName+"에서 탈퇴되었습니다.");
+        String messageBody = fridgeName+"에서 탈퇴되었습니다.";
+        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", messageBody);
         Response response = sendMessage(objectMapper.writeValueAsString(message));
         System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
+        this.notificationRepository.save(this.notificationAssembler.toEntity(null, PushNotificationType.FRIDGE_WITHDRAW, messageBody, user));
     }
     // TODO 냉장고 유저 초대 리펙 후 호출 추가
     @Override
     public void sendJoinFridgeAlarm(User user, String fridgeName) throws IOException {
-        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", fridgeName+"에 초대 되었습니다.");
+        String messageBody = fridgeName+"에서 초대되었습니다.";
+        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), "냉장고", messageBody);
         Response response = sendMessage(objectMapper.writeValueAsString(message));
         System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
+        this.notificationRepository.save(this.notificationAssembler.toEntity(null, PushNotificationType.FRIDGE_JOIN, messageBody, user));
     }
 
 

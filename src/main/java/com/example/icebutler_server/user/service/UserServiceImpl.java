@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     // 자진 탈퇴 회원은 재가입 처리
     if (user.getIsEnable().equals(false)) user.setIsEnable(true);
 
-    user.login();
+    user.login(postUserReq.getFcmToken());
     this.recipeServerEventPublisher.addUser(user);
     return PostUserRes.toDto(tokenUtils.createToken(user));
   }
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     User user = checkUserInfo(loginUserReq.getEmail(), loginUserReq.getProvider());
     if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
 
-    user.login();
+    user.login(loginUserReq.getFcmToken());
     return PostUserRes.toDto(tokenUtils.createToken(user));
   }
 
@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
             .email(postUserReq.getEmail())
             .nickname(postUserReq.getNickname())
             .profileImgKey(postUserReq.getProfileImgKey())
+            .fcmToken(postUserReq.getFcmToken())
             .build());
   }
 

@@ -40,15 +40,17 @@ public class User extends BaseEntity {
     private Boolean isDenied = false;
 
     @Builder
-    public User(Provider provider, String email, String nickname, String profileImgKey) {
+    public User(Provider provider, String email, String nickname, String profileImgKey, String fcmToken) {
         this.provider = provider;
         this.email = email;
         this.nickname = nickname;
         this.profileImgKey = profileImgKey;
+        this.fcmToken = fcmToken;
     }
 
-    public void login() {
+    public void login(String fcmToken) {
         this.loginStatus = true;
+        this.fcmToken = fcmToken;
     }
 
     public void logout() {

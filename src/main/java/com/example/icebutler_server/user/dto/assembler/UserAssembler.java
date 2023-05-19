@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class UserAssembler {
 
   public User signUpOrLogin(User user, PostUserReq postUserReq) {
-    user.login();
+    user.login(postUserReq.getFcmToken());
     return user;
   }
 

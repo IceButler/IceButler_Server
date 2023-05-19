@@ -6,4 +6,5 @@ import lombok.Getter;
 public class LoginUserReq {
   private String email;
   private String provider;
+  private String fcmToken;
 }

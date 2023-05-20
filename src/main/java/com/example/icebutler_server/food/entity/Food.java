@@ -1,7 +1,9 @@
 package com.example.icebutler_server.food.entity;
 
+import com.example.icebutler_server.admin.dto.request.ModifyFoodRequest;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.entityListener.FoodEntityListener;
+import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,6 +43,22 @@ public class Food extends BaseEntity {
         this.uuid = uuid;
     }
 
+    public void toUpdateInfo(String foodName, FoodCategory foodCategory, String foodImgKey) {
+        this.foodName = foodName;
+        this.foodCategory = foodCategory;
+        this.foodImgKey = foodImgKey;
+    }
 
+    public void toUpdateImgKey(String foodImgKey) {
+        this.foodImgKey = foodImgKey;
+    }
+
+    public void toUpdateName(String foodName) {
+        this.foodName = foodName;
+    }
+
+    public void toUpdateCategory(FoodCategory foodCategory) {
+        this.foodCategory = foodCategory;
+    }
 }
 

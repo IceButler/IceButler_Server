@@ -1,5 +1,7 @@
 package com.example.icebutler_server.global.feign.feignClient;
 
+import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.feign.dto.AdminReq;
 import com.example.icebutler_server.global.feign.dto.UserReq;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -16,4 +18,7 @@ public interface RecipeServerClient {
 
     @DeleteMapping("/users")
     void deleteUser(@RequestBody UserReq userReq);
+
+    @PostMapping("/admin")
+    ResponseCustom<Void> addAdmin(@RequestBody AdminReq adminReq);
 }

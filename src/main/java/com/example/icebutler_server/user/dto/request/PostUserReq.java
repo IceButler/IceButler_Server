@@ -8,4 +8,5 @@ public class PostUserReq {
   private String email;
   private String nickname;
   private String profileImgKey;
+  private String fcmToken;
 }

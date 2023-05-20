@@ -25,7 +25,7 @@ public class FridgeFoodsRes {
     return FridgeFoodsRes.builder()
             .fridgeFoodIdx(fridgeFood.getMultiFridgeFoodIdx())
             .foodName(fridgeFood.getFood().getFoodName())
-            .foodImgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFridgeFoodImgKey()))
+            .foodImgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFood().getFoodImgKey()))
             .shelfLife(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))
             .build();
   }
@@ -34,7 +34,7 @@ public class FridgeFoodsRes {
     return FridgeFoodsRes.builder()
             .fridgeFoodIdx(fridgeFood.getFridgeFoodIdx())
             .foodName(fridgeFood.getFood().getFoodName())
-            .foodImgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFridgeFoodImgKey()))
+            .foodImgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFood().getFoodImgKey()))
             .shelfLife(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))
             .build();
   }

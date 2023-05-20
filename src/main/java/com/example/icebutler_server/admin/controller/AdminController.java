@@ -6,6 +6,7 @@ import com.example.icebutler_server.admin.dto.request.LoginRequest;
 import com.example.icebutler_server.admin.dto.request.ModifyFoodRequest;
 import com.example.icebutler_server.admin.dto.request.RemoveFoodsRequest;
 import com.example.icebutler_server.admin.dto.request.WithDrawRequest;
+import com.example.icebutler_server.admin.dto.response.*;
 import com.example.icebutler_server.admin.dto.response.AdminResponse;
 import com.example.icebutler_server.admin.dto.response.LoginResponse;
 import com.example.icebutler_server.admin.dto.response.LogoutResponse;
@@ -34,26 +35,33 @@ public class AdminController {
     {
         return ResponseCustom.OK(adminService.join(request));
     }
+
     @PostMapping("/login")
     public ResponseCustom<PostAdminRes> login(@RequestBody LoginRequest request)
     {
         return ResponseCustom.OK(adminService.login(request));
     }
+
     @Admin
     @PostMapping("/logout")
     public ResponseCustom<LogoutResponse> logout(@IsAdminLogin AdminLoginStatus loginStatus)
     {
-        return ResponseCustom.OK(adminService.logout(loginStatus.getAdminIdx()));
+        adminService.logout(loginStatus.getAdminIdx());
+        return ResponseCustom.OK();
     }
+
     @Admin
     @GetMapping("/users")
-    public ResponseCustom<Page<MyProfileRes>> search(
+    public ResponseCustom<Page<UserResponse>> search(
             @IsAdminLogin AdminLoginStatus loginStatus,
-            SearchCond cond
+            Pageable pageable,
+            @RequestParam(defaultValue = "") String nickname,
+            @RequestParam(defaultValue = "true") boolean active
     )
     {
-        return ResponseCustom.OK(adminService.search(cond));
+        return ResponseCustom.OK(adminService.search(pageable, nickname, active));
     }
+
     @Admin
     @DeleteMapping("/users")
     public ResponseCustom<Void> withdraw(
@@ -88,5 +96,4 @@ public class AdminController {
         adminService.removeFoods(request);
         return ResponseCustom.OK();
     }
-
 }

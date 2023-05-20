@@ -11,6 +11,7 @@ import com.example.icebutler_server.admin.dto.response.LogoutResponse;
 import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import com.example.icebutler_server.admin.dto.response.PostAdminRes;
+import com.example.icebutler_server.admin.dto.response.UserResponse;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +19,8 @@ import org.springframework.data.domain.Pageable;
 public interface AdminService {
     AdminResponse join(JoinRequest request);
     PostAdminRes login(LoginRequest request);
-    LogoutResponse logout(Long adminIdx);
-    Page<MyProfileRes> search(SearchCond cond);
+    void logout(Long adminIdx);
+    Page<UserResponse> search(Pageable pageable, String nickname, boolean active);
     void withdraw(WithDrawRequest request);
 
     Page<SearchFoodsResponse> searchFoods(SearchCond cond, Pageable pageable);

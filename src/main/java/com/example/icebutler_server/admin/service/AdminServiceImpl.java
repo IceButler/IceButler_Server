@@ -19,14 +19,19 @@ import com.example.icebutler_server.food.exception.FoodNameNotFoundException;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import com.example.icebutler_server.admin.dto.response.PostAdminRes;
+import com.example.icebutler_server.admin.dto.response.UserResponse;
 import com.example.icebutler_server.admin.entity.Admin;
 import com.example.icebutler_server.admin.exception.AdminNotFoundException;
 import com.example.icebutler_server.admin.exception.PasswordNotMatchException;
 import com.example.icebutler_server.admin.repository.AdminRepository;
+import com.example.icebutler_server.global.feign.dto.AdminReq;
+import com.example.icebutler_server.global.feign.feignClient.RecipeServerClient;
 import com.example.icebutler_server.global.util.RedisTemplateService;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
+import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
+import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +43,10 @@ import java.util.stream.Collectors;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RequiredArgsConstructor
 @Service
@@ -48,13 +57,16 @@ public class AdminServiceImpl implements AdminService {
     private final TokenUtils tokenUtils;
     private final BCryptPasswordEncoder pwEncoder;
     private final AdminRepository adminRepository;
+    private final UserRepository userRepository;
     private final RedisTemplateService redisTemplateService;
+    private final RecipeServerClient recipeServerClient;
 
-    @Override
     @Transactional
+    @Override
     public AdminResponse join(JoinRequest request)
     {
         Admin admin = adminRepository.save(request.toAdmin(pwEncoder.encode(request.getPassword())));
+        recipeServerClient.addAdmin(AdminReq.toDto(admin));
         return AdminResponse.toDto(admin);
     }
 
@@ -67,20 +79,26 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public LogoutResponse logout(Long adminIdx) {
+    public void logout(Long adminIdx)
+    {
         Admin admin = adminRepository.findByAdminIdxAndIsEnable(adminIdx, true).orElseThrow(UserNotFoundException::new);
         redisTemplateService.deleteUserRefreshToken(admin.getAdminIdx());
-        return null;
     }
 
     @Override
-    public Page<MyProfileRes> search(SearchCond cond) {
-        return null;
+    public Page<UserResponse> search(
+            Pageable pageable,
+            String nickname,
+            boolean active)
+    {
+        return adminRepository.findAllByNicknameAndActive(pageable, nickname, active);
     }
-
+    @Transactional
     @Override
-    public void withdraw(WithDrawRequest request) {
-
+    public void withdraw(WithDrawRequest request)
+    {
+        User user = userRepository.findById(request.getUserIdx()).orElseThrow(UserNotFoundException::new);
+        userRepository.delete(user);
     }
 
     @Override
@@ -112,4 +130,32 @@ public class AdminServiceImpl implements AdminService {
         foodRepository.deleteAll(removeFoods);
     }
 
+    @Override
+    public Page<SearchFoodsResponse> searchFoods(SearchCond cond, Pageable pageable) {
+        Page<SearchFoodsResponse> searchFoods;
+
+        if (StringUtils.hasText(cond.getCond())){
+            Page<Food> searchFood = foodRepository.findByFoodNameContainsAndIsEnable(cond.getCond(), true, pageable);
+            searchFoods = searchFood.map(SearchFoodsResponse::toDto);
+            return searchFoods;
+        }
+
+        Page<Food> all = foodRepository.findAll(pageable);
+        searchFoods = all.map(SearchFoodsResponse::toDto);
+        return searchFoods;
+    }
+
+    @Override
+    @Transactional
+    public void modifyFood(Long foodIdx, ModifyFoodRequest request) {
+        Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
+        foodRepository.save(adminAssembler.toUpdateFoodInfo(food, request));
+    }
+
+    @Override
+    @Transactional
+    public void removeFoods(RemoveFoodsRequest request) {
+        List<Food> removeFoods = request.getRemoveFoods().stream().map(m -> foodRepository.findByFoodIdxAndIsEnable(m.getFoodIdx(), true).orElseThrow(FoodNotFoundException::new)).collect(Collectors.toList());
+        foodRepository.deleteAll(removeFoods);
+    }
 }

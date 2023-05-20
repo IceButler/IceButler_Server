@@ -41,6 +41,12 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RequiredArgsConstructor
 @Service
@@ -124,4 +130,32 @@ public class AdminServiceImpl implements AdminService {
         foodRepository.deleteAll(removeFoods);
     }
 
+    @Override
+    public Page<SearchFoodsResponse> searchFoods(SearchCond cond, Pageable pageable) {
+        Page<SearchFoodsResponse> searchFoods;
+
+        if (StringUtils.hasText(cond.getCond())){
+            Page<Food> searchFood = foodRepository.findByFoodNameContainsAndIsEnable(cond.getCond(), true, pageable);
+            searchFoods = searchFood.map(SearchFoodsResponse::toDto);
+            return searchFoods;
+        }
+
+        Page<Food> all = foodRepository.findAll(pageable);
+        searchFoods = all.map(SearchFoodsResponse::toDto);
+        return searchFoods;
+    }
+
+    @Override
+    @Transactional
+    public void modifyFood(Long foodIdx, ModifyFoodRequest request) {
+        Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
+        foodRepository.save(adminAssembler.toUpdateFoodInfo(food, request));
+    }
+
+    @Override
+    @Transactional
+    public void removeFoods(RemoveFoodsRequest request) {
+        List<Food> removeFoods = request.getRemoveFoods().stream().map(m -> foodRepository.findByFoodIdxAndIsEnable(m.getFoodIdx(), true).orElseThrow(FoodNotFoundException::new)).collect(Collectors.toList());
+        foodRepository.deleteAll(removeFoods);
+    }
 }

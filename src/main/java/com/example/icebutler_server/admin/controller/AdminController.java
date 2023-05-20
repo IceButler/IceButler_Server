@@ -4,10 +4,7 @@ import com.example.icebutler_server.admin.dto.condition.SearchCond;
 import com.example.icebutler_server.admin.dto.request.JoinRequest;
 import com.example.icebutler_server.admin.dto.request.LoginRequest;
 import com.example.icebutler_server.admin.dto.request.WithDrawRequest;
-import com.example.icebutler_server.admin.dto.response.AdminResponse;
-import com.example.icebutler_server.admin.dto.response.LoginResponse;
-import com.example.icebutler_server.admin.dto.response.LogoutResponse;
-import com.example.icebutler_server.admin.dto.response.PostAdminRes;
+import com.example.icebutler_server.admin.dto.response.*;
 import com.example.icebutler_server.admin.service.AdminService;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.*;
@@ -15,6 +12,7 @@ import com.example.icebutler_server.user.dto.response.MyProfileRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -30,26 +28,33 @@ public class AdminController {
     {
         return ResponseCustom.OK(adminService.join(request));
     }
+
     @PostMapping("/login")
     public ResponseCustom<PostAdminRes> login(@RequestBody LoginRequest request)
     {
         return ResponseCustom.OK(adminService.login(request));
     }
+
     @Admin
     @PostMapping("/logout")
     public ResponseCustom<LogoutResponse> logout(@IsAdminLogin AdminLoginStatus loginStatus)
     {
-        return ResponseCustom.OK(adminService.logout(loginStatus.getAdminIdx()));
+        adminService.logout(loginStatus.getAdminIdx());
+        return ResponseCustom.OK();
     }
+
     @Admin
     @GetMapping("/users")
-    public ResponseCustom<Page<MyProfileRes>> search(
+    public ResponseCustom<Page<UserResponse>> search(
             @IsAdminLogin AdminLoginStatus loginStatus,
-            SearchCond cond
+            Pageable pageable,
+            @RequestParam(defaultValue = "") String nickname,
+            @RequestParam(defaultValue = "true") boolean active
     )
     {
-        return ResponseCustom.OK(adminService.search(cond));
+        return ResponseCustom.OK(adminService.search(pageable, nickname, active));
     }
+
     @Admin
     @DeleteMapping("/users")
     public ResponseCustom<Void> withdraw(

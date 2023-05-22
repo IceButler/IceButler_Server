@@ -13,6 +13,7 @@ import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import com.example.icebutler_server.global.util.Constant;
 import lombok.RequiredArgsConstructor;
+import okhttp3.Response;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,11 @@ public class FridgeController {
 
   private final FridgeServiceImpl fridgeService;
   private final MultiFridgeServiceImpl multiFridgeService;
+
+  @GetMapping("/health")
+  public ResponseCustom<Void> healthCheck() {
+    return ResponseCustom.OK();
+  }
 
   // 냉장고 추가
   @Auth

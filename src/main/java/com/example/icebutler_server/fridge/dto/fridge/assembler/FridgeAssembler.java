@@ -2,6 +2,7 @@ package com.example.icebutler_server.fridge.dto.fridge.assembler;
 
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
+import com.example.icebutler_server.fridge.dto.fridge.response.UpdateMembersRes;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
@@ -35,11 +36,41 @@ public class FridgeAssembler {
     fridge.updateBasicFridgeInfo(updateFridgeReq.getFridgeName(), updateFridgeReq.getFridgeComment());
   }
 
-  public List<FridgeUser> toUpdateFridgeMembers(List<User> newMembers, List<FridgeUser> fridgeUsers) {
+//  public List<FridgeUser> toUpdateFridgeMembers(List<User> newMembers, List<FridgeUser> fridgeUsers) {
+//    for (FridgeUser member : fridgeUsers) {
+//      member.setIsEnable(false);
+//    }
+//    List<FridgeUser> checkNewMember = new ArrayList<>();
+//
+//    for (User user : newMembers) {
+//      boolean hasMember = false;
+//
+//      for (FridgeUser members : fridgeUsers) {
+//        if (user.equals(members.getUser())) {
+//          members.setIsEnable(true);
+//          hasMember = true;
+//        }
+//        if(members.getRole().equals(FridgeRole.OWNER)){
+//          members.setIsEnable(true);
+//        }
+//      }
+//      if (!hasMember) {
+//        checkNewMember.add(FridgeUser.builder()
+//                .user(user)
+//                .role(FridgeRole.MEMBER)
+//                .fridge(fridgeUsers.get(0).getFridge())
+//                .build());
+//      }
+//    }
+//    return checkNewMember;
+//}
+
+  public UpdateMembersRes toUpdateFridgeMembers(List<User> newMembers, List<FridgeUser> fridgeUsers) {
     for (FridgeUser member : fridgeUsers) {
       member.setIsEnable(false);
     }
     List<FridgeUser> checkNewMember = new ArrayList<>();
+    List<FridgeUser> withDrawMember = new ArrayList<>();
 
     for (User user : newMembers) {
       boolean hasMember = false;
@@ -61,8 +92,11 @@ public class FridgeAssembler {
                 .build());
       }
     }
-    return checkNewMember;
-}
+    for (FridgeUser f : fridgeUsers) {
+      if(!f.getIsEnable()) withDrawMember.add(f);
+    }
+    return UpdateMembersRes.toDto(withDrawMember, checkNewMember);
+  }
 
 //  public List<Food> searchFridgeFood(List<FridgeFood> fridgeFoods, String keyword) {
 //

@@ -1,5 +1,6 @@
 package com.example.icebutler_server.fridge.service;
 
+import com.example.icebutler_server.alarm.service.NotificationServiceImpl;
 import com.example.icebutler_server.cart.dto.cart.assembler.CartAssembler;
 import com.example.icebutler_server.cart.repository.cart.CartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +64,7 @@ public class FridgeServiceImpl implements FridgeService {
   private final FoodAssembler foodAssembler;
   private final CartAssembler cartAssembler;
   private final AmazonSQSSender amazonSQSSender;
+  private final NotificationServiceImpl notificationService;
 
   @Override
   public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
@@ -123,11 +126,32 @@ public class FridgeServiceImpl implements FridgeService {
       List<FridgeUser> members = this.fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
       List<User> newMembers = updateFridgeReq.getMembers().stream()
               .map(m -> this.userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-      List<FridgeUser> checkNewMember = this.fridgeAssembler.toUpdateFridgeMembers(newMembers, members);
+//      List<FridgeUser> checkNewMember = this.fridgeAssembler.toUpdateFridgeMembers(newMembers, members);
+      UpdateMembersRes updateMembers = this.fridgeAssembler.toUpdateFridgeMembers(newMembers, members);
 
-      if (!checkNewMember.isEmpty()) {
-        this.fridgeUserRepository.saveAll(checkNewMember);
+//      if (!checkNewMember.isEmpty()) {
+//        this.fridgeUserRepository.saveAll(checkNewMember);
+//      }
+      if (!updateMembers.getCheckNewMember().isEmpty()) {
+        this.fridgeUserRepository.saveAll(updateMembers.getCheckNewMember());
       }
+
+      updateMembers.getWithDrawMember().forEach(f -> {
+        try {
+          notificationService.sendWithdrawalAlarm(f.getUser(), f.getFridge().getFridgeName());
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      });
+
+      updateMembers.getCheckNewMember().forEach(f -> {
+        try {
+          notificationService.sendJoinFridgeAlarm(f.getUser(), f.getFridge().getFridgeName());
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      });
+
     }
   }
 

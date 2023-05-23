@@ -1,5 +1,6 @@
 package com.example.icebutler_server.user.service;
 
+import com.example.icebutler_server.alarm.repository.PushNotificationRepository;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.repository.fridge.FridgeRepository;
@@ -15,19 +16,18 @@ import com.example.icebutler_server.user.dto.assembler.UserAssembler;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
-import com.example.icebutler_server.user.dto.response.MyProfileRes;
-import com.example.icebutler_server.user.dto.response.NickNameRes;
-import com.example.icebutler_server.user.dto.response.PostNickNameRes;
-import com.example.icebutler_server.user.dto.response.PostUserRes;
+import com.example.icebutler_server.user.dto.response.*;
 import com.example.icebutler_server.user.entity.Provider;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.*;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
 
   private final RecipeServerEventPublisherImpl recipeServerEventPublisher;
   private final RedisTemplateService redisTemplateService;
+  private final PushNotificationRepository pushNotificationRepository;
 
 
   // 소셜로그인
@@ -152,6 +153,12 @@ public class UserServiceImpl implements UserService {
     return userRepository.findByNicknameContains(nickname)
             .stream().map(NickNameRes::toDto).collect(Collectors.toList());
 //    return NickNameRes.toDto(user.getNickname());
+  }
+
+  @Override
+  public Page<MyNotificationRes> getUserNotification(Long userIdx, Pageable pageable) {
+    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    return this.userAssembler.toUserNotificationList(this.pushNotificationRepository.findByUserOrderByCreatedAtDesc(user, pageable));
   }
 
 }

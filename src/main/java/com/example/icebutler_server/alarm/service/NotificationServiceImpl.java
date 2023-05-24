@@ -49,6 +49,16 @@ public class NotificationServiceImpl implements NotificationService {
         this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
     }
 
+    @Transactional
+    @Override
+    public void sendShelfLifeAlarm(User user, String fridgeName, String foodName) throws IOException {
+        String messageBody = foodName+" 소비기한이 임박해요!";
+        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), fridgeName, messageBody);
+        Response response = sendMessage(objectMapper.writeValueAsString(message));
+        System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
+        this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
+    }
+
 
     @NotNull
     private Response sendMessage(String message) throws IOException {

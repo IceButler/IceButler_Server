@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,6 @@ public class MultiFridgeServiceImpl implements FridgeService {
 
     private final AmazonSQSSender amazonSQSSender;
     private final NotificationServiceImpl alarmService;
-
 
     @Override
     public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
@@ -113,11 +113,31 @@ public class MultiFridgeServiceImpl implements FridgeService {
             List<MultiFridgeUser> members = this.multiFridgeUserRepository.findByMultiFridgeAndIsEnable(fridge, true);
             List<User> newMembers = updateFridgeReq.getMembers().stream()
                     .map(m -> this.userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-            List<MultiFridgeUser> checkNewMember = this.multiFridgeAssembler.toUpdateFridgeMembers(newMembers, members);
+//            List<MultiFridgeUser> checkNewMember = this.multiFridgeAssembler.toUpdateFridgeMembers(newMembers, members);
+            UpdateMultiMemberRes updateMembers = this.multiFridgeAssembler.toUpdateFridgeMembers(newMembers, members);
 
-            if(!checkNewMember.isEmpty()){
-                this.multiFridgeUserRepository.saveAll(checkNewMember);
+//            if(!checkNewMember.isEmpty()){
+//                this.multiFridgeUserRepository.saveAll(checkNewMember);
+//            }
+            if (!updateMembers.getCheckNewMember().isEmpty()) {
+                this.multiFridgeUserRepository.saveAll(updateMembers.getCheckNewMember());
             }
+
+            updateMembers.getWithDrawMember().forEach(f -> {
+                try {
+                    alarmService.sendWithdrawalAlarm(f.getUser(), f.getMultiFridge().getFridgeName());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            updateMembers.getCheckNewMember().forEach(f -> {
+                try {
+                    alarmService.sendJoinFridgeAlarm(f.getUser(), f.getMultiFridge().getFridgeName());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
     // 냉장고 삭제

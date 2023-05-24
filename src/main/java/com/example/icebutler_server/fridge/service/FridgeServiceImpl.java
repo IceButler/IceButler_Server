@@ -126,12 +126,8 @@ public class FridgeServiceImpl implements FridgeService {
       List<FridgeUser> members = this.fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
       List<User> newMembers = updateFridgeReq.getMembers().stream()
               .map(m -> this.userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-//      List<FridgeUser> checkNewMember = this.fridgeAssembler.toUpdateFridgeMembers(newMembers, members);
       UpdateMembersRes updateMembers = this.fridgeAssembler.toUpdateFridgeMembers(newMembers, members);
 
-//      if (!checkNewMember.isEmpty()) {
-//        this.fridgeUserRepository.saveAll(checkNewMember);
-//      }
       if (!updateMembers.getCheckNewMember().isEmpty()) {
         this.fridgeUserRepository.saveAll(updateMembers.getCheckNewMember());
       }

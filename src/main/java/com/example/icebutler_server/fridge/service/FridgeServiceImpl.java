@@ -335,4 +335,8 @@ public class FridgeServiceImpl implements FridgeService {
       return RecipeFridgeFoodListsRes.toDto(this.fridgeFoodRepository.findByUserForFridgeRecipeFoodList(fridge));
 
   }
+
+  public void notifyFridgeFood() {
+
+  }
 }

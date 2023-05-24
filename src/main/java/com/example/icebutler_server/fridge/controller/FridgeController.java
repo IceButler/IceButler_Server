@@ -14,6 +14,7 @@ import com.example.icebutler_server.global.resolver.LoginStatus;
 import com.example.icebutler_server.global.util.Constant;
 import lombok.RequiredArgsConstructor;
 import okhttp3.Response;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -172,6 +173,12 @@ public class FridgeController {
     return ResponseCustom.OK(fridgeService.getFridgeFoodStatistics(fridgeIdx, deleteCategory, status.getUserIdx(), year, month));
   }
 
+
+  // 알림
+  @Scheduled(cron = "0 0 18 * * *")
+  public void notifyFridgeFood() {
+    fridgeService.notifyFridgeFood();
+  }
 
   // 레시피 정보 전달 api
 

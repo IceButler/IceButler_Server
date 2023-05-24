@@ -1,8 +1,11 @@
 package com.example.icebutler_server.user.dto.assembler;
 
+import com.example.icebutler_server.alarm.entity.PushNotification;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
+import com.example.icebutler_server.user.dto.response.MyNotificationRes;
 import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
@@ -28,5 +31,14 @@ public class UserAssembler {
       err = true;
     }
     return err;
+  }
+
+  // 알림 list return
+  public Page<MyNotificationRes> toUserNotificationList(Page<PushNotification> notifications){
+    return notifications.map(n -> MyNotificationRes.builder()
+            .pushNotificationType(n.getPushNotificationType())
+            .notificationInfo(n.getNotificationInfo())
+            .createdAt(n.getCreatedAt())
+            .build());
   }
 }

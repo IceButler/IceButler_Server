@@ -7,11 +7,14 @@ import com.example.icebutler_server.user.dto.LoginUserReq;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
+import com.example.icebutler_server.user.dto.response.MyNotificationRes;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
 import com.example.icebutler_server.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import com.example.icebutler_server.global.resolver.Auth;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -82,6 +85,15 @@ public class UserController {
           @RequestParam String nickname
   ) {
     return ResponseCustom.OK(userService.searchNickname(nickname));
+  }
+
+  @Auth
+  @GetMapping("/notification")
+  public ResponseCustom<?> getUserNotification(
+          @IsLogin LoginStatus loginStatus,
+          Pageable pageable
+  ) {
+    return ResponseCustom.OK(userService.getUserNotification(loginStatus.getUserIdx(), pageable));
   }
 
 }

@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -264,5 +265,20 @@ public class MultiFridgeServiceImpl implements FridgeService {
         MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(multiFridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         this.multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
         return RecipeFridgeFoodListsRes.toDto(this.multiFridgeFoodRepository.findByUserForMultiFridgeRecipeFoodList(fridge));
+    }
+
+    @Transactional
+    @Override
+    public void notifyFridgeFood() {
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.plusDays(3);
+        List<MultiFridgeFood> list = multiFridgeFoodRepository.findByShelfLifeBetweenAndIsEnable(startDate, endDate, true);
+        for (MultiFridgeFood multiFridgeFood : list) {
+            MultiFridge multiFridge = multiFridgeFood.getMultiFridge();
+            List<MultiFridgeUser> users = multiFridgeUserRepository.findByMultiFridgeAndIsEnable(multiFridge, true);
+            for (MultiFridgeUser user : users) {
+//                alarmService.sendShelfLifeAlarm(user.getUser(), multiFridge.getFridgeName(), multiFridgeFood.getFood().getFoodName());
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +20,6 @@ public interface MultiFridgeFoodRepository extends JpaRepository<MultiFridgeFood
     void deleteByMultiFridge(MultiFridge multiFridge);
     void deleteByFood(Food food);
     List<MultiFridgeFood> findByFoodDetailNameContainingAndMultiFridgeAndIsEnable(String keyword, MultiFridge fridge, boolean status);
+
+    List<MultiFridgeFood> findByShelfLifeBetweenAndIsEnable(LocalDate startDate, LocalDate endDate, boolean b);
 }

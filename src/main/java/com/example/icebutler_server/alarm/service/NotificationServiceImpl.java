@@ -33,20 +33,36 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendWithdrawalAlarm(User user, String fridgeName) throws JsonParseException, IOException {
         String messageBody = fridgeName+"에서 탈퇴되었습니다.";
-        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
-        Response response = sendMessage(objectMapper.writeValueAsString(message));
-        System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
-        this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
+        if(user.getFcmToken()!=null){
+            FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
+            Response response = sendMessage(objectMapper.writeValueAsString(message));
+            System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
+            this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
+        }
     }
     // TODO 냉장고 유저 초대 리펙 후 호출
     @Transactional
     @Override
     public void sendJoinFridgeAlarm(User user, String fridgeName) throws IOException {
         String messageBody = fridgeName+"에서 초대되었습니다.";
-        FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
-        Response response = sendMessage(objectMapper.writeValueAsString(message));
-        System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
-        this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
+        if(user.getFcmToken()!=null) {
+            FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
+            Response response = sendMessage(objectMapper.writeValueAsString(message));
+            System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
+            this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
+        }
+    }
+
+    @Transactional
+    @Override
+    public void sendShelfLifeAlarm(User user, String fridgeName, String foodName) throws IOException {
+        String messageBody = foodName+" 소비기한이 임박해요!";
+        if(user.getFcmToken()!=null) {
+            FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), fridgeName, messageBody);
+            Response response = sendMessage(objectMapper.writeValueAsString(message));
+            System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
+            this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
+        }
     }
 
 

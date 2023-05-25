@@ -31,6 +31,7 @@ import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -63,6 +64,7 @@ public class FridgeServiceImpl implements FridgeService {
   private final FridgeFoodAssembler fridgeFoodAssembler;
   private final FoodAssembler foodAssembler;
   private final CartAssembler cartAssembler;
+
   private final AmazonSQSSender amazonSQSSender;
   private final NotificationServiceImpl notificationService;
 
@@ -329,6 +331,22 @@ public class FridgeServiceImpl implements FridgeService {
       Fridge fridge = this.fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx,true).orElseThrow(FridgeNotFoundException::new);
       this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
       return RecipeFridgeFoodListsRes.toDto(this.fridgeFoodRepository.findByUserForFridgeRecipeFoodList(fridge));
+
+  }
+
+  @Override
+  public void notifyFridgeFood() {
+     this.fridgeFoodRepository.findByActiveAndShelfLifeLimit3()
+            .stream().forEach(food -> {
+              this.fridgeUserRepository.findByFridgeAndIsEnable(food.getFridge(), true)
+                      .stream().forEach(user -> {
+                        try {
+                          notificationService.sendShelfLifeAlarm(user.getUser(), food.getFridge().getFridgeName(), food.getFood().getFoodName());
+                        } catch (IOException e) {
+                          throw new FridgeNameEmptyException(); //todo: 예외처리 바꾸기
+                        }
+                      });
+            });
 
   }
 }

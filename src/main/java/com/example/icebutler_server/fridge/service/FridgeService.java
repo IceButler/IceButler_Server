@@ -21,4 +21,5 @@ public interface FridgeService {
   FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx);
   FridgeFoodsStatistics getFridgeFoodStatistics(Long multiFridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month);
   RecipeFridgeFoodListsRes getFridgeUserFoodList(Long fridgeIdx, Long userIdx);
+  void notifyFridgeFood();
 }

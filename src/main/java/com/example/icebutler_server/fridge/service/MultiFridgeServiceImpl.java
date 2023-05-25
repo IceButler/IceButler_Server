@@ -11,7 +11,6 @@ import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeAssembler;
 import com.example.icebutler_server.fridge.dto.multiFridge.assembler.MultiFridgeFoodAssembler;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
@@ -26,6 +25,7 @@ import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -53,7 +53,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
     private final FoodAssembler foodAssembler;
 
     private final AmazonSQSSender amazonSQSSender;
-    private final NotificationServiceImpl alarmService;
+    private final NotificationServiceImpl notificationService;
 
 
     @Override
@@ -267,6 +267,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
         return RecipeFridgeFoodListsRes.toDto(this.multiFridgeFoodRepository.findByUserForMultiFridgeRecipeFoodList(fridge));
     }
 
+    @SneakyThrows
     @Transactional
     @Override
     public void notifyFridgeFood() {
@@ -277,7 +278,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
             MultiFridge multiFridge = multiFridgeFood.getMultiFridge();
             List<MultiFridgeUser> users = multiFridgeUserRepository.findByMultiFridgeAndIsEnable(multiFridge, true);
             for (MultiFridgeUser user : users) {
-//                alarmService.sendShelfLifeAlarm(user.getUser(), multiFridge.getFridgeName(), multiFridgeFood.getFood().getFoodName());
+                notificationService.sendShelfLifeAlarm(user.getUser(), multiFridge.getFridgeName(), multiFridgeFood.getFood().getFoodName());
             }
         }
     }

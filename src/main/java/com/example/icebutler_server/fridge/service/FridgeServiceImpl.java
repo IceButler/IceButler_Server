@@ -337,6 +337,13 @@ public class FridgeServiceImpl implements FridgeService {
   }
 
   public void notifyFridgeFood() {
+     this.fridgeFoodRepository.findByActiveAndShelfLifeLimit3()
+            .stream().forEach(food -> {
+              this.fridgeUserRepository.findByFridgeAndIsEnable(food.getFridge(), true)
+                      .stream().forEach(user -> {
+                        // todo: 여기에추가해욤~!~!~!!!!!
+                      });
+            });
 
   }
 }

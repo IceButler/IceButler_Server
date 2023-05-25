@@ -6,6 +6,7 @@ import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeDiscardRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.QFridgeDiscardRes;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -87,5 +88,16 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                 .setNull(fridgeFood.owner)
                 .where(fridgeFood.owner.eq(fridgeUser.getUser()))
                 .execute();
+    }
+
+    @Override
+    public List<FridgeFood> findByActiveAndShelfLifeLimit3() {
+        LocalDate beginTimePath = LocalDate.now();
+        LocalDate beforeThreeDate = LocalDate.now().minusDays(3);
+       return jpaQueryFactory.selectFrom(fridgeFood)
+                .where(fridgeFood.isEnable.eq(true)
+                        .and(fridgeFood.shelfLife.between(beforeThreeDate, beginTimePath)))
+               .fetch();
+
     }
 }

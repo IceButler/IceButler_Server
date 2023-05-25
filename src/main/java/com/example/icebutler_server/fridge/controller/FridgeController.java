@@ -175,7 +175,7 @@ public class FridgeController {
 
 
   // 알림
-  @Scheduled(cron = "0 17 2 * * *")
+  @Scheduled(cron = "0/10 * * * * ?")
   public void notifyFridgeFood() {
     fridgeService.notifyFridgeFood();
     multiFridgeService.notifyFridgeFood();

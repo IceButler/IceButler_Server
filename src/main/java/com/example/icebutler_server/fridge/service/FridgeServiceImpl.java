@@ -334,6 +334,7 @@ public class FridgeServiceImpl implements FridgeService {
 
   }
 
+  @Transactional
   @Override
   public void notifyFridgeFood() {
      this.fridgeFoodRepository.findByActiveAndShelfLifeLimit3()

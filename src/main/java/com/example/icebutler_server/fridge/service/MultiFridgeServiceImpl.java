@@ -26,6 +26,7 @@ import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -291,8 +292,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
     @Transactional
     @Override
     public void notifyFridgeFood() {
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.plusDays(3);
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusDays(3);
         List<MultiFridgeFood> list = multiFridgeFoodRepository.findByShelfLifeBetweenAndIsEnable(startDate, endDate, true);
         for (MultiFridgeFood multiFridgeFood : list) {
             MultiFridge multiFridge = multiFridgeFood.getMultiFridge();

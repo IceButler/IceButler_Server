@@ -32,6 +32,7 @@ import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;

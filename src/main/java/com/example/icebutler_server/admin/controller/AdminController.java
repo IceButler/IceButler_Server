@@ -76,7 +76,8 @@ public class AdminController {
     // 식품조회
     @Admin
     @GetMapping("/foods")
-    public ResponseCustom<Page<SearchFoodsResponse>> searchFoods(@RequestBody SearchCond cond, Pageable pageable) {
+    public ResponseCustom<Page<SearchFoodsResponse>> searchFoods(@RequestBody SearchCond cond, Pageable pageable)
+    {
         return ResponseCustom.OK(adminService.searchFoods(cond, pageable));
     }
 
@@ -84,7 +85,8 @@ public class AdminController {
     @Admin
     @PatchMapping("/food/{foodIdx}")
     public ResponseCustom<Void> modifyFood(@PathVariable(name = "foodIdx") Long foodIdx,
-                                           @RequestBody ModifyFoodRequest request) {
+                                           @RequestBody ModifyFoodRequest request)
+    {
         adminService.modifyFood(foodIdx, request);
         return ResponseCustom.OK();
     }

@@ -36,35 +36,6 @@ public class FridgeAssembler {
     fridge.updateBasicFridgeInfo(updateFridgeReq.getFridgeName(), updateFridgeReq.getFridgeComment());
   }
 
-//  public List<FridgeUser> toUpdateFridgeMembers(List<User> newMembers, List<FridgeUser> fridgeUsers) {
-//    for (FridgeUser member : fridgeUsers) {
-//      member.setIsEnable(false);
-//    }
-//    List<FridgeUser> checkNewMember = new ArrayList<>();
-//
-//    for (User user : newMembers) {
-//      boolean hasMember = false;
-//
-//      for (FridgeUser members : fridgeUsers) {
-//        if (user.equals(members.getUser())) {
-//          members.setIsEnable(true);
-//          hasMember = true;
-//        }
-//        if(members.getRole().equals(FridgeRole.OWNER)){
-//          members.setIsEnable(true);
-//        }
-//      }
-//      if (!hasMember) {
-//        checkNewMember.add(FridgeUser.builder()
-//                .user(user)
-//                .role(FridgeRole.MEMBER)
-//                .fridge(fridgeUsers.get(0).getFridge())
-//                .build());
-//      }
-//    }
-//    return checkNewMember;
-//}
-
   public UpdateMembersRes toUpdateFridgeMembers(List<User> newMembers, List<FridgeUser> fridgeUsers) {
     for (FridgeUser member : fridgeUsers) {
       member.setIsEnable(false);

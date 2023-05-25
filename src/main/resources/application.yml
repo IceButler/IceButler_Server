@@ -3,6 +3,11 @@ spring:
     name: IceButler_Server
   profiles:
     include: rds
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://main.csaa3ijtvera.ap-northeast-2.rds.amazonaws.com/main
+    username: admin
+    password: icebulter1350!
 
   mvc:
     pathmatch:

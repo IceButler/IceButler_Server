@@ -26,6 +26,7 @@ import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -54,7 +55,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
     private final FoodAssembler foodAssembler;
 
     private final AmazonSQSSender amazonSQSSender;
-    private final NotificationServiceImpl notificationService;
+    private final NotificationServiceImpl alarmService;
 
     @Override
     public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
@@ -291,14 +292,14 @@ public class MultiFridgeServiceImpl implements FridgeService {
     @Transactional
     @Override
     public void notifyFridgeFood() {
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.plusDays(3);
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusDays(3);
         List<MultiFridgeFood> list = multiFridgeFoodRepository.findByShelfLifeBetweenAndIsEnable(startDate, endDate, true);
         for (MultiFridgeFood multiFridgeFood : list) {
             MultiFridge multiFridge = multiFridgeFood.getMultiFridge();
             List<MultiFridgeUser> users = multiFridgeUserRepository.findByMultiFridgeAndIsEnable(multiFridge, true);
             for (MultiFridgeUser user : users) {
-                notificationService.sendShelfLifeAlarm(user.getUser(), multiFridge.getFridgeName(), multiFridgeFood.getFood().getFoodName());
+                alarmService.sendShelfLifeAlarm(user.getUser(), multiFridge.getFridgeName(), multiFridgeFood.getFood().getFoodName());
             }
         }
     }

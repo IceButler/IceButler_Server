@@ -3,7 +3,6 @@ package com.example.icebutler_server.fridge.controller;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
-import com.example.icebutler_server.fridge.dto.fridge.response.RecipeFridgeFoodListsRes;
 import com.example.icebutler_server.fridge.exception.FridgeTypeNotFoundException;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.fridge.service.MultiFridgeServiceImpl;
@@ -13,7 +12,6 @@ import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import com.example.icebutler_server.global.util.Constant;
 import lombok.RequiredArgsConstructor;
-import okhttp3.Response;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
@@ -175,9 +173,8 @@ public class FridgeController {
 
 
   // 알림
-  @Scheduled(cron = "0 0 14 * * *")
+  @Scheduled(cron="0 0 18 * * ?", zone="GMT+9:00")
   public void notifyFridgeFood() {
-
     fridgeService.notifyFridgeFood();
     multiFridgeService.notifyFridgeFood();
   }

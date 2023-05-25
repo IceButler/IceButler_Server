@@ -56,6 +56,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     @Override
     public void sendShelfLifeAlarm(User user, String fridgeName, String foodName) throws IOException {
+        System.out.println("NotificationServiceImpl.sendShelfLifeAlarm");
         String messageBody = foodName+" 소비기한이 임박해요!";
         if(user.getFcmToken()!=null) {
             FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), fridgeName, messageBody);

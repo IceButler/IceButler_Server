@@ -32,6 +32,7 @@ import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -66,7 +67,7 @@ public class FridgeServiceImpl implements FridgeService {
   private final CartAssembler cartAssembler;
 
   private final AmazonSQSSender amazonSQSSender;
-  private final NotificationServiceImpl notificationService;
+  private final NotificationServiceImpl alarmService;
 
   @Override
   public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
@@ -136,7 +137,7 @@ public class FridgeServiceImpl implements FridgeService {
 
       updateMembers.getWithDrawMember().forEach(f -> {
         try {
-          notificationService.sendWithdrawalAlarm(f.getUser(), f.getFridge().getFridgeName());
+          alarmService.sendWithdrawalAlarm(f.getUser(), f.getFridge().getFridgeName());
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -144,7 +145,7 @@ public class FridgeServiceImpl implements FridgeService {
 
       updateMembers.getCheckNewMember().forEach(f -> {
         try {
-          notificationService.sendJoinFridgeAlarm(f.getUser(), f.getFridge().getFridgeName());
+          alarmService.sendJoinFridgeAlarm(f.getUser(), f.getFridge().getFridgeName());
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -341,7 +342,7 @@ public class FridgeServiceImpl implements FridgeService {
               this.fridgeUserRepository.findByFridgeAndIsEnable(food.getFridge(), true)
                       .stream().forEach(user -> {
                         try {
-                          notificationService.sendShelfLifeAlarm(user.getUser(), food.getFridge().getFridgeName(), food.getFood().getFoodName());
+                          alarmService.sendShelfLifeAlarm(user.getUser(), food.getFridge().getFridgeName(), food.getFood().getFoodName());
                         } catch (IOException e) {
                           throw new FridgeNameEmptyException(); //todo: 예외처리 바꾸기
                         }

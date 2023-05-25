@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService {
     if (user == null) user = saveUser(postUserReq);
 
     // 정지된 회원은 재가입 불가
-    if(user.getIsDenied().equals(true)) throw new AccessDeniedUserException();
+    if (user.getIsDenied().equals(true)) throw new AccessDeniedUserException();
     // 자진 탈퇴 회원은 재가입 처리
     if (user.getIsEnable().equals(false)) user.setIsEnable(true);
 
@@ -63,14 +64,26 @@ public class UserServiceImpl implements UserService {
     return PostUserRes.toDto(tokenUtils.createToken(user));
   }
 
+  //  @Transactional
+//  public PostUserRes login(LoginUserReq loginUserReq) {
+//    User user = checkUserInfo(loginUserReq.getEmail(), loginUserReq.getProvider());
+//    if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
+//
+//    user.login(loginUserReq.getFcmToken());
+//    return PostUserRes.toDto(tokenUtils.createToken(user));
+//  }
   @Transactional
   public PostUserRes login(LoginUserReq loginUserReq) {
     User user = checkUserInfo(loginUserReq.getEmail(), loginUserReq.getProvider());
-    if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
 
-    user.login(loginUserReq.getFcmToken());
-    return PostUserRes.toDto(tokenUtils.createToken(user));
+    if (user != null) {
+      if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
+      user.login(loginUserReq.getFcmToken());
+      return PostUserRes.toDto(tokenUtils.createToken(user));
+    }
+    return null;
   }
+
 
   public User checkUserInfo(String email, String provider) {
     if (Provider.getProviderByName(provider) == null) throw new ProviderMissingValueException();
@@ -115,10 +128,10 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void deleteUser(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-    List<FridgeUser> fridgeOwners = fridgeUserRepository.findByUserAndRoleAndIsEnable(user, FridgeRole.OWNER,true);
+    List<FridgeUser> fridgeOwners = fridgeUserRepository.findByUserAndRoleAndIsEnable(user, FridgeRole.OWNER, true);
     for (FridgeUser fridgeOwner : fridgeOwners) {
       Fridge fridge = fridgeOwner.getFridge();
-      List<FridgeUser> fridgeMembers = fridgeUserRepository.findByFridgeAndRoleAndIsEnable(fridge, FridgeRole.MEMBER,true);
+      List<FridgeUser> fridgeMembers = fridgeUserRepository.findByFridgeAndRoleAndIsEnable(fridge, FridgeRole.MEMBER, true);
       if (fridgeMembers.size() > 0) {
         throw new CannotDeleteFridgeException();
       }

@@ -93,10 +93,10 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
     @Override
     public List<FridgeFood> findByActiveAndShelfLifeLimit3() {
         LocalDate beginTimePath = LocalDate.now();
-        LocalDate beforeThreeDate = LocalDate.now().minusDays(3);
+        LocalDate afterThreeDate = LocalDate.now().plusDays(3);
        return jpaQueryFactory.selectFrom(fridgeFood)
                 .where(fridgeFood.isEnable.eq(true)
-                        .and(fridgeFood.shelfLife.between(beforeThreeDate, beginTimePath)))
+                        .and(fridgeFood.shelfLife.between(beginTimePath, afterThreeDate)))
                .fetch();
 
     }

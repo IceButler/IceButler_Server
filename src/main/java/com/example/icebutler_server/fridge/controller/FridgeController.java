@@ -175,9 +175,11 @@ public class FridgeController {
 
 
   // 알림
-  @Scheduled(cron = "0 0 18 * * *")
+  @Scheduled(cron = "0 0 14 * * *")
   public void notifyFridgeFood() {
+
     fridgeService.notifyFridgeFood();
+    multiFridgeService.notifyFridgeFood();
   }
 
   // 레시피 정보 전달 api

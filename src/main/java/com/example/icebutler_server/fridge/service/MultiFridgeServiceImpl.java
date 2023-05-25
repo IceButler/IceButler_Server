@@ -54,7 +54,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
     private final FoodAssembler foodAssembler;
 
     private final AmazonSQSSender amazonSQSSender;
-    private final NotificationServiceImpl notificationService;
+    private final NotificationServiceImpl alarmService;
 
     @Override
     public FridgeMainRes getFoods(Long fridgeIdx, Long userIdx, String category) {
@@ -298,7 +298,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
             MultiFridge multiFridge = multiFridgeFood.getMultiFridge();
             List<MultiFridgeUser> users = multiFridgeUserRepository.findByMultiFridgeAndIsEnable(multiFridge, true);
             for (MultiFridgeUser user : users) {
-                notificationService.sendShelfLifeAlarm(user.getUser(), multiFridge.getFridgeName(), multiFridgeFood.getFood().getFoodName());
+                alarmService.sendShelfLifeAlarm(user.getUser(), multiFridge.getFridgeName(), multiFridgeFood.getFood().getFoodName());
             }
         }
     }

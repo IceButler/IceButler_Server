@@ -1,17 +1,16 @@
 spring:
   application:
     name: IceButler_Server
-  profiles:
-    include: rds
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://main.csaa3ijtvera.ap-northeast-2.rds.amazonaws.com/main
-    username: admin
-    password: icebulter1350!
 
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8??
+    url: jdbc:mysql://main.csaa3ijtvera.ap-northeast-2.rds.amazonaws.com/main
+    username: admin # ??????
+    password: icebulter1350! #  # ??????
  # ??????
   sql:
     init:
@@ -32,7 +31,7 @@ spring:
       max-idle: 8
       max-active: 8
     port: 6379
-    host: 43.201.148.149
+    host: 3.36.98.12
     password: 1234
 
 # TODO: 배포 재설정 후 수정

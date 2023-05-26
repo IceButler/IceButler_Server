@@ -98,11 +98,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Page<SearchFoodsResponse> searchFoods(SearchCond cond, Pageable pageable) {
+    public Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable) {
         Page<SearchFoodsResponse> searchFoods;
 
-        if (StringUtils.hasText(cond.getCond())){
-            Page<Food> searchFood = foodRepository.findByFoodNameContainsAndIsEnable(cond.getCond(), true, pageable);
+        if (StringUtils.hasText(cond)){
+            Page<Food> searchFood = foodRepository.findByFoodNameContainsAndIsEnable(cond, true, pageable);
             searchFoods = searchFood.map(SearchFoodsResponse::toDto);
             return searchFoods;
         }

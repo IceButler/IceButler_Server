@@ -76,7 +76,7 @@ public class AdminController {
     // 식품조회
     @Admin
     @GetMapping("/foods")
-    public ResponseCustom<Page<SearchFoodsResponse>> searchFoods(@RequestBody SearchCond cond, Pageable pageable)
+    public ResponseCustom<Page<SearchFoodsResponse>> searchFoods(@RequestParam String cond, Pageable pageable)
     {
         return ResponseCustom.OK(adminService.searchFoods(cond, pageable));
     }

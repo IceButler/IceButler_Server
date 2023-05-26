@@ -23,7 +23,7 @@ public interface AdminService {
     Page<UserResponse> search(Pageable pageable, String nickname, boolean active);
     void withdraw(WithDrawRequest request);
 
-    Page<SearchFoodsResponse> searchFoods(SearchCond cond, Pageable pageable);
+    Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable);
 
     void modifyFood(Long foodIdx, ModifyFoodRequest request);
 

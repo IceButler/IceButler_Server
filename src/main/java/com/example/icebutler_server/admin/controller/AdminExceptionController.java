@@ -1,9 +1,6 @@
 package com.example.icebutler_server.admin.controller;
 
-import com.example.icebutler_server.admin.exception.AdminAnnotationIsNowhereException;
-import com.example.icebutler_server.admin.exception.AdminNotFoundException;
-import com.example.icebutler_server.admin.exception.FoodNotFoundException;
-import com.example.icebutler_server.admin.exception.PasswordNotMatchException;
+import com.example.icebutler_server.admin.exception.*;
 import com.example.icebutler_server.cart.exception.CartNotFoundException;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +25,13 @@ public class AdminExceptionController {
 
     @ExceptionHandler(PasswordNotMatchException.class)
     public ResponseCustom<Void> passwordNotMatchException(PasswordNotMatchException e){
+        log.error(e.getMessage());
+        return ResponseCustom.BAD_REQUEST(e.getMessage());
+    }
+
+
+    @ExceptionHandler(AlreadyExistEmailException.class)
+    public ResponseCustom<Void> alreadyExistEmailException(AlreadyExistEmailException e){
         log.error(e.getMessage());
         return ResponseCustom.BAD_REQUEST(e.getMessage());
     }

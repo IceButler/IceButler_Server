@@ -10,6 +10,7 @@ import com.example.icebutler_server.admin.dto.request.RemoveFoodsRequest;
 import com.example.icebutler_server.admin.dto.request.WithDrawRequest;
 import com.example.icebutler_server.admin.dto.response.AdminResponse;
 import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
+import com.example.icebutler_server.admin.exception.AlreadyExistEmailException;
 import com.example.icebutler_server.admin.exception.FoodNotFoundException;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.repository.FoodRepository;
@@ -59,6 +60,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AdminResponse join(JoinRequest request)
     {
+        if(adminRepository.findByEmail(request.getEmail()).isPresent()) throw new AlreadyExistEmailException();
         Admin admin = adminRepository.save(request.toAdmin(pwEncoder.encode(request.getPassword())));
         recipeServerClient.addAdmin(AdminReq.toDto(admin));
         return AdminResponse.toDto(admin);

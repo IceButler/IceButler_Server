@@ -116,7 +116,8 @@ public class FridgeServiceImpl implements FridgeService {
 
     // 오너 업데이트
     if (owner.getUser().getUserIdx() != updateFridgeReq.getNewOwnerIdx()) {
-      FridgeUser newOwner = this.fridgeUserRepository.findByFridgeAndUser_UserIdxAndRoleAndIsEnableAndUser_IsEnable(fridge, updateFridgeReq.getNewOwnerIdx(), FridgeRole.MEMBER, true, true).orElseThrow(FridgeUserNotFoundException::new);
+//      FridgeUser newOwner = this.fridgeUserRepository.findByFridgeAndUser_UserIdxAndRoleAndIsEnableAndUser_IsEnable(fridge, updateFridgeReq.getNewOwnerIdx(), FridgeRole.MEMBER, true, true).orElseThrow(FridgeUserNotFoundException::new);
+      FridgeUser newOwner = this.fridgeUserRepository.findByFridgeAndUser_UserIdxAndIsEnableAndUser_IsEnable(fridge, updateFridgeReq.getNewOwnerIdx(), true, true).orElseThrow(FridgeUserNotFoundException::new);
       this.fridgeAssembler.toUpdateFridgeOwner(owner, newOwner);
     }
 

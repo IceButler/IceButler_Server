@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
       }
       fridgeRepository.delete(fridge);
     }
-    userRepository.delete(user);
+    user.deleteUser();
     redisTemplateService.deleteUserRefreshToken(userIdx);
 //    user.setIsEnable(false);
     recipeServerEventPublisher.deleteUser(user);

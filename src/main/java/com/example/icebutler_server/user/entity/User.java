@@ -62,4 +62,8 @@ public class User extends BaseEntity {
         this.nickname = nickname;
         this.profileImgKey = profileImgKey;
     }
+
+    public void deleteUser() {
+        this.setIsEnable(false);
+    }
 }

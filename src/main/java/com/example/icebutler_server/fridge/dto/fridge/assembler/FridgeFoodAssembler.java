@@ -25,6 +25,10 @@ import static com.example.icebutler_server.global.util.Constant.FridgeFood.IMG_F
 @RequiredArgsConstructor
 public class FridgeFoodAssembler {
     public FridgeFood toEntity(User owner, Fridge fridge, Food food, FridgeFoodReq fridgeFoodReq) {
+        String imgKey;
+        if (fridgeFoodReq.getImgKey() == null) imgKey = null;
+        else imgKey = IMG_FOLDER + fridgeFoodReq.getImgKey();
+
         return FridgeFood.builder()
                 .fridge(fridge)
                 .food(food)
@@ -32,15 +36,18 @@ public class FridgeFoodAssembler {
                 .shelfLife(LocalDate.parse(fridgeFoodReq.getShelfLife()))
                 .owner(owner)
                 .memo(fridgeFoodReq.getMemo())
-                .fridgeFoodImgKey(IMG_FOLDER + fridgeFoodReq.getImgKey())
+                .fridgeFoodImgKey(imgKey)
                 .build();
     }
 
     public FridgeFoodRes toDto(FridgeFood fridgeFood) {
         String owner;
-
         if(fridgeFood.getOwner()==null) owner = null;
         else owner = fridgeFood.getOwner().getNickname();
+
+        String imgUrl;
+        if (fridgeFood.getFridgeFoodImgKey() == null) imgUrl = null;
+        else imgUrl = AwsS3ImageUrlUtil.toUrl(fridgeFood.getFridgeFoodImgKey());
 
         return FridgeFoodRes.builder()
                 .fridgeFoodIdx(fridgeFood.getFridgeFoodIdx())
@@ -52,7 +59,7 @@ public class FridgeFoodAssembler {
                 .day(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))
                 .owner(owner)
                 .memo(fridgeFood.getMemo())
-                .imgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFridgeFoodImgKey()))
+                .imgUrl(imgUrl)
                 .build();
     }
 
@@ -61,11 +68,14 @@ public class FridgeFoodAssembler {
     }
 
     public void toUpdateBasicFridgeFoodInfo(FridgeFood modifyFood, FridgeFoodReq fridgeFoodReq){
+        String imgKey;
+        if (fridgeFoodReq.getImgKey() == null) imgKey = null;
+        else imgKey = IMG_FOLDER + fridgeFoodReq.getImgKey();
         modifyFood.updateFridgeFoodInfo(
                 fridgeFoodReq.getFoodDetailName(),
                 fridgeFoodReq.getMemo(),
                 LocalDate.parse(fridgeFoodReq.getShelfLife()),
-                IMG_FOLDER + fridgeFoodReq.getImgKey()
+                imgKey
         );
     }
 

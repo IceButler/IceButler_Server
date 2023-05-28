@@ -251,12 +251,13 @@ public class FridgeServiceImpl implements FridgeService {
 
     this.fridgeFoodAssembler.toUpdateBasicFridgeFoodInfo(modifyFridgeFood, fridgeFoodReq);
 
-    if(!modifyFridgeFood.getOwner().getUserIdx().equals(fridgeFoodReq.getOwnerIdx())){
+    if (fridgeFoodReq.getOwnerIdx() == null) this.fridgeFoodAssembler.toUpdateFridgeFoodOwner(modifyFridgeFood, null);
+    else {
       User newOwner = this.userRepository.findByUserIdxAndIsEnable(fridgeFoodReq.getOwnerIdx(), true)
               .orElseThrow(UserNotFoundException::new);
       this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, newOwner, true)
               .orElseThrow(FridgeUserNotFoundException::new);
-      this.fridgeFoodAssembler.toUpdateFridgeFoodOwner(modifyFridgeFood, newOwner);
+      if(!newOwner.equals(modifyFridgeFood.getOwner())) this.fridgeFoodAssembler.toUpdateFridgeFoodOwner(modifyFridgeFood, newOwner);
     }
   }
 

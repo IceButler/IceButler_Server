@@ -31,7 +31,7 @@ public class MultiFridgeFoodAssembler {
                 .shelfLife(LocalDate.parse(fridgeFoodReq.getShelfLife()))
                 .owner(owner)
                 .memo(fridgeFoodReq.getMemo())
-                .fridgeFoodImgKey(IMG_FOLDER + fridgeFoodReq.getImgKey())
+                .fridgeFoodImgKey(fridgeFoodReq.getImgKey() == null ? null : IMG_FOLDER + fridgeFoodReq.getImgKey())
                 .build();
     }
 
@@ -40,7 +40,7 @@ public class MultiFridgeFoodAssembler {
                 fridgeFoodReq.getFoodDetailName(),
                 fridgeFoodReq.getMemo(),
                 LocalDate.parse(fridgeFoodReq.getShelfLife()),
-                IMG_FOLDER + fridgeFoodReq.getImgKey());
+                fridgeFoodReq.getImgKey() == null ? null : IMG_FOLDER + fridgeFoodReq.getImgKey());
     }
 
     public void toUpdateMultiFridgeFoodInfo(MultiFridgeFood modifyFood, Food food) {

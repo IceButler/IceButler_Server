@@ -197,7 +197,7 @@ public class FridgeServiceImpl implements FridgeService {
     fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
     FridgeFood fridgeFood = fridgeFoodRepository.findByFridgeFoodIdxAndFridgeAndIsEnable(fridgeFoodIdx, fridge, true).orElseThrow(FridgeFoodNotFoundException::new);
 
-    return fridgeFoodAssembler.getFridgeFood(fridgeFood);
+    return FridgeFoodRes.toDto(fridgeFood);
   }
 
   @Override

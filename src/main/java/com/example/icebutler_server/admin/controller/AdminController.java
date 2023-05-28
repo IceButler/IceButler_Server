@@ -15,12 +15,16 @@ import com.example.icebutler_server.admin.dto.response.PostAdminRes;
 import com.example.icebutler_server.admin.service.AdminService;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.*;
+import com.example.icebutler_server.global.sqs.AmazonSQSSender;
+import com.example.icebutler_server.global.sqs.FoodData;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
+
+    private final AmazonSQSSender amazonSQSSender;
 
     @PostMapping("/join")
     public ResponseCustom<AdminResponse> join(@RequestBody JoinRequest request)
@@ -96,6 +102,16 @@ public class AdminController {
     @DeleteMapping("/food")
     public ResponseCustom<Void> removeFoods(@RequestBody RemoveFoodsRequest request) {
         adminService.removeFoods(request);
+        return ResponseCustom.OK();
+    }
+
+    @GetMapping("/sqs-test")
+    public ResponseCustom<Void> getUserReportCheck() {
+        amazonSQSSender.sendMessage(FoodData.builder()
+                .foodName("fromRecipe")
+                .foodCategory("recipe")
+                .foodImgKey("recipe.img")
+                .uuid(UUID.randomUUID().toString()).build());
         return ResponseCustom.OK();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.icebutler_server.global.sqs;
 
+import com.example.icebutler_server.food.dto.request.FoodReq;
 import com.example.icebutler_server.food.entity.Food;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,10 +16,10 @@ public class FoodData {
     private String foodName;
     private String foodImgKey;
     private String foodCategory;
-    private UUID uuid;
+    private String uuid;
 
     @Builder
-    public FoodData(String foodName, String foodImgKey, String foodCategory, UUID uuid) {
+    public FoodData(String foodName, String foodImgKey, String foodCategory, String uuid) {
         this.foodName = foodName;
         this.foodImgKey = foodImgKey;
         this.foodCategory = foodCategory;
@@ -30,7 +31,11 @@ public class FoodData {
         foodData.foodName = food.getFoodName();
         foodData.foodImgKey = food.getFoodImgKey();
         foodData.foodCategory = food.getFoodCategory().toString();
-        foodData.uuid = food.getUuid();
+        foodData.uuid = food.getUuid().toString();
         return foodData;
+    }
+
+    public FoodReq toFoodReq() {
+        return FoodReq.toEntity(this);
     }
 }

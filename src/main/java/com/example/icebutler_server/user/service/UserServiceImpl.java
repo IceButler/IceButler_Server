@@ -8,8 +8,8 @@ import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepositor
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;
-import com.example.icebutler_server.global.util.RedisTemplateService;
-import com.example.icebutler_server.global.util.RedisUtils;
+import com.example.icebutler_server.global.util.redis.RedisTemplateService;
+import com.example.icebutler_server.global.util.redis.RedisUtils;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.LoginUserReq;
 import com.example.icebutler_server.user.dto.assembler.UserAssembler;
@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
       fridgeRepository.delete(fridge);
     }
     user.deleteUser();
-    redisTemplateService.deleteUserRefreshToken(userIdx);
+    redisTemplateService.deleteUserRefreshToken(userIdx.toString());
 //    user.setIsEnable(false);
     recipeServerEventPublisher.deleteUser(user);
   }
@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void logout(Long userIdx) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-    redisTemplateService.deleteUserRefreshToken(userIdx);
+    redisTemplateService.deleteUserRefreshToken(userIdx.toString());
     user.logout();
   }
 

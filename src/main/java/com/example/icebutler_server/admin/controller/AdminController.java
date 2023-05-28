@@ -83,7 +83,7 @@ public class AdminController {
 
     // 식품수정
     @Admin
-    @PatchMapping("/food/{foodIdx}")
+    @PatchMapping("/foods/{foodIdx}")
     public ResponseCustom<Void> modifyFood(@PathVariable(name = "foodIdx") Long foodIdx,
                                            @RequestBody ModifyFoodRequest request)
     {
@@ -93,7 +93,7 @@ public class AdminController {
 
     // 식품삭제
     @Admin
-    @DeleteMapping("/food")
+    @DeleteMapping("/foods")
     public ResponseCustom<Void> removeFoods(@RequestBody RemoveFoodsRequest request) {
         adminService.removeFoods(request);
         return ResponseCustom.OK();

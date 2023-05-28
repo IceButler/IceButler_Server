@@ -40,28 +40,6 @@ public class FridgeFoodAssembler {
                 .build();
     }
 
-    public FridgeFoodRes toDto(FridgeFood fridgeFood) {
-        String owner;
-        if(fridgeFood.getOwner()==null) owner = null;
-        else owner = fridgeFood.getOwner().getNickname();
-
-        String imgUrl;
-        if (fridgeFood.getFridgeFoodImgKey() == null) imgUrl = null;
-        else imgUrl = AwsS3ImageUrlUtil.toUrl(fridgeFood.getFridgeFoodImgKey());
-
-        return FridgeFoodRes.builder()
-                .fridgeFoodIdx(fridgeFood.getFridgeFoodIdx())
-                .foodIdx(fridgeFood.getFood().getFoodIdx())
-                .foodName(fridgeFood.getFood().getFoodName())
-                .foodDetailName(fridgeFood.getFoodDetailName())
-                .foodCategory(fridgeFood.getFood().getFoodCategory().getName())
-                .shelfLife(fridgeFood.getShelfLife().format(DateTimeFormatter.ISO_DATE))
-                .day(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))
-                .owner(owner)
-                .memo(fridgeFood.getMemo())
-                .imgUrl(imgUrl)
-                .build();
-    }
 
     public void toUpdateFridgeFoodInfo(FridgeFood modifyFood, Food food){
         modifyFood.updateFridgeFoodInfo(food);
@@ -77,10 +55,6 @@ public class FridgeFoodAssembler {
                 LocalDate.parse(fridgeFoodReq.getShelfLife()),
                 imgKey
         );
-    }
-
-    public FridgeFoodRes getFridgeFood(FridgeFood fridgeFood) {
-        return toDto(fridgeFood);
     }
 
     public void toUpdateFridgeFoodOwner(FridgeFood modifyFridgeFood, User newOwner) {

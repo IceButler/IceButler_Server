@@ -1,5 +1,7 @@
 package com.example.icebutler_server.food.service;
 
+import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
+import com.example.icebutler_server.food.dto.request.FoodReq;
 import com.example.icebutler_server.food.dto.response.BarcodeFoodRes;
 import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.FoodCategory;
@@ -33,6 +35,13 @@ public class FoodServiceImpl implements FoodService{
 //    String serviceKey;
 
     private final FoodRepository foodRepository;
+    private final FoodAssembler foodAssembler;
+
+    @Transactional
+    @Override
+    public void addFood(FoodReq foodReq) {
+        this.foodRepository.save(this.foodAssembler.toEntity(foodReq));
+    }
 
     @Override
     public List<FoodRes> getAllFood() {

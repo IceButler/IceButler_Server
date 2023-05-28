@@ -1,7 +1,7 @@
 package com.example.icebutler_server.global.util;
 
+import com.example.icebutler_server.global.util.redis.RedisTemplateService;
 import com.example.icebutler_server.user.dto.request.UserAuthTokenReq;
-import com.example.icebutler_server.user.dto.response.PostUserRes;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.TokenExpirationException;
 import io.jsonwebtoken.*;
@@ -122,7 +122,7 @@ public class TokenUtils {
             .setExpiration(ext)
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact();
-    redisTemplateService.setUserRefreshToken(userIdx, tokenType + ONE_BLOCK + refreshToken);
+    redisTemplateService.setUserRefreshToken(userIdx.toString(), tokenType + ONE_BLOCK + refreshToken);
     return tokenType + ONE_BLOCK + refreshToken;
   }
 
@@ -157,7 +157,7 @@ public class TokenUtils {
             .setExpiration(ext)
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact();
-    redisTemplateService.setUserRefreshToken(userIdx, tokenType + ONE_BLOCK + refreshToken);
+    redisTemplateService.setUserRefreshToken(userIdx.toString(), tokenType + ONE_BLOCK + refreshToken);
     return tokenType + ONE_BLOCK + refreshToken;
   }
 
@@ -239,7 +239,7 @@ public class TokenUtils {
 
     @Transactional
     public String accessExpiration(UserAuthTokenReq userAuthTokenReq) {
-        String userRefreshToken = redisTemplateService.getUserRefreshToken(userAuthTokenReq.getUserIdx());
+        String userRefreshToken = redisTemplateService.getUserRefreshToken(userAuthTokenReq.getUserIdx().toString());
         String refreshNickname = getNicknameFromFullToken(userRefreshToken);
       if (userRefreshToken == null) throw new TokenExpirationException();
       if (refreshNickname.isEmpty()) throw new TokenExpirationException();

@@ -46,7 +46,7 @@ public class FoodController {
                         .foodName("asd")
                         .foodCategory("asd")
                         .foodImgKey("ad")
-                        .uuid(UUID.randomUUID())
+                        .uuid(UUID.randomUUID().toString())
                         .build());
     }
 }

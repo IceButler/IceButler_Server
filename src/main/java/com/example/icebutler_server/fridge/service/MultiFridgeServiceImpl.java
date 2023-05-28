@@ -103,7 +103,7 @@ public class MultiFridgeServiceImpl implements FridgeService {
         MultiFridge fridge = this.multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         MultiFridgeUser owner = this.multiFridgeUserRepository.findByMultiFridgeAndUserAndRoleAndIsEnable(fridge, user, FridgeRole.OWNER, true).orElseThrow(InvalidFridgeUserRoleException::new);
 
-        if(owner.getUser().getUserIdx()!=updateFridgeReq.getNewOwnerIdx()){
+        if(!owner.getUser().getUserIdx().equals(updateFridgeReq.getNewOwnerIdx())){
             MultiFridgeUser newOwner = this.multiFridgeUserRepository.findByMultiFridgeAndUser_UserIdxAndRoleAndIsEnableAndUser_IsEnable(fridge, updateFridgeReq.getNewOwnerIdx(), FridgeRole.MEMBER, true, true).orElseThrow(FridgeUserNotFoundException::new);
             this.multiFridgeAssembler.toUpdateFridgeOwner(owner, newOwner);
         }
@@ -115,12 +115,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
             List<MultiFridgeUser> members = this.multiFridgeUserRepository.findByMultiFridgeAndIsEnable(fridge, true);
             List<User> newMembers = updateFridgeReq.getMembers().stream()
                     .map(m -> this.userRepository.findByUserIdxAndIsEnable(m.getUserIdx(), true).orElseThrow(UserNotFoundException::new)).collect(Collectors.toList());
-//            List<MultiFridgeUser> checkNewMember = this.multiFridgeAssembler.toUpdateFridgeMembers(newMembers, members);
             UpdateMultiMemberRes updateMembers = this.multiFridgeAssembler.toUpdateFridgeMembers(newMembers, members);
 
-//            if(!checkNewMember.isEmpty()){
-//                this.multiFridgeUserRepository.saveAll(checkNewMember);
-//            }
             if (!updateMembers.getCheckNewMember().isEmpty()) {
                 this.multiFridgeUserRepository.saveAll(updateMembers.getCheckNewMember());
             }
@@ -142,8 +138,8 @@ public class MultiFridgeServiceImpl implements FridgeService {
             });
         }
     }
-    // 냉장고 삭제
 
+    // 냉장고 삭제
     @Transactional
     @Override
     public Long removeFridge(Long fridgeIdx, Long userIdx) {

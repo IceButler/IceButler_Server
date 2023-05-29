@@ -1,6 +1,8 @@
 spring:
   application:
     name: IceButler_Server
+  profiles:
+    include: key
 
   mvc:
     pathmatch:
@@ -8,9 +10,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8??
-    url: jdbc:mysql://main.csaa3ijtvera.ap-northeast-2.rds.amazonaws.com/main
-    username: admin # ??????
-    password: icebulter1350! #  # ??????
+    url: ENC(EkmDgEYSCTgCXI0bnnAV2mC/gPQIYLab1ayY1+xRODB9cnvDTML3m0o7dU7dW79wESnS4bzDYO4TFfMsF6wDwaI74Pnkwb3mf8dn86jz+MDbauAbR3UMreZ1XTCcSnbuggaC3Nt0nuXIrMjcWjID1SxFDMyTsbK1/2qOe3Q7WHE=)
+    username: ENC(9BctWbQv+q5PlD0Ythgdpg==) # ??????
+    password: ENC(eaWN7QARppo4X262HPNySEsZzvRiRQ9p) #  # ??????
  # ??????
   sql:
     init:
@@ -74,3 +76,8 @@ apple:
     url: https://buy.itunes.apple.com/verifyReceipt
   sandbox:
     url: https://sandbox.itunes.apple.com/verifyReceipt
+
+jasypt:
+  encryptor:
+    bean : jasyptStringEncryptor
+    password: iceButlerEnc

@@ -10,9 +10,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8??
-    url: ENC(EkmDgEYSCTgCXI0bnnAV2mC/gPQIYLab1ayY1+xRODB9cnvDTML3m0o7dU7dW79wESnS4bzDYO4TFfMsF6wDwaI74Pnkwb3mf8dn86jz+MDbauAbR3UMreZ1XTCcSnbuggaC3Nt0nuXIrMjcWjID1SxFDMyTsbK1/2qOe3Q7WHE=)
-    username: ENC(9BctWbQv+q5PlD0Ythgdpg==) # ??????
-    password: ENC(eaWN7QARppo4X262HPNySEsZzvRiRQ9p) #  # ??????
+    url: ENC(5zZmnCUUCEuFz5gIr7AdIJIqAYxOFoGg0zG3kbwwhBg7Zyvi7eDZDVoBoDzTvT+vdoKqfmUo40kJuQziZSpk/+5WhHz4vcKIf6uQUrR2PB3az2mc3Ed0NzDQKjf5GUes4g78wXjjE0GjqoL2Me0xX/gwEjneZ9tbxigOqjqad7U=)
+    username: ENC(VvtsJvBRSw57Istj/J/2Gg==) # ??????
+    password: ENC(BwyZEu35pJmUf8M/JxXu8Mszm1JWAACv) #  # ??????
  # ??????
   sql:
     init:
@@ -80,4 +80,3 @@ apple:
 jasypt:
   encryptor:
     bean : jasyptStringEncryptor
-    password: iceButlerEnc

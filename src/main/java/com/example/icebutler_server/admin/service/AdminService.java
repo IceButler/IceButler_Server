@@ -21,7 +21,7 @@ public interface AdminService {
     PostAdminRes login(LoginRequest request);
     void logout(Long adminIdx);
     Page<UserResponse> search(Pageable pageable, String nickname, boolean active);
-    void withdraw(WithDrawRequest request);
+    void withdraw(Long userIdx);
 
     Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable);
 

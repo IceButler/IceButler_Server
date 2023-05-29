@@ -13,6 +13,9 @@ import com.example.icebutler_server.admin.dto.response.LogoutResponse;
 import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
 import com.example.icebutler_server.admin.dto.response.PostAdminRes;
 import com.example.icebutler_server.admin.service.AdminService;
+import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.food.entity.FoodCategory;
+import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.*;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
@@ -35,6 +38,8 @@ public class AdminController {
     private final AdminService adminService;
 
     private final AmazonSQSSender amazonSQSSender;
+
+    private final FoodRepository foodRepository;
 
     @PostMapping("/join")
     public ResponseCustom<AdminResponse> join(@RequestBody JoinRequest request)
@@ -107,11 +112,16 @@ public class AdminController {
 
     @GetMapping("/sqs-test")
     public ResponseCustom<Void> getUserReportCheck() {
-        amazonSQSSender.sendMessage(FoodData.builder()
-                .foodName("fromRecipe")
-                .foodCategory("recipe")
-                .foodImgKey("recipe.img")
-                .uuid(UUID.randomUUID().toString()).build());
+        Food testFood = Food.builder()
+                .uuid(UUID.randomUUID())
+                .foodName("testFoodName1")
+                .foodCategory(FoodCategory.ETC)
+                .foodImgKey("food/testFoodName1.img")
+                .build();
+
+        foodRepository.save(testFood);
+        amazonSQSSender.sendMessage(FoodData.toDto(testFood));
+
         return ResponseCustom.OK();
     }
 }

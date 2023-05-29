@@ -84,9 +84,9 @@ public class AdminServiceImpl implements AdminService {
     }
     @Transactional
     @Override
-    public void withdraw(WithDrawRequest request)
+    public void withdraw(Long userIdx)
     {
-        User user = userRepository.findById(request.getUserIdx()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
         userRepository.delete(user);
     }
 

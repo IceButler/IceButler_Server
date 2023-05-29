@@ -69,13 +69,13 @@ public class AdminController {
     }
 
     @Admin
-    @DeleteMapping("/users")
+    @DeleteMapping("/users/{userIdx}")
     public ResponseCustom<Void> withdraw(
             @IsAdminLogin AdminLoginStatus loginStatus,
-            @RequestBody WithDrawRequest request
+            @PathVariable Long userIdx
     )
     {
-        adminService.withdraw(request);
+        adminService.withdraw(userIdx);
         return ResponseCustom.OK();
     }
 

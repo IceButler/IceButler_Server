@@ -75,6 +75,8 @@ dependencies {
 	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
 }
 
 dependencyManagement {

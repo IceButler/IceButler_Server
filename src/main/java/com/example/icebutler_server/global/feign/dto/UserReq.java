@@ -8,11 +8,13 @@ public class UserReq {
     private Long userIdx;
     private String nickname;
     private String profileImgKey;
+    private String email;
 
     @Builder
-    public UserReq(Long userIdx, String nickname, String profileImgKey) {
+    public UserReq(Long userIdx, String nickname, String profileImgKey, String email) {
         this.userIdx = userIdx;
         this.nickname = nickname;
         this.profileImgKey = profileImgKey;
+        this.email = email;
     }
 }

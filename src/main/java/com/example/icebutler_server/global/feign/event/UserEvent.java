@@ -9,10 +9,12 @@ public class UserEvent {
     private Long userIdx;
     private String nickname;
     private String profileImgKey;
+    private String email;
 
     public static UserEvent toEvent(User user){
         UserEvent userJoinEvent = new UserEvent();
         userJoinEvent.userIdx = user.getUserIdx();
+        userJoinEvent.email = user.getEmail();
         userJoinEvent.nickname = user.getNickname();
         userJoinEvent.profileImgKey = user.getProfileImgKey();
         return userJoinEvent;
@@ -22,6 +24,7 @@ public class UserEvent {
         return UserReq.builder()
                 .userIdx(this.userIdx)
                 .nickname(this.nickname)
+                .email(this.email)
                 .profileImgKey(this.profileImgKey).build();
     }
 }

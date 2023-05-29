@@ -87,6 +87,7 @@ public class AdminServiceImpl implements AdminService {
     public void withdraw(Long userIdx)
     {
         User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+        recipeServerClient.withdrawUser(userIdx);
         userRepository.delete(user);
     }
 

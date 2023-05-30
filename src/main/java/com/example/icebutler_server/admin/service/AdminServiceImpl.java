@@ -59,18 +59,22 @@ public class AdminServiceImpl implements AdminService {
         return AdminResponse.toDto(admin);
     }
 
+    @Transactional
     @Override
     public PostAdminRes login(LoginRequest request)
     {
         Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(AdminNotFoundException::new);
         if(!pwEncoder.matches(request.getPassword(), admin.getPassword())) throw new PasswordNotMatchException();
+        admin.login();
         return PostAdminRes.toDto(tokenUtils.createToken(admin.getAdminIdx(), admin.getEmail()));
     }
 
+    @Transactional
     @Override
     public void logout(Long adminIdx)
     {
         Admin admin = adminRepository.findByAdminIdxAndIsEnable(adminIdx, true).orElseThrow(UserNotFoundException::new);
+        admin.logout();
         redisTemplateService.deleteUserRefreshToken(admin.getAdminIdx().toString());
     }
 

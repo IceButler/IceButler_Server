@@ -14,21 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static com.example.icebutler_server.global.util.Constant.FridgeFood.IMG_FOLDER;
 
 @Component
 @RequiredArgsConstructor
 public class FridgeFoodAssembler {
     public FridgeFood toEntity(User owner, Fridge fridge, Food food, FridgeFoodReq fridgeFoodReq) {
-        String imgKey;
-        if (fridgeFoodReq.getImgKey() == null) imgKey = null;
-        else imgKey = IMG_FOLDER + fridgeFoodReq.getImgKey();
-
         return FridgeFood.builder()
                 .fridge(fridge)
                 .food(food)
@@ -36,7 +29,7 @@ public class FridgeFoodAssembler {
                 .shelfLife(LocalDate.parse(fridgeFoodReq.getShelfLife()))
                 .owner(owner)
                 .memo(fridgeFoodReq.getMemo())
-                .fridgeFoodImgKey(imgKey)
+                .fridgeFoodImgKey(fridgeFoodReq.getImgKey())
                 .build();
     }
 
@@ -46,14 +39,11 @@ public class FridgeFoodAssembler {
     }
 
     public void toUpdateBasicFridgeFoodInfo(FridgeFood modifyFood, FridgeFoodReq fridgeFoodReq){
-        String imgKey;
-        if (fridgeFoodReq.getImgKey() == null) imgKey = null;
-        else imgKey = IMG_FOLDER + fridgeFoodReq.getImgKey();
         modifyFood.updateFridgeFoodInfo(
                 fridgeFoodReq.getFoodDetailName(),
                 fridgeFoodReq.getMemo(),
                 LocalDate.parse(fridgeFoodReq.getShelfLife()),
-                imgKey
+                fridgeFoodReq.getImgKey()
         );
     }
 

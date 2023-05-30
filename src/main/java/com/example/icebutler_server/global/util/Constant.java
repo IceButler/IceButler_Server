@@ -15,9 +15,6 @@ public final class Constant {
     public static final String IMG_FOLDER = "food/";
     public static final String ICON_EXTENSION = ".png";
   }
-  public static class FridgeFood {
-    public static final String IMG_FOLDER = "fridge-food/";
-  }
 
   public static class PushNotification{
     public static final String FRIDGE = "냉장고";

@@ -80,3 +80,4 @@ apple:
 jasypt:
   encryptor:
     bean : jasyptStringEncryptor
+barcode-service-key: ENC(PSZXf47H/3fHcQkCw7eSvF9U6vx+VN4ilYC6S99r3QA=)

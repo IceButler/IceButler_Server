@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 @Service
 public class FoodServiceImpl implements FoodService{
     //TODO: 배포 설정 후 수정예정
-//    @Value("${barcode-service-key}")
-//    String serviceKey;
+    @Value("${barcode-service-key}")
+    String serviceKey;
 
     private final FoodRepository foodRepository;
     private final FoodAssembler foodAssembler;
@@ -75,7 +75,6 @@ public class FoodServiceImpl implements FoodService{
     }
 
     private String callBarcodeApi(String barcodeNum) throws IOException, ParseException {
-        String serviceKey = "5b44035a29544b54aa72";
         URL url = new URL("https://openapi.foodsafetykorea.go.kr/api/" + serviceKey +
                 "/I2570/json/1/5/BRCD_NO=" + barcodeNum);
         StringBuilder sb = callAPI(url);

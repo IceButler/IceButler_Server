@@ -1,5 +1,6 @@
 package com.example.icebutler_server.global.feign.handler;
 
+import com.example.icebutler_server.global.feign.event.FoodEvent;
 import com.example.icebutler_server.global.feign.event.UserEvent;
 
 public interface RecipeServerEventHandler {
@@ -8,4 +9,6 @@ public interface RecipeServerEventHandler {
     void changeUserProfile(UserEvent userEvent);
 
     void deleteUser(UserEvent userEvent);
+
+    void deleteFood(FoodEvent foodEvent);
 }

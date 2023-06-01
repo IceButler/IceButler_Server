@@ -23,5 +23,5 @@ public interface AdminService {
 
     void modifyFood(Long foodIdx, ModifyFoodRequest request);
 
-    void removeFoods(RemoveFoodRequest request);
+    void removeFoods(Long foodIdx);
 }

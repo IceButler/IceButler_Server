@@ -1,5 +1,6 @@
 package com.example.icebutler_server.global.feign.handler;
 
+import com.example.icebutler_server.global.feign.event.FoodEvent;
 import com.example.icebutler_server.global.feign.event.UserEvent;
 import com.example.icebutler_server.global.feign.feignClient.RecipeServerClient;
 import feign.FeignException;
@@ -42,5 +43,12 @@ public class RecipeServerEventHandlerImpl implements RecipeServerEventHandler{
     @Override
     public void deleteUser(UserEvent userEvent) {
         recipeServerClient.deleteUser(userEvent.toDto());
+    }
+
+    @Async
+    @EventListener
+    @Override
+    public void deleteFood(FoodEvent foodEvent) {
+        recipeServerClient.deleteFood(foodEvent.toDto());
     }
 }

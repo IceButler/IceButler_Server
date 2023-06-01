@@ -2,6 +2,7 @@ package com.example.icebutler_server.global.feign.feignClient;
 
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.feign.dto.AdminReq;
+import com.example.icebutler_server.global.feign.dto.FoodReq;
 import com.example.icebutler_server.global.feign.dto.UserReq;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -24,4 +25,7 @@ public interface RecipeServerClient {
 
     @DeleteMapping("/admin/users/{userIdx}")
     ResponseCustom<Void> withdrawUser(@PathVariable("userIdx") Long userIdx);
+
+    @DeleteMapping("/foods")
+    void deleteFood(@RequestBody FoodReq foodReq);
 }

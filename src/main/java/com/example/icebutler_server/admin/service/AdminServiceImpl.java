@@ -16,7 +16,9 @@ import com.example.icebutler_server.admin.exception.AdminNotFoundException;
 import com.example.icebutler_server.admin.exception.PasswordNotMatchException;
 import com.example.icebutler_server.admin.repository.AdminRepository;
 import com.example.icebutler_server.global.feign.dto.AdminReq;
+import com.example.icebutler_server.global.feign.dto.FoodReq;
 import com.example.icebutler_server.global.feign.feignClient.RecipeServerClient;
+import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.util.redis.RedisTemplateService;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.entity.User;
@@ -44,6 +46,8 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
     private final RedisTemplateService redisTemplateService;
     private final RecipeServerClient recipeServerClient;
+    private final RecipeServerEventPublisherImpl recipeServerEventPublisher;
+
 
     @Transactional
     @Override
@@ -110,14 +114,15 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public void modifyFood(Long foodIdx, ModifyFoodRequest request) {
         Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
+//        Food food = foodRepository.findByFoodNameAndIsEnable(request.getFoodName(), true).orElseThrow(FoodNotFoundException::new);
         foodRepository.save(adminAssembler.toUpdateFoodInfo(food, request));
     }
 
     @Override
     @Transactional
-    public void removeFoods(RemoveFoodRequest request) {
-//        List<Food> removeFoods = request.getRemoveFoods().stream().map(m -> foodRepository.findByFoodIdxAndIsEnable(m.getFoodIdx(), true).orElseThrow(FoodNotFoundException::new)).collect(Collectors.toList());
-//        foodRepository.deleteAll(removeFoods);
-        foodRepository.delete(foodRepository.findByFoodIdxAndIsEnable(request.getFoodIdx(), true).orElseThrow(FoodNotFoundException::new));
+    public void removeFoods(Long foodIdx) {
+        Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
+        foodRepository.delete(food);
+        recipeServerEventPublisher.deleteFood(food);
     }
 }

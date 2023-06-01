@@ -100,9 +100,9 @@ public class AdminController {
 
     // 식품삭제
     @Admin
-    @DeleteMapping("/foods")
-    public ResponseCustom<Void> removeFoods(RemoveFoodRequest request) {
-        adminService.removeFoods(request);
+    @DeleteMapping("/foods/{foodIdx}")
+    public ResponseCustom<Void> removeFoods(@PathVariable(name = "foodIdx") Long foodIdx) {
+        adminService.removeFoods(foodIdx);
         return ResponseCustom.OK();
     }
 

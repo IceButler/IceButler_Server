@@ -1,11 +1,7 @@
 package com.example.icebutler_server.admin.controller;
 
 import com.example.icebutler_server.admin.dto.condition.SearchCond;
-import com.example.icebutler_server.admin.dto.request.JoinRequest;
-import com.example.icebutler_server.admin.dto.request.LoginRequest;
-import com.example.icebutler_server.admin.dto.request.ModifyFoodRequest;
-import com.example.icebutler_server.admin.dto.request.RemoveFoodsRequest;
-import com.example.icebutler_server.admin.dto.request.WithDrawRequest;
+import com.example.icebutler_server.admin.dto.request.*;
 import com.example.icebutler_server.admin.dto.response.*;
 import com.example.icebutler_server.admin.dto.response.AdminResponse;
 import com.example.icebutler_server.admin.dto.response.LoginResponse;
@@ -105,7 +101,7 @@ public class AdminController {
     // 식품삭제
     @Admin
     @DeleteMapping("/foods")
-    public ResponseCustom<Void> removeFoods(@RequestBody RemoveFoodsRequest request) {
+    public ResponseCustom<Void> removeFoods(RemoveFoodRequest request) {
         adminService.removeFoods(request);
         return ResponseCustom.OK();
     }

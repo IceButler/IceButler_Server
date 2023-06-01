@@ -2,11 +2,7 @@ package com.example.icebutler_server.admin.service;
 
 
 import com.example.icebutler_server.admin.dto.assembler.AdminAssembler;
-import com.example.icebutler_server.admin.dto.request.JoinRequest;
-import com.example.icebutler_server.admin.dto.request.LoginRequest;
-import com.example.icebutler_server.admin.dto.request.ModifyFoodRequest;
-import com.example.icebutler_server.admin.dto.request.RemoveFoodsRequest;
-import com.example.icebutler_server.admin.dto.request.WithDrawRequest;
+import com.example.icebutler_server.admin.dto.request.*;
 import com.example.icebutler_server.admin.dto.response.AdminResponse;
 import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
 import com.example.icebutler_server.admin.exception.AlreadyExistEmailException;
@@ -119,8 +115,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void removeFoods(RemoveFoodsRequest request) {
-        List<Food> removeFoods = request.getRemoveFoods().stream().map(m -> foodRepository.findByFoodIdxAndIsEnable(m.getFoodIdx(), true).orElseThrow(FoodNotFoundException::new)).collect(Collectors.toList());
-        foodRepository.deleteAll(removeFoods);
+    public void removeFoods(RemoveFoodRequest request) {
+//        List<Food> removeFoods = request.getRemoveFoods().stream().map(m -> foodRepository.findByFoodIdxAndIsEnable(m.getFoodIdx(), true).orElseThrow(FoodNotFoundException::new)).collect(Collectors.toList());
+//        foodRepository.deleteAll(removeFoods);
+        foodRepository.delete(foodRepository.findByFoodIdxAndIsEnable(request.getFoodIdx(), true).orElseThrow(FoodNotFoundException::new));
     }
 }

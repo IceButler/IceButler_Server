@@ -8,6 +8,8 @@ import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
 import com.example.icebutler_server.admin.exception.AlreadyExistEmailException;
 import com.example.icebutler_server.admin.exception.FoodNotFoundException;
 import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.food.exception.DuplicateFoodNameException;
+import com.example.icebutler_server.food.exception.FoodNameNotFoundException;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.admin.dto.response.PostAdminRes;
 import com.example.icebutler_server.admin.dto.response.UserResponse;
@@ -105,7 +107,7 @@ public class AdminServiceImpl implements AdminService {
             return searchFoods;
         }
 
-        Page<Food> all = foodRepository.findAll(pageable);
+        Page<Food> all = foodRepository.findByIsEnable(true, pageable);
         searchFoods = all.map(SearchFoodsResponse::toDto);
         return searchFoods;
     }
@@ -114,7 +116,10 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public void modifyFood(Long foodIdx, ModifyFoodRequest request) {
         Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
-//        Food food = foodRepository.findByFoodNameAndIsEnable(request.getFoodName(), true).orElseThrow(FoodNotFoundException::new);
+        if (!food.getFoodName().equals(request.getFoodName())) {
+            Food checkFood = foodRepository.findByFoodNameAndIsEnable(request.getFoodName(), true).orElseThrow(FoodNotFoundException::new);
+            adminAssembler.validateFoodName(checkFood, request.getFoodName());
+        }
         foodRepository.save(adminAssembler.toUpdateFoodInfo(food, request));
     }
 

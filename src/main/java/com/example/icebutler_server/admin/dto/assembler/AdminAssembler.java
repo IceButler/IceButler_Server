@@ -3,6 +3,7 @@ package com.example.icebutler_server.admin.dto.assembler;
 import com.example.icebutler_server.admin.dto.request.ModifyFoodRequest;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
+import com.example.icebutler_server.food.exception.DuplicateFoodNameException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,5 +13,9 @@ public class AdminAssembler {
     if(request.getFoodName() != null) food.toUpdateName(request.getFoodName());
     if(request.getFoodCategory() != null) food.toUpdateCategory(FoodCategory.getFoodCategoryByName(request.getFoodCategory()));
     return food;
+  }
+
+  public void validateFoodName(Food checkFood, String foodName) {
+    if(checkFood.getFoodName().equals(foodName)) throw new DuplicateFoodNameException();
   }
 }

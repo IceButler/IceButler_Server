@@ -22,11 +22,15 @@ public class MyProfileRes {
     }
 
     public static MyProfileRes toDto(User user) {
-        return MyProfileRes.builder()
+        MyProfileResBuilder builder = MyProfileRes.builder()
                 .userIdx(user.getUserIdx())
                 .nickname(user.getNickname())
-                .profileImgUrl(AwsS3ImageUrlUtil.toUrl(user.getProfileImgKey()))
-                .email(user.getEmail())
-                .build();
+                .email(user.getEmail());
+
+        if (user.getProfileImgKey() != null) {
+            builder.profileImgUrl(AwsS3ImageUrlUtil.toUrl(user.getProfileImgKey()));
+        }
+
+        return builder.build();
     }
 }

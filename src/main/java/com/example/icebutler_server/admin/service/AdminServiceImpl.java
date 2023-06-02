@@ -116,8 +116,8 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public void modifyFood(Long foodIdx, ModifyFoodRequest request) {
         Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
-        if (!food.getFoodName().equals(request.getFoodName())) {
-            Food checkFood = foodRepository.findByFoodNameAndIsEnable(request.getFoodName(), true).orElseThrow(FoodNotFoundException::new);
+        Food checkFood = foodRepository.findByFoodNameAndIsEnable(request.getFoodName(), true);
+        if (!food.getFoodName().equals(request.getFoodName()) && checkFood != null) {
             adminAssembler.validateFoodName(checkFood, request.getFoodName());
         }
         foodRepository.save(adminAssembler.toUpdateFoodInfo(food, request));

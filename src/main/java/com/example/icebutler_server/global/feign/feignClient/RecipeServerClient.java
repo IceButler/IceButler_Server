@@ -28,4 +28,7 @@ public interface RecipeServerClient {
 
     @DeleteMapping("/foods")
     void deleteFood(@RequestBody FoodReq foodReq);
+
+    @PatchMapping("/foods")
+    void updateFood(@RequestBody FoodReq foodReq);
 }

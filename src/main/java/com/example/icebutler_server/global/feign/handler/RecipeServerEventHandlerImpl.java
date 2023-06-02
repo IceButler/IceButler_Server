@@ -51,4 +51,15 @@ public class RecipeServerEventHandlerImpl implements RecipeServerEventHandler{
     public void deleteFood(FoodEvent foodEvent) {
         recipeServerClient.deleteFood(foodEvent.toDto());
     }
+
+    @Async
+    @EventListener
+    @Override
+    public void updateFood(FoodEvent foodEvent) {
+        try {
+            recipeServerClient.updateFood(foodEvent.toDto());
+        } catch (FeignException e) {
+            log.error(e.getMessage());
+        }
+    }
 }

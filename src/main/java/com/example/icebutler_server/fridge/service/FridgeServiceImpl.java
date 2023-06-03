@@ -104,6 +104,14 @@ public class FridgeServiceImpl implements FridgeService {
     // fridge - cart 연관관계 추가
     cartRepository.save(cartAssembler.toEntity(fridge));
 
+    users.forEach(f -> {
+      try{
+        alarmService.sendJoinFridgeAlarm(f, fridge.getFridgeName());
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    });
+
     return fridge.getFridgeIdx();
   }
 

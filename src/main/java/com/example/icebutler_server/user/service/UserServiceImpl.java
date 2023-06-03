@@ -46,32 +46,21 @@ public class UserServiceImpl implements UserService {
   private final RecipeServerEventPublisherImpl recipeServerEventPublisher;
   private final RedisTemplateService redisTemplateService;
   private final PushNotificationRepository pushNotificationRepository;
-
-
   // 소셜로그인
   @Transactional
   public PostUserRes join(PostUserReq postUserReq) {
     User user = checkUserInfo(postUserReq.getEmail(), postUserReq.getProvider());
     if (user == null) user = saveUser(postUserReq);
-
     // 정지된 회원은 재가입 불가
     if (user.getIsDenied().equals(true)) throw new AccessDeniedUserException();
     // 자진 탈퇴 회원은 재가입 처리
-    if (user.getIsEnable().equals(false)) user.setIsEnable(true);
+    if (user.getIsEnable().equals(false)) user=saveUser(postUserReq); // 새로운 행 추가
 
     user.login(postUserReq.getFcmToken());
     this.recipeServerEventPublisher.addUser(user);
     return PostUserRes.toDto(tokenUtils.createToken(user));
   }
 
-  //  @Transactional
-//  public PostUserRes login(LoginUserReq loginUserReq) {
-//    User user = checkUserInfo(loginUserReq.getEmail(), loginUserReq.getProvider());
-//    if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
-//
-//    user.login(loginUserReq.getFcmToken());
-//    return PostUserRes.toDto(tokenUtils.createToken(user));
-//  }
   @Transactional
   public PostUserRes login(LoginUserReq loginUserReq) {
     User user = checkUserInfo(loginUserReq.getEmail(), loginUserReq.getProvider());

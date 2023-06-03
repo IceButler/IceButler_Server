@@ -2,6 +2,7 @@ package com.example.icebutler_server.user.entity;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.entityListener.UserEntityListener;
+import com.example.icebutler_server.user.dto.request.PostUserReq;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 

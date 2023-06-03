@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     if (user.getIsDenied().equals(true)) throw new AccessDeniedUserException();
     // 자진 탈퇴 회원은 재가입 처리
     if (user.getIsEnable().equals(false)) user=saveUser(postUserReq); // 새로운 행 추가
-//      user.setIsEnable(true);
+
     user.login(postUserReq.getFcmToken());
     this.recipeServerEventPublisher.addUser(user);
     return PostUserRes.toDto(tokenUtils.createToken(user));

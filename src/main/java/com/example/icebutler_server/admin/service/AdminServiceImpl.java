@@ -121,6 +121,7 @@ public class AdminServiceImpl implements AdminService {
             adminAssembler.validateFoodName(checkFood, request.getFoodName());
         }
         foodRepository.save(adminAssembler.toUpdateFoodInfo(food, request));
+        recipeServerEventPublisher.updateFood(food);
     }
 
     @Override

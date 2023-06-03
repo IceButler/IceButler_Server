@@ -34,5 +34,10 @@ public class RecipeServerEventPublisherImpl implements RecipeServerEventPublishe
         publisher.publishEvent(FoodEvent.toEvent(food));
     }
 
+    @Override
+    public void updateFood(Food food) {
+        publisher.publishEvent(FoodEvent.toEvent(food));
+    }
+
 
 }

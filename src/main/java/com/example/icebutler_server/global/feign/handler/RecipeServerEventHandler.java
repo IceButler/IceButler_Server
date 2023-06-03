@@ -11,4 +11,6 @@ public interface RecipeServerEventHandler {
     void deleteUser(UserEvent userEvent);
 
     void deleteFood(FoodEvent foodEvent);
+
+    void updateFood(FoodEvent foodEvent);
 }

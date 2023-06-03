@@ -92,6 +92,14 @@ public class MultiFridgeServiceImpl implements FridgeService {
         // multiFridge - multiCart 연관관계 추가
         multiCartRepository.saveAll(multiFridgeAssembler.multiCartToEntity(multiFridgeUsers));
 
+        users.forEach(f -> {
+            try{
+                alarmService.sendJoinFridgeAlarm(f, multiFridge.getFridgeName());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
         return multiFridge.getMultiFridgeIdx();
     }
 

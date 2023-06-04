@@ -29,5 +29,5 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
   Food findByFoodNameAndIsEnable(String foodName, boolean status);
 
-  Page<Food> findByIsEnableOrderByCreatedAt(boolean status, Pageable pageable);
+  Page<Food> findByIsEnableOrderByUpdateAtDesc(boolean status, Pageable pageable);
 }

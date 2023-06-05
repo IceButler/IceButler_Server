@@ -1,6 +1,9 @@
 package com.example.icebutler_server.user.controller;
 
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.resolver.Auth;
+import com.example.icebutler_server.global.resolver.IsLogin;
+import com.example.icebutler_server.global.resolver.LoginStatus;
 import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.request.UserAuthTokenReq;
 import io.swagger.annotations.Api;
@@ -19,11 +22,10 @@ public class UserAuthController {
 
   private final TokenUtils tokenUtils;
 
+  @Auth
   @PostMapping("/renew")
-  public ResponseCustom<String> accessToken(@RequestBody
-//                                            @Valid
-                                            UserAuthTokenReq userAuthTokenReq) {
-    return ResponseCustom.OK(tokenUtils.accessExpiration(userAuthTokenReq));
+  public ResponseCustom<String> accessToken(@IsLogin LoginStatus loginStatus) {
+    return ResponseCustom.OK(tokenUtils.accessExpiration(loginStatus.getUserIdx()));
   }
 
 

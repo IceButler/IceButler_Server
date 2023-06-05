@@ -31,7 +31,7 @@ public class Food extends BaseEntity {
     @Column(nullable = false)
     private FoodCategory foodCategory;
 
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+//    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Type(type = "uuid-char")
     private UUID uuid;
 

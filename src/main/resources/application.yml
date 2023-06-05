@@ -69,8 +69,7 @@ jwt:
 
 server:
   recipe:
-#    url: https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/dev-ice-bulter-recipe
-    url: http://localhost:8070
+    url: https://za8hqdiis4.execute-api.ap-northeast-2.amazonaws.com/dev/dev-ice-bulter-recipe
 
 apple:
   production:

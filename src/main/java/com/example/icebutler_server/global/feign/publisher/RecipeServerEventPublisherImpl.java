@@ -2,6 +2,7 @@ package com.example.icebutler_server.global.feign.publisher;
 
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.global.feign.event.FoodEvent;
+import com.example.icebutler_server.global.feign.event.UpdateFoodEvent;
 import com.example.icebutler_server.global.feign.event.UserEvent;
 import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class RecipeServerEventPublisherImpl implements RecipeServerEventPublishe
 
     @Override
     public void updateFood(Food food) {
-        publisher.publishEvent(FoodEvent.toEvent(food));
+        publisher.publishEvent(UpdateFoodEvent.toEvent(food));
     }
 
 

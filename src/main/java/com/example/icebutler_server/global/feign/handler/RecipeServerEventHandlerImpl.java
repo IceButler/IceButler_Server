@@ -1,6 +1,7 @@
 package com.example.icebutler_server.global.feign.handler;
 
 import com.example.icebutler_server.global.feign.event.FoodEvent;
+import com.example.icebutler_server.global.feign.event.UpdateFoodEvent;
 import com.example.icebutler_server.global.feign.event.UserEvent;
 import com.example.icebutler_server.global.feign.feignClient.RecipeServerClient;
 import feign.FeignException;
@@ -55,7 +56,7 @@ public class RecipeServerEventHandlerImpl implements RecipeServerEventHandler{
     @Async
     @EventListener
     @Override
-    public void updateFood(FoodEvent foodEvent) {
+    public void updateFood(UpdateFoodEvent foodEvent) {
         try {
             recipeServerClient.updateFood(foodEvent.toDto());
         } catch (FeignException e) {

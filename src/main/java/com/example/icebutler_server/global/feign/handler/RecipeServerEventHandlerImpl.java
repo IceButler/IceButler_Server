@@ -1,8 +1,6 @@
 package com.example.icebutler_server.global.feign.handler;
 
-import com.example.icebutler_server.global.feign.event.FoodEvent;
-import com.example.icebutler_server.global.feign.event.UpdateFoodEvent;
-import com.example.icebutler_server.global.feign.event.UserEvent;
+import com.example.icebutler_server.global.feign.event.*;
 import com.example.icebutler_server.global.feign.feignClient.RecipeServerClient;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +29,7 @@ public class RecipeServerEventHandlerImpl implements RecipeServerEventHandler{
     @Async
     @EventListener
     @Override
-    public void changeUserProfile(UserEvent userEvent) {
+    public void changeUserProfile(UpdateUserEvent userEvent) {
         try {
             recipeServerClient.changeUser(userEvent.toDto());
         } catch (FeignException e) {
@@ -42,7 +40,7 @@ public class RecipeServerEventHandlerImpl implements RecipeServerEventHandler{
     @Async
     @EventListener
     @Override
-    public void deleteUser(UserEvent userEvent) {
+    public void deleteUser(DeleteUserEvent userEvent) {
         recipeServerClient.deleteUser(userEvent.toDto());
     }
 

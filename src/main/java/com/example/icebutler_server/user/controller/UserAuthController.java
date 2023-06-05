@@ -8,10 +8,7 @@ import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.request.UserAuthTokenReq;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RequiredArgsConstructor
@@ -23,7 +20,7 @@ public class UserAuthController {
   private final TokenUtils tokenUtils;
 
   @Auth
-  @PostMapping("/renew")
+  @GetMapping("/renew")
   public ResponseCustom<String> accessToken(@IsLogin LoginStatus loginStatus) {
     return ResponseCustom.OK(tokenUtils.accessExpiration(loginStatus.getUserIdx()));
   }

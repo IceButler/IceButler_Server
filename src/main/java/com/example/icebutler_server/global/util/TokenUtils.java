@@ -238,14 +238,14 @@ public class TokenUtils {
   }
 
     @Transactional
-    public String accessExpiration(UserAuthTokenReq userAuthTokenReq) {
-        String userRefreshToken = redisTemplateService.getUserRefreshToken(userAuthTokenReq.getUserIdx().toString());
-        String refreshNickname = getNicknameFromFullToken(userRefreshToken);
+    public String accessExpiration(Long userIdx) {
+        String userRefreshToken = redisTemplateService.getUserRefreshToken(userIdx.toString());
       if (userRefreshToken == null) throw new TokenExpirationException();
+      String refreshNickname = getNicknameFromFullToken(userRefreshToken);
       if (refreshNickname.isEmpty()) throw new TokenExpirationException();
 
         //토큰이 만료되었을 경우.
-        return createAccessToken(userAuthTokenReq.getUserIdx(), refreshNickname);
+        return createAccessToken(userIdx, refreshNickname);
     }
 
 }

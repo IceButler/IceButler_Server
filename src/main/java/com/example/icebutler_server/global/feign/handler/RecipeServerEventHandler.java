@@ -1,15 +1,13 @@
 package com.example.icebutler_server.global.feign.handler;
 
-import com.example.icebutler_server.global.feign.event.FoodEvent;
-import com.example.icebutler_server.global.feign.event.UpdateFoodEvent;
-import com.example.icebutler_server.global.feign.event.UserEvent;
+import com.example.icebutler_server.global.feign.event.*;
 
 public interface RecipeServerEventHandler {
     void addUser(UserEvent userEvent);
 
-    void changeUserProfile(UserEvent userEvent);
+    void changeUserProfile(UpdateUserEvent userEvent);
 
-    void deleteUser(UserEvent userEvent);
+    void deleteUser(DeleteUserEvent userEvent);
 
     void deleteFood(FoodEvent foodEvent);
 

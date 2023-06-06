@@ -1,5 +1,10 @@
 package com.example.icebutler_server.food.controller;
 
+import com.example.icebutler_server.cart.dto.cart.request.AddFoodRequest;
+import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
+import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.food.entity.FoodCategory;
+import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.food.service.FoodServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
@@ -23,6 +28,9 @@ public class FoodController {
     private final FoodServiceImpl foodService;
     private final AmazonSQSSender amazonSQSSender;
 
+    private final FoodRepository foodRepository;
+    private final FoodAssembler foodAssembler;
+
     // 식품 검색
     @GetMapping("")
     public ResponseCustom<?> searchFood(@RequestParam(required = false) String category, @RequestParam(required = false) String word) {
@@ -40,13 +48,15 @@ public class FoodController {
 
     @GetMapping("/hihitest")
     public void hihiTest() {
-        System.out.println("hihi");
-        amazonSQSSender.sendMessage(
-                FoodData.builder()
-                        .foodName("asd")
-                        .foodCategory("asd")
-                        .foodImgKey("ad")
-                        .uuid(UUID.randomUUID().toString())
-                        .build());
+
+        AddFoodRequest addFoodRequest = new AddFoodRequest();
+        addFoodRequest.setFoodName("맛없는 고기");
+        addFoodRequest.setFoodCategory("육류");
+
+        Food food = this.foodRepository.save(foodAssembler.toEntity(addFoodRequest));
+        FoodData foodData = FoodData.toDto(food);
+        String uuid = foodData.getUuid();
+        System.out.println("sending food uuid :"+uuid);
+        amazonSQSSender.sendMessage(FoodData.toDto(food));
     }
 }

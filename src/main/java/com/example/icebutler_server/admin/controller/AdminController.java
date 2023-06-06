@@ -66,7 +66,7 @@ public class AdminController {
             @RequestParam(defaultValue = "true") boolean active
     )
     {
-        return ResponseCustom.OK(adminService.search(pageable, nickname, active));
+        return ResponseCustom.OK(adminService.search(pageable, nickname, active,loginStatus.getAdminIdx()));
     }
 
     @Admin
@@ -76,33 +76,39 @@ public class AdminController {
             @PathVariable Long userIdx
     )
     {
-        adminService.withdraw(userIdx);
+        adminService.withdraw(userIdx,loginStatus.getAdminIdx());
         return ResponseCustom.OK();
     }
 
     // 식품조회
     @Admin
     @GetMapping("/foods")
-    public ResponseCustom<Page<SearchFoodsResponse>> searchFoods(@RequestParam String cond, Pageable pageable)
+    public ResponseCustom<Page<SearchFoodsResponse>> searchFoods(@RequestParam String cond, Pageable pageable
+    ,@IsAdminLogin AdminLoginStatus loginStatus
+    )
     {
-        return ResponseCustom.OK(adminService.searchFoods(cond, pageable));
+        return ResponseCustom.OK(adminService.searchFoods(cond, pageable,loginStatus.getAdminIdx()));
     }
 
     // 식품수정
     @Admin
     @PatchMapping("/foods/{foodIdx}")
     public ResponseCustom<Void> modifyFood(@PathVariable(name = "foodIdx") Long foodIdx,
-                                           @RequestBody ModifyFoodRequest request)
+                                           @RequestBody ModifyFoodRequest request
+            ,@IsAdminLogin AdminLoginStatus loginStatus
+    )
     {
-        adminService.modifyFood(foodIdx, request);
+        adminService.modifyFood(foodIdx, request,loginStatus.getAdminIdx());
         return ResponseCustom.OK();
     }
 
     // 식품삭제
     @Admin
     @DeleteMapping("/foods/{foodIdx}")
-    public ResponseCustom<Void> removeFoods(@PathVariable(name = "foodIdx") Long foodIdx) {
-        adminService.removeFoods(foodIdx);
+    public ResponseCustom<Void> removeFoods(@PathVariable(name = "foodIdx") Long foodIdx
+            ,@IsAdminLogin AdminLoginStatus loginStatus
+    ) {
+        adminService.removeFoods(foodIdx,loginStatus.getAdminIdx());
         return ResponseCustom.OK();
     }
 

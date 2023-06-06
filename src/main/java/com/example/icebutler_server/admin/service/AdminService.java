@@ -16,12 +16,12 @@ public interface AdminService {
     AdminResponse join(JoinRequest request);
     PostAdminRes login(LoginRequest request);
     void logout(Long adminIdx);
-    Page<UserResponse> search(Pageable pageable, String nickname, boolean active);
-    void withdraw(Long userIdx);
+    Page<UserResponse> search(Pageable pageable, String nickname, boolean active,Long adminIdx);
+    void withdraw(Long userIdx,Long adminIdx);
 
-    Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable);
+    Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable,Long adminIdx);
 
-    void modifyFood(Long foodIdx, ModifyFoodRequest request);
+    void modifyFood(Long foodIdx, ModifyFoodRequest request,Long adminIdx);
 
-    void removeFoods(Long foodIdx);
+    void removeFoods(Long foodIdx,Long adminIdx);
 }

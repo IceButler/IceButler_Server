@@ -84,21 +84,24 @@ public class AdminServiceImpl implements AdminService {
     public Page<UserResponse> search(
             Pageable pageable,
             String nickname,
-            boolean active)
+            boolean active,Long adminIdx)
     {
+        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
         return adminRepository.findAllByNicknameAndActive(pageable, nickname, active);
     }
     @Transactional
     @Override
-    public void withdraw(Long userIdx)
+    public void withdraw(Long userIdx,Long adminIdx)
     {
+        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
         User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
         recipeServerClient.withdrawUser(userIdx);
         userRepository.delete(user);
     }
 
     @Override
-    public Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable) {
+    public Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable,Long adminIdx) {
+        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
         Page<SearchFoodsResponse> searchFoods;
 
         if (StringUtils.hasText(cond)){
@@ -114,7 +117,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void modifyFood(Long foodIdx, ModifyFoodRequest request) {
+    public void modifyFood(Long foodIdx, ModifyFoodRequest request,Long adminIdx) {
+        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
         Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
         Food checkFood = foodRepository.findByFoodNameAndIsEnable(request.getFoodName(), true);
         if (!food.getFoodName().equals(request.getFoodName()) && checkFood != null) {
@@ -126,7 +130,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void removeFoods(Long foodIdx) {
+    public void removeFoods(Long foodIdx,Long adminIdx) {
+        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
         Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
         foodRepository.delete(food);
         recipeServerEventPublisher.deleteFood(food);

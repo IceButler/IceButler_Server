@@ -49,7 +49,7 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                         .and(fridgeFood.isEnable.eq(false))
                         .and(fridgeFood.updateAt.year().eq(beginTimePath.getYear()))
                         .and(fridgeFood.updateAt.month().eq(beginTimePath.getMonth().getValue())))
-                .groupBy(fridgeFood.food.foodCategory, fridgeFood.food.foodImgKey)
+                .groupBy(fridgeFood.food.foodCategory)
                 .having(fridgeFood.food.foodCategory.count().goe(1L))
                 .orderBy(fridgeFood.food.foodIdx.count().desc())
                 .limit(1)

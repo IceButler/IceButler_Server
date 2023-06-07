@@ -44,7 +44,7 @@ public class MultiFridgeFoodRepositoryImpl implements MultiFridgeFoodCustom{
                         .and(multiFridgeFood.isEnable.eq(false))
                         .and(multiFridgeFood.updateAt.year().eq(beginTimePath.getYear()))
                         .and(multiFridgeFood.updateAt.month().eq(beginTimePath.getMonth().getValue())))
-                .groupBy(multiFridgeFood.food.foodCategory, multiFridgeFood.food.foodImgKey)
+                .groupBy(multiFridgeFood.food.foodCategory)
                 .having(multiFridgeFood.food.foodCategory.count().goe(1L))
                 .orderBy(multiFridgeFood.food.foodIdx.count().desc())
                 .limit(1)

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Component
-@FeignClient(name="recipe-server", url = "${server.recipe.local-url}")
+@FeignClient(name="recipe-server", url = "${server.recipe.url}")
 public interface RecipeServerClient {
     @PostMapping("/users")
     void addUser(@RequestBody UserReq userReq);

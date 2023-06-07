@@ -53,7 +53,7 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                 .having(fridgeFood.food.foodCategory.count().goe(1L))
                 .orderBy(fridgeFood.food.foodIdx.count().desc())
                 .limit(1)
-                .fetchOne();
+                .fetchFirst();
     }
 
     /**

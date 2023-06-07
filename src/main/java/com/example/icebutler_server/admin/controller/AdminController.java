@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @Slf4j
@@ -73,10 +74,11 @@ public class AdminController {
     @DeleteMapping("/users/{userIdx}")
     public ResponseCustom<Void> withdraw(
             @IsAdminLogin AdminLoginStatus loginStatus,
-            @PathVariable Long userIdx
+            @PathVariable Long userIdx,
+            HttpServletRequest request
     )
     {
-        adminService.withdraw(userIdx,loginStatus.getAdminIdx());
+        adminService.withdraw(userIdx, loginStatus.getAdminIdx(), request.getHeader("Authorization"));
         return ResponseCustom.OK();
     }
 

@@ -8,8 +8,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Component
-@FeignClient(name="recipe-server", url = "${server.recipe.url}")
+@FeignClient(name="recipe-server", url = "${server.recipe.local-url}")
 public interface RecipeServerClient {
     @PostMapping("/users")
     void addUser(@RequestBody UserReq userReq);
@@ -24,7 +26,7 @@ public interface RecipeServerClient {
     ResponseCustom<Void> addAdmin(@RequestBody AdminReq adminReq);
 
     @DeleteMapping("/admin/users/{userIdx}")
-    ResponseCustom<Void> withdrawUser(@PathVariable("userIdx") Long userIdx);
+    ResponseCustom<Void> withdrawUser(@PathVariable("userIdx") Long userIdx, @RequestHeader Map<String, String> requestHeader);
 
     @DeleteMapping("/foods")
     void deleteFood(@RequestBody FoodReq foodReq);

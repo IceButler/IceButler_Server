@@ -32,6 +32,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -91,11 +93,13 @@ public class AdminServiceImpl implements AdminService {
     }
     @Transactional
     @Override
-    public void withdraw(Long userIdx,Long adminIdx)
+    public void withdraw(Long userIdx, Long adminIdx, String authorization)
     {
         adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
         User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
-        recipeServerClient.withdrawUser(userIdx);
+        HashMap<String, String> requestHeaders = new HashMap<>();
+        requestHeaders.put("Authorization", authorization);
+        recipeServerClient.withdrawUser(userIdx, requestHeaders);
         userRepository.delete(user);
     }
 

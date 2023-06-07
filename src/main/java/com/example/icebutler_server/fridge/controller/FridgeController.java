@@ -173,7 +173,7 @@ public class FridgeController {
 
 
   // 알림
-  @Scheduled(cron="0 0 18 * * ?", zone="GMT+9:00")
+  @Scheduled(cron="0 50 18 * * ?", zone="GMT+9:00")
   public void notifyFridgeFood() {
     fridgeService.notifyFridgeFood();
     multiFridgeService.notifyFridgeFood();

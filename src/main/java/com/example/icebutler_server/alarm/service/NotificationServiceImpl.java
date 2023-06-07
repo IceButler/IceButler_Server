@@ -36,7 +36,6 @@ public class NotificationServiceImpl implements NotificationService {
         if(user.getFcmToken()!=null){
             FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
             Response response = sendMessage(objectMapper.writeValueAsString(message));
-            System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
             this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
         }
     }
@@ -48,7 +47,6 @@ public class NotificationServiceImpl implements NotificationService {
         if(user.getFcmToken()!=null) {
             FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
             Response response = sendMessage(objectMapper.writeValueAsString(message));
-            System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
             this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
         }
     }
@@ -60,7 +58,6 @@ public class NotificationServiceImpl implements NotificationService {
         if(user.getFcmToken()!=null) {
             FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), fridgeName, messageBody);
             Response response = sendMessage(objectMapper.writeValueAsString(message));
-            System.out.println(response.body().string()); // TODO 프론트와 테스트 확인 후 출력문 삭제
             this.notificationRepository.save(this.notificationAssembler.toEntity(fridgeName, messageBody, user));
         }
     }

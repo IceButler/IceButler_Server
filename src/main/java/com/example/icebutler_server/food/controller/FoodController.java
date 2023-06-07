@@ -55,8 +55,6 @@ public class FoodController {
 
         Food food = this.foodRepository.save(foodAssembler.toEntity(addFoodRequest));
         FoodData foodData = FoodData.toDto(food);
-        String uuid = foodData.getUuid();
-        System.out.println("sending food uuid :"+uuid);
         amazonSQSSender.sendMessage(FoodData.toDto(food));
     }
 }

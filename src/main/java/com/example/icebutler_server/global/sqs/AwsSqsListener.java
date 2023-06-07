@@ -51,7 +51,6 @@ public class AwsSqsListener {
 			if(!syncData.isMainService()){
 				//1. 음식 데이터 저장
 				foodService.addFood(foodData.toFoodReq());
-				System.out.println(" 음식 데이터 저장! ");
 				//2. 레디스의 동기화용 데이터 삭제
 				redisUtils.delete(foodData.getUuid());
 				//3. 큐에 있는 음식 데이터 삭제

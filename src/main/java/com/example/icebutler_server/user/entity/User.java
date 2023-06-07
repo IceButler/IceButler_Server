@@ -2,7 +2,6 @@ package com.example.icebutler_server.user.entity;
 
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.entityListener.UserEntityListener;
-import com.example.icebutler_server.user.dto.request.PostUserReq;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
@@ -59,8 +58,11 @@ public class User extends BaseEntity {
         this.fcmToken = null;
     }
 
-    public void modifyProfile(String nickname, String profileImgKey) {
+    public void modifyProfileNickName(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void modifyProfileImgKey(String profileImgKey) {
         this.profileImgKey = profileImgKey;
     }
 

@@ -97,10 +97,10 @@ public class UserServiceImpl implements UserService {
   public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
-    if (!StringUtils.hasText(patchProfileReq.getNickname())) throw new InvalidUserNickNameException();
-    if (!StringUtils.hasText(patchProfileReq.getProfileImgKey())) throw new InvalidUserProfileImgKeyException();
+    if (StringUtils.hasText(patchProfileReq.getNickname())) user.modifyProfileNickName(patchProfileReq.getNickname());
+    if (StringUtils.hasText(patchProfileReq.getProfileImgKey())) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
 
-    user.modifyProfile(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
+//    user.modifyProfileNickName(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
     recipeServerEventPublisher.changeUserProfile(user);
   }
 

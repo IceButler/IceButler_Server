@@ -29,35 +29,6 @@ public class MultiFridgeAssembler {
         newOwner.changeFridgeOwner(newOwner.getUser());
     }
 
-//    public List<MultiFridgeUser> toUpdateFridgeMembers(List<User> newMembers, List<MultiFridgeUser> multiFridgeUsers) {
-//        for(MultiFridgeUser member: multiFridgeUsers){
-//            member.setIsEnable(false);
-//        }
-//        List<MultiFridgeUser> checkNewMember = new ArrayList<>();
-//        for(User user: newMembers){
-//            boolean hasMember = false;
-//
-//            for(MultiFridgeUser members : multiFridgeUsers){
-//                if(user.equals(members.getUser())) {
-//                    members.setIsEnable(true);
-//                    hasMember = true;
-//                }
-//
-//                if(members.getRole().equals(FridgeRole.OWNER)){
-//                    members.setIsEnable(true);
-//                }
-//            }
-//            if(!hasMember) {
-//                checkNewMember.add(MultiFridgeUser.builder()
-//                        .user(user)
-//                        .role(FridgeRole.MEMBER)
-//                        .multiFridge(multiFridgeUsers.get(0).getMultiFridge())
-//                        .build());
-//            }
-//        }
-//        return checkNewMember;
-//    }
-
     public UpdateMultiMemberRes toUpdateFridgeMembers(List<User> newMembers, List<MultiFridgeUser> multiFridgeUsers) {
         for(MultiFridgeUser member: multiFridgeUsers){
             member.setIsEnable(false);

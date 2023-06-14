@@ -443,6 +443,12 @@ feature/7-desserts-patchDessert
 ```
 <br>
 
+## MSA (Micro Service Architecture)
+|[MAIN_SERVER](https://github.com/IceButler/IceButler_Server)|[RECIPE_SERVER](https://github.com/IceButler/IceButler_Server_Recipe)|[CHAT_GPT_WORDS](https://github.com/IceButler/chatGPT-OneWord-lambda)|[CHAT_GPT_CATEGORY](https://github.com/IceButler/chatGPT-category-lambda)|[GET_PRESIGNED_S3_URL](https://github.com/IceButler/presignedURL-lambda)|
+|:---:|:---:|:---:|:---:|:---:|
+|**main 서버** | **레시피 서버**| **ChatGPT 활용 대표단어 추출 Lambda** | **ChatGPT 활용 카테고리 추출 Lambda** | **PresignedURL Lambda** |
+<br>
+
 ## API
 [👉 CLICK HERE](https://broadleaf-mist-919.notion.site/API-58f09d6c03ff4cbcbe7df30d21f60bd7?pvs=4)
 <br>

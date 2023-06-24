@@ -1,5 +1,7 @@
 package com.example.icebutler_server.chae_eun.cart;
 
+import com.example.icebutler_server.cart.dto.cart.request.AddFoodRequest;
+import com.example.icebutler_server.cart.dto.cart.request.AddFoodToCartRequest;
 import com.example.icebutler_server.cart.dto.cart.response.CartResponse;
 import com.example.icebutler_server.cart.entity.cart.Cart;
 import com.example.icebutler_server.cart.entity.cart.CartFood;
@@ -21,13 +23,13 @@ import com.example.icebutler_server.user.entity.Provider;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,6 +53,9 @@ class CartServiceImplTest {
     @Autowired
     private CartFoodRepository cartFoodRepository;
 
+    /**
+     * 장바구니 식품 조회
+     */
     @DisplayName("냉장고 카트를 불러온다.")
     @Test
     @Transactional
@@ -68,8 +73,10 @@ class CartServiceImplTest {
         foodRepository.save(food);
         CartFood cartFood = createCartFood(cart, food);
         cartFoodRepository.save(cartFood);
+
         // when
         Cart cart1 = getCart(user.getUserIdx(), fridge.getFridgeIdx());
+
         // then
         assertThat(cart).isEqualTo(cart1);
     }
@@ -122,14 +129,68 @@ class CartServiceImplTest {
         assertThat(cartFoods.size()).isEqualTo(1);
     }
 
+    @DisplayName("카트에 음식을 추가한다.")
     @Test
     @Transactional
     void addCartFoods() {
+        // given
+        User user = createUser();
+        userRepository.save(user);
+        Fridge fridge = createFridge();
+        fridgeRepository.save(fridge);
+        FridgeUser fridgeUser = createFridgeUser(fridge, user);
+        fridgeUserRepository.save(fridgeUser);
+        Cart cart = createCart(fridge);
+        cartRepository.save(cart);
+        Food food = createFood();
+        foodRepository.save(food);
+        CartFood cartFood = createCartFood(cart, food);
+        cartFoodRepository.save(cartFood);
+
+        // when
+        List<AddFoodRequest> lists = new ArrayList<>();
+        lists.add(new AddFoodRequest("토마토", "채소"));
+        lists.add(new AddFoodRequest("딸기", "과일"));
+        AddFoodToCartRequest foodToCartInfo = new AddFoodToCartRequest(lists);
+
+        this.cartService.addCartFoods(fridge.getFridgeIdx(), foodToCartInfo, user.getUserIdx());
+
+        List<Food> foodLists = this.foodRepository.findAll();
+        List<CartFood> cartFoodList = this.cartFoodRepository.findByCartAndIsEnable(cart, true);
+
+
+        // then
+        // 토마토는 이미 저장되어 있으므로 새로 생성이 되지 않고 딸기만 생성이 되는지 확인
+        assertThat(foodLists.size()).isEqualTo(2);
+        // 이미 토마토는 저장이 되어 있으므로, 딸기만 카트에 저장되어 있는지 확인
+        assertThat(cartFoodList.size()).isEqualTo(2);
     }
 
+    @DisplayName("카트에 음식을 삭제한다.")
     @Test
     @Transactional
     void deleteCartFoods() {
+        // given
+        User user = createUser();
+        userRepository.save(user);
+        Fridge fridge = createFridge();
+        fridgeRepository.save(fridge);
+        FridgeUser fridgeUser = createFridgeUser(fridge, user);
+        fridgeUserRepository.save(fridgeUser);
+        Cart cart = createCart(fridge);
+        cartRepository.save(cart);
+        Food food = createFood();
+        foodRepository.save(food);
+        CartFood cartFood = createCartFood(cart, food);
+        cartFoodRepository.save(cartFood);
+
+        // when
+        // 현재 cascade가 적용 되어 있어서 자동으로 삭제 완
+        this.cartFoodRepository.delete(cartFood);
+        List<CartFood> cartFood1 = this.cartFoodRepository.findByCartAndIsEnable(cart, true);
+
+        // then
+        assertThat(cartFood1.size()).isEqualTo(0);
     }
 
     // 객체 생성 코드
@@ -173,7 +234,7 @@ class CartServiceImplTest {
         return Food.builder()
                 .foodName("토마토")
                 .foodImgKey("foods/tomato.jpg")
-                .foodCategory(FoodCategory.FRUIT)
+                .foodCategory(FoodCategory.VEGETABLE)
                 .build();
     }
 

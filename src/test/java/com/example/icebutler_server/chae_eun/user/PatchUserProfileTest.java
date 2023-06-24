@@ -8,7 +8,6 @@ import com.example.icebutler_server.user.entity.Provider;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.repository.UserRepository;
 import com.example.icebutler_server.user.service.UserService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class PatchUserProfileTest {
     @Autowired
     private UserAssembler assembler;
-
     @Autowired
     private UserService userService;
     @Autowired

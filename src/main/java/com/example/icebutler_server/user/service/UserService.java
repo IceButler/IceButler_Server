@@ -16,7 +16,7 @@ public interface UserService {
 
   PostUserRes login(LoginUserReq loginUserReq);
 
-  void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq);
+  boolean modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq);
 
   PostNickNameRes checkNickname(PostNicknameReq postNicknameReq);
 

@@ -9,6 +9,6 @@ import java.util.List;
 public interface CartService {
 
     List<CartResponse> getCartFoods(Long fridgeIdx, Long userIdx);
-    void addCartFoods(Long cartIdx, AddFoodToCartRequest request, Long userIdx);
+    boolean addCartFoods(Long cartIdx, AddFoodToCartRequest request, Long userIdx);
     void deleteCartFoods(Long cartIdx, RemoveFoodFromCartRequest request, Long userIdx);
 }

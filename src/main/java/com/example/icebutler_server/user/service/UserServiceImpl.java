@@ -94,14 +94,15 @@ public class UserServiceImpl implements UserService {
 
   // 프로필 설정
   @Transactional
-  public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
+  public boolean modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
     User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     if (StringUtils.hasText(patchProfileReq.getNickname())) user.modifyProfileNickName(patchProfileReq.getNickname());
     if (StringUtils.hasText(patchProfileReq.getProfileImgKey())) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
 
 //    user.modifyProfileNickName(patchProfileReq.getNickname(), patchProfileReq.getProfileImgKey());
-    recipeServerEventPublisher.changeUserProfile(user);
+//    recipeServerEventPublisher.changeUserProfile(user);
+    return true;
   }
 
   // 닉네임 중복 확인

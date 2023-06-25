@@ -67,7 +67,7 @@ public class CartServiceImpl implements CartService {
     // 장바구니 식품 추가
     @Transactional
     @Override
-    public void addCartFoods(Long fridgeIdx, AddFoodToCartRequest request, Long userIdx) {
+    public boolean addCartFoods(Long fridgeIdx, AddFoodToCartRequest request, Long userIdx) {
         Cart cart = getCart(userIdx, fridgeIdx);
         // food 없는 경우 food 생성
         List<Food> foodRequests = new ArrayList<>();
@@ -93,6 +93,7 @@ public class CartServiceImpl implements CartService {
                 .collect(Collectors.toList());
 
         cartFoodRepository.saveAll(cartFoods);
+        return false;
     }
 
     // 장바구니 식품 삭제

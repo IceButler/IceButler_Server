@@ -68,7 +68,7 @@ public class MultiCartServiceImpl implements CartService {
     // 장바구니 식품 추가
     @Transactional
     @Override
-    public void addCartFoods(Long fridgeIdx, AddFoodToCartRequest request, Long userIdx) {
+    public boolean addCartFoods(Long fridgeIdx, AddFoodToCartRequest request, Long userIdx) {
         MultiCart cart = getMultiCart(userIdx, fridgeIdx);
         // food 없는 경우 food 생성
         List<Food> foodRequests = new ArrayList<>();
@@ -93,6 +93,7 @@ public class MultiCartServiceImpl implements CartService {
                 .collect(Collectors.toList());
 
         multiCartFoodRepository.saveAll(cartFoods);
+      return false;
     }
 
     // 장바구니 식품 삭제

@@ -23,26 +23,26 @@
 ## Project Architecture
 <details>
 <summary>FINAL ARCHITECTURE</summary>
-    
-![스크린샷 2023-06-07 오전 1 09 2](https://github.com/IceButler/IceButler_Server/assets/90203250/16d4f6ad-5d01-4ecc-8fbb-4afacca7d55e)
+
+<img width="674" alt="스크린샷 2023-09-06 오후 7 21 05" src="https://github.com/IceButler/IceButler_Server/assets/90022940/1646d788-54a2-4df9-9e40-1584943bcb39">
 </details>
 
 <details>
 <summary>CI/CD</summary>
     
-![image 370](https://github.com/IceButler/IceButler_Server/assets/90203250/cec1115d-1014-4d57-80a4-7ba44408509d)
+<img width="782" alt="스크린샷 2023-09-06 오후 7 21 59" src="https://github.com/IceButler/IceButler_Server/assets/90022940/4db4fce7-c681-424c-a0e3-e8a2661379b3">
 </details>
 
 <details>
 <summary>AWS Lambda</summary>
-    
- ![image 340](https://github.com/IceButler/IceButler_Server/assets/90203250/f215a8d5-8201-4bcb-9033-fdaad5633e2b)
+
+<img width="1001" alt="스크린샷 2023-09-06 오후 7 24 33" src="https://github.com/IceButler/IceButler_Server/assets/90022940/6477ae54-17b4-44ff-9e10-d0e7458656a5">
 </details>
 
 <details>
 <summary>AWS SQS</summary>
     
- ![image 397](https://github.com/IceButler/IceButler_Server/assets/90203250/6f76861e-8335-4df7-b6db-2e0790882cfe)
+<img width="759" alt="스크린샷 2023-09-06 오후 7 25 39" src="https://github.com/IceButler/IceButler_Server/assets/90022940/e287c806-4a55-4e25-be3b-85b0a0c7df14">
 </details>
 <br>
 
@@ -392,15 +392,15 @@
 ## DB 
 <details>
 <summary>MAIN_SERVER</summary>
- 
-![image](https://github.com/IceButler/IceButler_Server/assets/90203250/de9db769-11c5-45e7-8c6a-5f861bb5ff19)
     
+<img width="821" alt="스크린샷 2023-09-06 오후 7 29 42" src="https://github.com/IceButler/IceButler_Server/assets/90022940/7394fb82-1e2b-434f-b9b5-baab010d0681">
+
 <br>
 </details>
 <details>
 <summary>RECIPE_SERVER</summary>
 
-![image](https://github.com/IceButler/IceButler_Server/assets/90203250/2f76bbac-2e7b-433e-b127-e592c700ef2d)
+<img width="859" alt="스크린샷 2023-09-06 오후 7 29 26" src="https://github.com/IceButler/IceButler_Server/assets/90022940/69714b9b-4cd5-44f1-ac03-95d993cd238f">
 
 <br>
 </details>

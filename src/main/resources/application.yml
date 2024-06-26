@@ -89,3 +89,6 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: method
     display-request-duration: true
+    model-converters:
+      pageable-converter:
+        enabled: true

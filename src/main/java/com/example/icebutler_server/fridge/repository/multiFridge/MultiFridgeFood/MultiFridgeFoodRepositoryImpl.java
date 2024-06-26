@@ -46,7 +46,7 @@ public class MultiFridgeFoodRepositoryImpl implements MultiFridgeFoodCustom{
                         .and(multiFridgeFood.updateAt.month().eq(beginTimePath.getMonth().getValue())))
                 .groupBy(multiFridgeFood.food.foodCategory)
                 .having(multiFridgeFood.food.foodCategory.count().goe(1L))
-                .orderBy(multiFridgeFood.food.foodIdx.count().desc())
+                .orderBy(multiFridgeFood.food.id.count().desc())
                 .limit(1)
                 .fetchFirst();
     }
@@ -67,7 +67,7 @@ public class MultiFridgeFoodRepositoryImpl implements MultiFridgeFoodCustom{
                 .leftJoin(multiFridgeUser).on(multiFridgeUser.multiFridge.eq(multiFridge))
                 .where((multiFridge.eq(fridgeEntity)).
                         and(multiFridgeFood.isEnable.eq(true)).and(multiFridge.isEnable.eq(true)).and(multiFridgeUser.isEnable.eq(true)))
-                .groupBy(food.foodIdx)
+                .groupBy(food.id)
                 .fetch();
     }
 }

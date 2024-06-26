@@ -13,19 +13,19 @@ import javax.persistence.*;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE multi_cart_food SET is_enable = false, update_at = current_timestamp WHERE multi_cart_food_idx = ?")
+@SQLDelete(sql = "UPDATE multi_cart_food SET is_enable = false, update_at = current_timestamp WHERE multi_cart_food_id = ?")
 public class MultiCartFood extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
-  private Long multiCartFoodIdx;
+  private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name="foodIdx")
+  @JoinColumn(name="food_id")
   private Food food;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name="multiCartIdx")
+  @JoinColumn(name="multi_cart_id")
   private MultiCart multiCart;
 
   @Builder

@@ -25,8 +25,8 @@ public class SelectFridgesMainRes {
   public static SelectFridgesMainRes toDto(List<FridgeUser> fridgeUsers, List<MultiFridgeUser> multiFridgeUsers) {
     SelectFridgesMainRes selectFridgesMainRes = new SelectFridgesMainRes();
 
-    selectFridgesMainRes.fridgeList = fridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getFridge().getFridgeName(), m.getFridge().getFridgeIdx(), FRIDGE)).collect(Collectors.toList());
-    selectFridgesMainRes.fridgeList.addAll(multiFridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getMultiFridge().getFridgeName(), m.getMultiFridge().getMultiFridgeIdx(), MULTI_FRIDGE)).collect(Collectors.toList()));
+    selectFridgesMainRes.fridgeList = fridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getFridge().getFridgeName(), m.getFridge().getId(), FRIDGE)).collect(Collectors.toList());
+    selectFridgesMainRes.fridgeList.addAll(multiFridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getMultiFridge().getFridgeName(), m.getMultiFridge().getId(), MULTI_FRIDGE)).collect(Collectors.toList()));
 
     return selectFridgesMainRes;
   }

@@ -15,7 +15,7 @@ public class FoodResponse {
 
     public static FoodResponse toDto(Food food) {
         FoodResponse foodResponse = new FoodResponse();
-        foodResponse.foodIdx = food.getFoodIdx();
+        foodResponse.foodIdx = food.getId();
         foodResponse.foodName = food.getFoodName();
         foodResponse.foodImgUrl = AwsS3ImageUrlUtil.toUrl(food.getFoodImgKey());
         return foodResponse;

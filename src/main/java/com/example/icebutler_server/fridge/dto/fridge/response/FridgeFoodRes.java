@@ -29,8 +29,8 @@ public class FridgeFoodRes {
 
   public static FridgeFoodRes toDto(MultiFridgeFood fridgeFood) {
     return FridgeFoodRes.builder()
-            .fridgeFoodIdx(fridgeFood.getMultiFridgeFoodIdx())
-            .foodIdx(fridgeFood.getFood().getFoodIdx())
+            .fridgeFoodIdx(fridgeFood.getId())
+            .foodIdx(fridgeFood.getFood().getId())
             .foodName(fridgeFood.getFood().getFoodName())
             .foodDetailName(fridgeFood.getFoodDetailName())
             .foodCategory(fridgeFood.getFood().getFoodCategory().getName())
@@ -44,8 +44,8 @@ public class FridgeFoodRes {
 
   public static FridgeFoodRes toDto(FridgeFood fridgeFood) {
     return FridgeFoodRes.builder()
-            .fridgeFoodIdx(fridgeFood.getFridgeFoodIdx())
-            .foodIdx(fridgeFood.getFood().getFoodIdx())
+            .fridgeFoodIdx(fridgeFood.getId())
+            .foodIdx(fridgeFood.getFood().getId())
             .foodName(fridgeFood.getFood().getFoodName())
             .foodDetailName(fridgeFood.getFoodDetailName())
             .foodCategory(fridgeFood.getFood().getFoodCategory().getName())

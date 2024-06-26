@@ -21,7 +21,7 @@ public class SearchFridgeFoodRes {
 
   public static SearchFridgeFoodRes toDto(List<FridgeFood> searchFoods, Long fridgeIdx, Long userIdx) {
     SearchFridgeFoodRes searchFridgeFoodRes = new SearchFridgeFoodRes();
-    searchFridgeFoodRes.searchFoods = searchFoods.stream().map(m -> SearchFoodRes.toDto(m.getFridgeFoodIdx(), m.getFoodDetailName())).collect(Collectors.toList());
+    searchFridgeFoodRes.searchFoods = searchFoods.stream().map(m -> SearchFoodRes.toDto(m.getId(), m.getFoodDetailName())).collect(Collectors.toList());
     searchFridgeFoodRes.fridgeIdx = fridgeIdx;
     searchFridgeFoodRes.userIdx = userIdx;
     return searchFridgeFoodRes;
@@ -29,7 +29,7 @@ public class SearchFridgeFoodRes {
 
   public static SearchFridgeFoodRes toMultiDto(List<MultiFridgeFood> searchFoods, Long fridgeIdx, Long userIdx) {
     SearchFridgeFoodRes searchFridgeFoodRes = new SearchFridgeFoodRes();
-    searchFridgeFoodRes.searchFoods = searchFoods.stream().map(m -> SearchFoodRes.toDto(m.getMultiFridgeFoodIdx(), m.getFoodDetailName())).collect(Collectors.toList());
+    searchFridgeFoodRes.searchFoods = searchFoods.stream().map(m -> SearchFoodRes.toDto(m.getId(), m.getFoodDetailName())).collect(Collectors.toList());
     searchFridgeFoodRes.fridgeIdx = fridgeIdx;
     searchFridgeFoodRes.userIdx = userIdx;
     return searchFridgeFoodRes;

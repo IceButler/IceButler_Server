@@ -22,10 +22,10 @@ public class GetFridgesMainRes {
   public static GetFridgesMainRes toDto(List<List<FridgeUser>> fridgeUserListList, List<List<MultiFridgeUser>> multiFridgeUserListList, Long userIdx) {
     GetFridgesMainRes getFridgesMainRes = new GetFridgesMainRes();
 
-    List<FridgeUser> fridgeUsers = fridgeUserListList.stream().map(m -> m.stream().filter(f -> f.getUser().getUserIdx().equals(userIdx)).findAny().orElseThrow(FridgeUserNotFoundException::new)).collect(Collectors.toList());
+    List<FridgeUser> fridgeUsers = fridgeUserListList.stream().map(m -> m.stream().filter(f -> f.getUser().getId().equals(userIdx)).findAny().orElseThrow(FridgeUserNotFoundException::new)).collect(Collectors.toList());
     getFridgesMainRes.fridgeList = fridgeUsers.stream().map(m -> FridgeRes.toDto(m.getFridge(), fridgeUserListList)).collect(Collectors.toList());
 
-    List<MultiFridgeUser> multiFridgeUsers = multiFridgeUserListList.stream().map(m -> m.stream().filter(f -> f.getUser().getUserIdx().equals(userIdx)).findAny().orElseThrow(FridgeUserNotFoundException::new)).collect(Collectors.toList());
+    List<MultiFridgeUser> multiFridgeUsers = multiFridgeUserListList.stream().map(m -> m.stream().filter(f -> f.getUser().getId().equals(userIdx)).findAny().orElseThrow(FridgeUserNotFoundException::new)).collect(Collectors.toList());
     getFridgesMainRes.multiFridgeResList = multiFridgeUsers.stream().map(m -> MultiFridgeRes.toDto(m.getMultiFridge(), multiFridgeUserListList)).collect(Collectors.toList());
 
     return getFridgesMainRes;

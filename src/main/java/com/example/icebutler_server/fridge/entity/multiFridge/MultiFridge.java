@@ -13,13 +13,13 @@ import javax.persistence.*;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE multi_fridge SET is_enable = false, update_at = current_timestamp WHERE multi_fridge_idx = ?")
+@SQLDelete(sql = "UPDATE multi_fridge SET is_enable = false, update_at = current_timestamp WHERE multi_fridge_id = ?")
 @EntityListeners(MultiFridgeEntityListener.class)
 public class MultiFridge extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
-  private Long multiFridgeIdx;
+  private Long id;
 
   @Column(nullable = false)
   private String fridgeName;

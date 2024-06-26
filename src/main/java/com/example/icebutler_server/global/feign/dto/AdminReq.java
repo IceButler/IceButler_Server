@@ -19,7 +19,7 @@ public class AdminReq {
 
     public static AdminReq toDto(Admin admin){
         AdminReq adminReq = new AdminReq();
-        adminReq.adminIdx = admin.getAdminIdx();
+        adminReq.adminIdx = admin.getId();
         adminReq.email = admin.getEmail();
         return adminReq;
     }

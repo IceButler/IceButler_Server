@@ -17,7 +17,7 @@ public class UserResponse {
     public static UserResponse toDto(User user)
     {
         UserResponse userResponse = new UserResponse();
-        userResponse.userIdx = user.getUserIdx();
+        userResponse.userIdx = user.getId();
         userResponse.nickname = user.getNickname();
         userResponse.email = user.getEmail();
         userResponse.provider = user.getProvider().getName();

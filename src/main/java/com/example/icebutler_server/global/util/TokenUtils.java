@@ -80,8 +80,8 @@ public class TokenUtils {
   }
 
   public String createToken(User user) {
-    String access_token = this.createAccessToken(user.getUserIdx(), user.getNickname());
-    String refresh_token = this.createRefreshToken(user.getUserIdx(), user.getNickname());
+    String access_token = this.createAccessToken(user.getId(), user.getNickname());
+    String refresh_token = this.createRefreshToken(user.getId(), user.getNickname());
     return access_token + COMMA + refresh_token;
   }
 

@@ -14,16 +14,16 @@ import javax.persistence.*;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE multi_cart SET is_enable = false, update_at = current_timestamp WHERE multi_cart_idx = ?")
+@SQLDelete(sql = "UPDATE multi_cart SET is_enable = false, update_at = current_timestamp WHERE multi_cart_id = ?")
 @EntityListeners(MultiCartEntityListener.class)
 public class MultiCart extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
-  private Long multiCartIdx;
+  private Long id;
 
   @OneToOne
-  @JoinColumn(name = "multiFridgeUserIdx", nullable = false)
+  @JoinColumn(name = "multi_fridge_user_id", nullable = false)
   private MultiFridgeUser multiFridgeUser;
 
   @Builder

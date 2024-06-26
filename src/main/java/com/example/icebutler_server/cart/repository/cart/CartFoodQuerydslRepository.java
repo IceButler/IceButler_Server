@@ -5,6 +5,6 @@ import com.example.icebutler_server.cart.entity.cart.CartFood;
 import java.util.List;
 
 public interface CartFoodQuerydslRepository {
-    List<CartFood> findByCartIdxAndFoodIdxIn(Long cartIdx, List<Long> foodIdxes);
+    List<CartFood> findByCartIdAndFoodIdIn(Long cartIdx, List<Long> foodIdxes);
 
 }

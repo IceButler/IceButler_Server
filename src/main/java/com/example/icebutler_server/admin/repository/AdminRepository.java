@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface AdminRepository extends JpaRepository<Admin, Long> , AdminRepositoryQuerydsl{
     Optional<Admin> findByEmail(String email);
-    Optional<Admin> findByAdminIdxAndIsEnable(Long adminIdx, boolean isEnable);
+    Optional<Admin> findByIdAndIsEnable(Long adminIdx, boolean isEnable);
 }

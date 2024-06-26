@@ -30,12 +30,12 @@ public class FridgeRes {
     List<FridgeUser> fridgeUsers = new ArrayList<>();
     for (List<FridgeUser> fridgeArr : fridgeUserList) {
       for (FridgeUser fridgeUser : fridgeArr) {
-        if (fridgeUser.getFridge().getFridgeIdx().equals(fridge.getFridgeIdx())) fridgeUsers.add(fridgeUser);
+        if (fridgeUser.getFridge().getId().equals(fridge.getId())) fridgeUsers.add(fridgeUser);
       }
     }
 
     FridgeRes fridgeRes = new FridgeRes();
-    fridgeRes.fridgeIdx = fridge.getFridgeIdx();
+    fridgeRes.fridgeIdx = fridge.getId();
     fridgeRes.fridgeName = fridge.getFridgeName();
     fridgeRes.comment = fridge.getFridgeComment();
     fridgeRes.users = fridgeUsers.stream().map(m -> FridgeUserRes.toDto(m.getUser(), m.getRole())).collect(Collectors.toList());

@@ -16,7 +16,7 @@ public class PushNotification extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long notificationIdx;
+    private Long id;
 
     @Column(nullable = false)
     private String pushNotificationType;
@@ -25,7 +25,7 @@ public class PushNotification extends BaseEntity {
     private String notificationInfo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="userIdx")
+    @JoinColumn(name="user_id")
     private User user;
 
     @Builder

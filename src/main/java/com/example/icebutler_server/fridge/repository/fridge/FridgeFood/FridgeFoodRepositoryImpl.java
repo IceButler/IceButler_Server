@@ -51,7 +51,7 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                         .and(fridgeFood.updateAt.month().eq(beginTimePath.getMonth().getValue())))
                 .groupBy(fridgeFood.food.foodCategory)
                 .having(fridgeFood.food.foodCategory.count().goe(1L))
-                .orderBy(fridgeFood.food.foodIdx.count().desc())
+                .orderBy(fridgeFood.food.id.count().desc())
                 .limit(1)
                 .fetchFirst();
     }
@@ -76,7 +76,7 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                 .leftJoin(fridgeUser).on(fridgeUser.fridge.eq(fridge))
                 .where((fridge.eq(fridgeEntity)).
                         and(fridgeFood.isEnable.eq(true)).and(fridge.isEnable.eq(true)).and(fridgeUser.isEnable.eq(true)))
-                .groupBy(food.foodIdx)
+                .groupBy(food.id)
                 .fetch();
     }
 

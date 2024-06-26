@@ -16,12 +16,12 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE fridge_food SET is_enable = false, update_at = current_timestamp WHERE fridge_food_idx = ?")
+@SQLDelete(sql = "UPDATE fridge_food SET is_enable = false, update_at = current_timestamp WHERE fridge_food_id = ?")
 public class FridgeFood extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
-  private Long fridgeFoodIdx;
+  private Long id;
 
   @Column(nullable = false)
   private LocalDate shelfLife;
@@ -37,15 +37,15 @@ public class FridgeFood extends BaseEntity {
   private FoodDeleteStatus foodDeleteStatus;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "foodIdx")
+  @JoinColumn(name = "food_id")
   private Food food;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userIdx")
+  @JoinColumn(name = "user_id")
   private User owner;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "fridgeIdx")
+  @JoinColumn(name = "fridge_id")
   private Fridge fridge;
 
   @Builder

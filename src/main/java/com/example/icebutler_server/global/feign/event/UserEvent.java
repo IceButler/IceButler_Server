@@ -13,7 +13,7 @@ public class UserEvent {
 
     public static UserEvent toEvent(User user){
         UserEvent userJoinEvent = new UserEvent();
-        userJoinEvent.userIdx = user.getUserIdx();
+        userJoinEvent.userIdx = user.getId();
         userJoinEvent.email = user.getEmail();
         userJoinEvent.nickname = user.getNickname();
         userJoinEvent.profileImgKey = user.getProfileImgKey();

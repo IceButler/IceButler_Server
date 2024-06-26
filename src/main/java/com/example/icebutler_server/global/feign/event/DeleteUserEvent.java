@@ -13,7 +13,7 @@ public class DeleteUserEvent {
 
     public static DeleteUserEvent toEvent(User user){
         DeleteUserEvent userJoinEvent = new DeleteUserEvent();
-        userJoinEvent.userIdx = user.getUserIdx();
+        userJoinEvent.userIdx = user.getId();
         userJoinEvent.email = user.getEmail();
         userJoinEvent.nickname = user.getNickname();
         userJoinEvent.profileImgKey = user.getProfileImgKey();

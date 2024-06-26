@@ -20,7 +20,7 @@ public class FridgeUserRes {
 
     public static FridgeUserRes toDto(User user, FridgeRole role) {
         FridgeUserRes fridgeUserRes = new FridgeUserRes();
-        fridgeUserRes.userIdx = user.getUserIdx();
+        fridgeUserRes.userIdx = user.getId();
         fridgeUserRes.nickname = user.getNickname();
         fridgeUserRes.role = role;
         fridgeUserRes.profileImgUrl = AwsS3ImageUrlUtil.toUrl(user.getProfileImgKey());

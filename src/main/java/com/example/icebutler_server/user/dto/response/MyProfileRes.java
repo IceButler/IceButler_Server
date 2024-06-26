@@ -23,7 +23,7 @@ public class MyProfileRes {
 
     public static MyProfileRes toDto(User user) {
         MyProfileResBuilder builder = MyProfileRes.builder()
-                .userIdx(user.getUserIdx())
+                .userIdx(user.getId())
                 .nickname(user.getNickname())
                 .email(user.getEmail());
 

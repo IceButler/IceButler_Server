@@ -17,7 +17,7 @@ public class SearchFoodsResponse {
 
   public static SearchFoodsResponse toDto(Food food) {
     SearchFoodsResponse searchFoodsResponse = new SearchFoodsResponse();
-    searchFoodsResponse.foodIdx = food.getFoodIdx();
+    searchFoodsResponse.foodIdx = food.getId();
     searchFoodsResponse.foodCategory = food.getFoodCategory().getName();
     searchFoodsResponse.foodName = food.getFoodName();
     searchFoodsResponse.foodImgUrl = AwsS3ImageUrlUtil.toUrl(food.getFoodImgKey());

@@ -17,7 +17,7 @@ public class UpdateFoodEvent {
 
   public static UpdateFoodEvent toEvent(Food food){
     UpdateFoodEvent foodJoinEvent = new UpdateFoodEvent();
-    foodJoinEvent.foodIdx = food.getFoodIdx();
+    foodJoinEvent.foodIdx = food.getId();
     foodJoinEvent.foodName = food.getFoodName();
     foodJoinEvent.foodImgKey = food.getFoodImgKey();
     foodJoinEvent.foodCategory = food.getFoodCategory();

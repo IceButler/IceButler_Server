@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface MultiFridgeUserRepository extends JpaRepository<MultiFridgeUser, Long> {
-  Optional<MultiFridgeUser> findByMultiFridgeAndUser_UserIdxAndRoleAndIsEnableAndUser_IsEnable(MultiFridge fridge, Long userIdx, FridgeRole fridgeRole, Boolean status, Boolean userStatus);
+  Optional<MultiFridgeUser> findByMultiFridgeAndUser_IdAndRoleAndIsEnableAndUser_IsEnable(MultiFridge fridge, Long userIdx, FridgeRole fridgeRole, Boolean status, Boolean userStatus);
 
   Optional<MultiFridgeUser> findByMultiFridgeAndUserAndRoleAndIsEnable(MultiFridge fridge, User user, FridgeRole fridgeRole, Boolean status);
 
@@ -26,7 +26,7 @@ public interface MultiFridgeUserRepository extends JpaRepository<MultiFridgeUser
 
   List<MultiFridgeUser> findByUserAndIsEnable(User user, Boolean status);
 
-  Optional<MultiFridgeUser> findByUser_UserIdxAndMultiFridge_MultiFridgeIdxAndIsEnable(Long userIdx, Long multiFridgeIdx, Boolean status);
+  Optional<MultiFridgeUser> findByUser_IdAndMultiFridge_IdAndIsEnable(Long userIdx, Long multiFridgeIdx, Boolean status);
 
   void deleteByMultiFridge(MultiFridge multiFridge);
 

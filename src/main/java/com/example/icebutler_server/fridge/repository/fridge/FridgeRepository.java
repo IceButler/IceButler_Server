@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface FridgeRepository extends JpaRepository<Fridge, Long> {
-    Optional<Fridge> findByFridgeIdxAndIsEnable(Long fridgeIdx, Boolean isEnable);
+    Optional<Fridge> findByIdAndIsEnable(Long fridgeIdx, Boolean isEnable);
 }

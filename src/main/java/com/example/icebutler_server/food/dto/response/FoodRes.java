@@ -20,7 +20,7 @@ public class FoodRes {
 
     public static FoodRes toDto(Food food) {
         return FoodRes.builder()
-                .foodIdx(food.getFoodIdx())
+                .foodIdx(food.getId())
                 .foodName(food.getFoodName())
                 .foodCategory(food.getFoodCategory().getName())
                 .foodImgUrl(AwsS3ImageUrlUtil.toUrl(food.getFoodImgKey()))

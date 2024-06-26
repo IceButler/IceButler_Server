@@ -8,8 +8,6 @@ import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
 import com.example.icebutler_server.admin.exception.AlreadyExistEmailException;
 import com.example.icebutler_server.admin.exception.FoodNotFoundException;
 import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.food.exception.DuplicateFoodNameException;
-import com.example.icebutler_server.food.exception.FoodNameNotFoundException;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.admin.dto.response.PostAdminRes;
 import com.example.icebutler_server.admin.dto.response.UserResponse;
@@ -18,7 +16,6 @@ import com.example.icebutler_server.admin.exception.AdminNotFoundException;
 import com.example.icebutler_server.admin.exception.PasswordNotMatchException;
 import com.example.icebutler_server.admin.repository.AdminRepository;
 import com.example.icebutler_server.global.feign.dto.AdminReq;
-import com.example.icebutler_server.global.feign.dto.FoodReq;
 import com.example.icebutler_server.global.feign.feignClient.RecipeServerClient;
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.util.redis.RedisTemplateService;
@@ -34,8 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RequiredArgsConstructor
@@ -70,16 +66,16 @@ public class AdminServiceImpl implements AdminService {
         Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(AdminNotFoundException::new);
         if(!pwEncoder.matches(request.getPassword(), admin.getPassword())) throw new PasswordNotMatchException();
         admin.login();
-        return PostAdminRes.toDto(tokenUtils.createToken(admin.getAdminIdx(), admin.getEmail()));
+        return PostAdminRes.toDto(tokenUtils.createToken(admin.getId(), admin.getEmail()));
     }
 
     @Transactional
     @Override
     public void logout(Long adminIdx)
     {
-        Admin admin = adminRepository.findByAdminIdxAndIsEnable(adminIdx, true).orElseThrow(UserNotFoundException::new);
+        Admin admin = adminRepository.findByIdAndIsEnable(adminIdx, true).orElseThrow(UserNotFoundException::new);
         admin.logout();
-        redisTemplateService.deleteUserRefreshToken(admin.getAdminIdx().toString());
+        redisTemplateService.deleteUserRefreshToken(admin.getId().toString());
     }
 
     @Override
@@ -88,14 +84,14 @@ public class AdminServiceImpl implements AdminService {
             String nickname,
             boolean active,Long adminIdx)
     {
-        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
+        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
         return adminRepository.findAllByNicknameAndActive(pageable, nickname, active);
     }
     @Transactional
     @Override
     public void withdraw(Long userIdx, Long adminIdx, String authorization)
     {
-        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
+        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
         User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
         HashMap<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("Authorization", authorization);
@@ -105,7 +101,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable,Long adminIdx) {
-        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
+        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
         Page<SearchFoodsResponse> searchFoods;
 
         if (StringUtils.hasText(cond)){
@@ -122,8 +118,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public void modifyFood(Long foodIdx, ModifyFoodRequest request,Long adminIdx) {
-        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
-        Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
+        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
+        Food food = foodRepository.findByIdAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
         Food checkFood = foodRepository.findByFoodNameAndIsEnable(request.getFoodName(), true);
         if (!food.getFoodName().equals(request.getFoodName()) && checkFood != null) {
             adminAssembler.validateFoodName(checkFood, request.getFoodName());
@@ -135,8 +131,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public void removeFoods(Long foodIdx,Long adminIdx) {
-        adminRepository.findByAdminIdxAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
-        Food food = foodRepository.findByFoodIdxAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
+        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
+        Food food = foodRepository.findByIdAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
         foodRepository.delete(food);
         recipeServerEventPublisher.deleteFood(food);
     }

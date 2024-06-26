@@ -23,7 +23,7 @@ public class FridgeFoodsRes {
 
   public static FridgeFoodsRes toMultiDto(MultiFridgeFood fridgeFood) {
     return FridgeFoodsRes.builder()
-            .fridgeFoodIdx(fridgeFood.getMultiFridgeFoodIdx())
+            .fridgeFoodIdx(fridgeFood.getId())
             .foodName(fridgeFood.getFood().getFoodName())
             .foodImgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFood().getFoodImgKey()))
             .shelfLife(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))
@@ -32,7 +32,7 @@ public class FridgeFoodsRes {
 
   public static FridgeFoodsRes toDto(FridgeFood fridgeFood) {
     return FridgeFoodsRes.builder()
-            .fridgeFoodIdx(fridgeFood.getFridgeFoodIdx())
+            .fridgeFoodIdx(fridgeFood.getId())
             .foodName(fridgeFood.getFood().getFoodName())
             .foodImgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFood().getFoodImgKey()))
             .shelfLife(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))

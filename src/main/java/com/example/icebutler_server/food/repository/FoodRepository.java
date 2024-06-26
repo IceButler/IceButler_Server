@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FoodRepository extends JpaRepository<Food, Long> {
-  List<Food> findAllByFoodIdxIn(List<Long> foodIdxes);
 
   List<Food> findAllByFoodCategory(FoodCategory foodCategory);
 
@@ -23,7 +22,7 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
   List<Food> findByFoodNameContains(String foodName);
 
-  Optional<Food> findByFoodIdxAndIsEnable(Long foodIdx, boolean status);
+  Optional<Food> findByIdAndIsEnable(Long foodIdx, boolean status);
 
   Page<Food> findByFoodNameContainsAndIsEnable(String cond, boolean status, Pageable pageable);
 

@@ -17,7 +17,7 @@ public class NickNameRes {
     public static NickNameRes toDto(User user){
         return NickNameRes.builder()
                 .nickname(user.getNickname())
-                .userIdx(user.getUserIdx())
+                .userIdx(user.getId())
                 .profileImgUrl(AwsS3ImageUrlUtil.toUrl(user.getProfileImgKey()))
                 .build();
     }

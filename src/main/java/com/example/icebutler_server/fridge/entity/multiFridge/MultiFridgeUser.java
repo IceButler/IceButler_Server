@@ -15,20 +15,20 @@ import javax.persistence.*;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE multi_fridge_user SET is_enable = false, update_at = current_timestamp WHERE multi_fridge_user_idx = ?")
+@SQLDelete(sql = "UPDATE multi_fridge_user SET is_enable = false, update_at = current_timestamp WHERE multi_fridge_user_id = ?")
 @EntityListeners(MultiFridgeUserEntityListener.class)
 public class MultiFridgeUser extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false)
-  private Long multiFridgeUserIdx;
+  private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name="userIdx")
+  @JoinColumn(name="user_id")
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name="multiFridgeIdx")
+  @JoinColumn(name="multi_fridge_id")
   private MultiFridge multiFridge;
 
   @Enumerated(EnumType.STRING)

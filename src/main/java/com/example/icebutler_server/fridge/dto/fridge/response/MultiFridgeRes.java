@@ -28,12 +28,12 @@ public class MultiFridgeRes {
         List<MultiFridgeUser> multiFridgeUsers = new ArrayList<>();
         for (List<MultiFridgeUser> multiFridgeUserArr : multiFridgeUserList) {
             for (MultiFridgeUser multiFridgeUser : multiFridgeUserArr) {
-                if (multiFridgeUser.getMultiFridge().getMultiFridgeIdx().equals(multiFridge.getMultiFridgeIdx())) multiFridgeUsers.add(multiFridgeUser);
+                if (multiFridgeUser.getMultiFridge().getId().equals(multiFridge.getId())) multiFridgeUsers.add(multiFridgeUser);
             }
         }
 
         MultiFridgeRes multiFridgeRes = new MultiFridgeRes();
-        multiFridgeRes.multiFridgeIdx = multiFridge.getMultiFridgeIdx();
+        multiFridgeRes.multiFridgeIdx = multiFridge.getId();
         multiFridgeRes.multiFridgeName = multiFridge.getFridgeName();
         multiFridgeRes.comment = multiFridge.getFridgeComment();
         multiFridgeRes.users = multiFridgeUsers.stream().map(m -> FridgeUserRes.toDto(m.getUser(), m.getRole())).collect(Collectors.toList());

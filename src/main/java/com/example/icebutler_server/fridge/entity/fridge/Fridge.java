@@ -13,14 +13,14 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE fridge SET is_enable = false, update_at = current_timestamp WHERE fridge_idx = ?")
+@SQLDelete(sql = "UPDATE fridge SET is_enable = false, update_at = current_timestamp WHERE fridge_id = ?")
 @EntityListeners(FridgeEntityListener.class)
 public class Fridge extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long fridgeIdx;
+    private Long id;
 
     @Column(nullable = false)
     private String fridgeName;

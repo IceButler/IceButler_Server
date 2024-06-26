@@ -16,12 +16,12 @@ public class MultiCartFoodQuerydslRepositoryImpl implements MultiCartFoodQueryds
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<MultiCartFood> findByCartIdxAndFoodIdxInAndIsEnable(Long cartIdx, List<Long> foodIdxes, Boolean status) {
+    public List<MultiCartFood> findByCartIdAndFoodIdInAndIsEnable(Long cartIdx, List<Long> foodIdxes, Boolean status) {
         return queryFactory
                 .selectFrom(multiCartFood)
                 .where(
-                        multiCartFood.multiCart.multiCartIdx.eq(cartIdx),
-                        multiCartFood.food.foodIdx.in(foodIdxes),
+                        multiCartFood.multiCart.id.eq(cartIdx),
+                        multiCartFood.food.id.in(foodIdxes),
                         multiCartFood.isEnable.eq(status)
                 )
                 .fetch();

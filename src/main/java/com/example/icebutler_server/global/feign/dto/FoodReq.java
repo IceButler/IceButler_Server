@@ -26,7 +26,7 @@ public class FoodReq {
 
   public static FoodReq toDto(Food food) {
     return FoodReq.builder()
-            .foodIdx(food.getFoodIdx())
+            .foodIdx(food.getId())
             .foodName(food.getFoodName())
             .foodImgKey(food.getFoodImgKey())
             .foodCategory(food.getFoodCategory())

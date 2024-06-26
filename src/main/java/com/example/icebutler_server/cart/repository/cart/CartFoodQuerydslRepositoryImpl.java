@@ -18,12 +18,12 @@ public class CartFoodQuerydslRepositoryImpl implements CartFoodQuerydslRepositor
 
 
     @Override
-    public List<CartFood> findByCartIdxAndFoodIdxIn(Long cartIdx, List<Long> foodIdxes) {
+    public List<CartFood> findByCartIdAndFoodIdIn(Long cartIdx, List<Long> foodIdxes) {
                 return queryFactory
                 .selectFrom(cartFood)
                 .where(
-                        cartFood.cart.cartIdx.eq(cartIdx),
-                        cartFood.food.foodIdx.in(foodIdxes)
+                        cartFood.cart.id.eq(cartIdx),
+                        cartFood.food.id.in(foodIdxes)
                 )
                 .fetch();
     }

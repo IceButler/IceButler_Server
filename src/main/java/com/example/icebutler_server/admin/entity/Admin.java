@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class Admin extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Long adminIdx;
+    private Long id;
     @Column(nullable = false)
     private String email;
     private String password;

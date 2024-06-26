@@ -17,7 +17,7 @@ public class FoodEvent {
 
   public static FoodEvent toEvent(Food food){
     FoodEvent foodJoinEvent = new FoodEvent();
-    foodJoinEvent.foodIdx = food.getFoodIdx();
+    foodJoinEvent.foodIdx = food.getId();
     foodJoinEvent.foodName = food.getFoodName();
     foodJoinEvent.foodImgKey = food.getFoodImgKey();
     foodJoinEvent.foodCategory = food.getFoodCategory();

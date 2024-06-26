@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
   // 프로필 설정
   @Transactional
   public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     if (StringUtils.hasText(patchProfileReq.getNickname())) user.modifyProfileNickName(patchProfileReq.getNickname());
     if (StringUtils.hasText(patchProfileReq.getProfileImgKey())) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void deleteUser(Long userIdx) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
     List<FridgeUser> fridgeOwners = fridgeUserRepository.findByUserAndRoleAndIsEnable(user, FridgeRole.OWNER, true);
     for (FridgeUser fridgeOwner : fridgeOwners) {
       Fridge fridge = fridgeOwner.getFridge();
@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void logout(Long userIdx) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
     redisTemplateService.deleteUserRefreshToken(userIdx.toString());
     user.logout();
   }
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
   //마이페이지 조회
   @Override
   public MyProfileRes checkProfile(Long userIdx) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
 
     return MyProfileRes.toDto(user);
 
@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Page<MyNotificationRes> getUserNotification(Long userIdx, Pageable pageable) {
-    User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
     return this.userAssembler.toUserNotificationList(this.pushNotificationRepository.findByUserOrderByCreatedAtDesc(user, pageable));
   }
 

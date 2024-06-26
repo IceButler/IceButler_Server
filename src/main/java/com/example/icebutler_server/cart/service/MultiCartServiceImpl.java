@@ -83,10 +83,10 @@ public class MultiCartServiceImpl implements CartService {
 
         // 장바구니 내 식품 유무 확인
         List<Long> foodsInNowCart = this.multiCartFoodRepository.findByMultiCartAndIsEnable(cart, true).stream()
-                .map((cf) -> cf.getFood().getFoodIdx()).collect(Collectors.toList());
+                .map((cf) -> cf.getFood().getId()).collect(Collectors.toList());
         List<MultiCartFood> cartFoods = foodRequests.stream()
                 .filter((f) -> {
-                    for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getFoodIdx())) return false;
+                    for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getId())) return false;
                     return true;
                 })
                 .map((food) -> multiCartFoodAssembler.toEntity(cart, food))
@@ -100,13 +100,13 @@ public class MultiCartServiceImpl implements CartService {
     @Override
     public void deleteCartFoods(Long fridgeIdx, RemoveFoodFromCartRequest request, Long userIdx) {
         MultiCart cart = getMultiCart(userIdx, fridgeIdx);
-        List<MultiCartFood> removeCartFoods = multiCartFoodRepository.findByCartIdxAndFoodIdxInAndIsEnable(cart.getMultiCartIdx(), request.getFoodIdxes(), true);
+        List<MultiCartFood> removeCartFoods = multiCartFoodRepository.findByCartIdAndFoodIdInAndIsEnable(cart.getId(), request.getFoodIdxes(), true);
         multiCartFoodRepository.deleteAll(removeCartFoods);
     }
 
     private MultiCart getMultiCart(Long userIdx, Long fridgeIdx) {
-        User user = this.userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-        MultiFridge fridge = multiFridgeRepository.findByMultiFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        User user = this.userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        MultiFridge fridge = multiFridgeRepository.findByIdAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         MultiFridgeUser fridgeUser = multiFridgeUserRepository.findByMultiFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(FridgeUserNotFoundException::new);
         return multiCartRepository.findByMultiFridgeUserAndIsEnable(fridgeUser, true).orElseThrow(CartNotFoundException::new);
     }

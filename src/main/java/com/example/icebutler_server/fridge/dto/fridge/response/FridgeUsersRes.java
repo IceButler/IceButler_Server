@@ -18,7 +18,7 @@ public class FridgeUsersRes {
     public static FridgeUsersRes toDto(User user){
         FridgeUsersRes fridgeUsersRes=new FridgeUsersRes();
         fridgeUsersRes.nickName=user.getNickname();
-        fridgeUsersRes.userIdx=user.getUserIdx();
+        fridgeUsersRes.userIdx=user.getId();
         fridgeUsersRes.profileImageUrl=AwsS3ImageUrlUtil.toUrl(user.getProfileImgKey());
         return fridgeUsersRes;
     }

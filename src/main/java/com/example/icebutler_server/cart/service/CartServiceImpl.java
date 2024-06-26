@@ -82,11 +82,11 @@ public class CartServiceImpl implements CartService {
 
         // 장바구니 내 식품 유무 확인
         List<Long> foodsInNowCart = this.cartFoodRepository.findByCartAndIsEnable(cart, true).stream()
-                .map((cf) -> cf.getFood().getFoodIdx())
+                .map((cf) -> cf.getFood().getId())
                 .collect(Collectors.toList());
         List<CartFood> cartFoods = foodRequests.stream()
                 .filter((f) -> {
-                    for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getFoodIdx())) return false;
+                    for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getId())) return false;
                     return true;
                 })
                 .map((food) -> cartFoodAssembler.toEntity(cart, food))
@@ -100,14 +100,14 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteCartFoods(Long fridgeIdx, RemoveFoodFromCartRequest request, Long userIdx) {
         Cart cart = getCart(userIdx, fridgeIdx);
-        List<CartFood> removeCartFoods = cartFoodRepository.findByCartIdxAndFoodIdxIn(cart.getCartIdx(), request.getFoodIdxes());
+        List<CartFood> removeCartFoods = cartFoodRepository.findByCartIdAndFoodIdIn(cart.getId(), request.getFoodIdxes());
         cartFoodRepository.deleteAll(removeCartFoods);
     }
 
     private Cart getCart(Long userIdx, Long fridgeIdx) {
-        User user = userRepository.findByUserIdxAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-        Fridge fridge = fridgeRepository.findByFridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
+        User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
-        return cartRepository.findByFridge_FridgeIdxAndIsEnable(fridgeIdx, true).orElseThrow(CartNotFoundException::new);
+        return cartRepository.findByFridge_IdAndIsEnable(fridgeIdx, true).orElseThrow(CartNotFoundException::new);
     }
 }

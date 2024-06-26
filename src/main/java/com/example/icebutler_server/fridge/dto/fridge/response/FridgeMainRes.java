@@ -20,13 +20,13 @@ public class FridgeMainRes {
 
   public static FridgeMainRes toFridgeDto(FridgeDiscardRes fridgeDiscard, List<FridgeFood> fridgeFoods) {
     return new FridgeMainRes(isNullFoodDiscardRes(fridgeDiscard), fridgeFoods.stream()
-            .map(ff -> new FridgeFoodsRes(ff.getFridgeFoodIdx(), ff.getFood().getFoodName(), AwsS3ImageUrlUtil.toUrl(ff.getFood().getFoodImgKey()), FridgeUtils.calShelfLife(ff.getShelfLife())))
+            .map(ff -> new FridgeFoodsRes(ff.getId(), ff.getFood().getFoodName(), AwsS3ImageUrlUtil.toUrl(ff.getFood().getFoodImgKey()), FridgeUtils.calShelfLife(ff.getShelfLife())))
             .collect(Collectors.toList()));
   }
 
   public static FridgeMainRes toMultiDto(FridgeDiscardRes fridgeDiscard, List<MultiFridgeFood> fridgeFoods) {
     return new FridgeMainRes(isNullFoodDiscardRes(fridgeDiscard), fridgeFoods.stream()
-            .map(ff -> new FridgeFoodsRes(ff.getMultiFridgeFoodIdx(), ff.getFood().getFoodName(), AwsS3ImageUrlUtil.toUrl(ff.getFood().getFoodImgKey()), FridgeUtils.calShelfLife(ff.getShelfLife())))
+            .map(ff -> new FridgeFoodsRes(ff.getId(), ff.getFood().getFoodName(), AwsS3ImageUrlUtil.toUrl(ff.getFood().getFoodImgKey()), FridgeUtils.calShelfLife(ff.getShelfLife())))
             .collect(Collectors.toList()));
   }
 

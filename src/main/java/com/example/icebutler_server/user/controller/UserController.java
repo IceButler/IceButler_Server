@@ -55,7 +55,7 @@ public class UserController {
   @ResponseBody
   @PatchMapping("/profile")
   public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
-                                         @IsLogin LoginStatus loginStatus) {
+                                         @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
     userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
     return ResponseCustom.OK();
   }

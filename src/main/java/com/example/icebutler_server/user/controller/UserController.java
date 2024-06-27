@@ -92,7 +92,6 @@ public class UserController {
   public ResponseCustom<MyProfileRes> profile(
           @IsLogin LoginStatus loginStatus
   ) {
-    System.out.println(loginStatus.getUserIdx());
     return ResponseCustom.OK(userService.checkProfile(loginStatus.getUserIdx()));
   }
 

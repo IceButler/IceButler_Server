@@ -82,3 +82,13 @@ jasypt:
   encryptor:
     bean : jasyptStringEncryptor
 barcode-service-key: ENC(PSZXf47H/3fHcQkCw7eSvF9U6vx+VN4ilYC6S99r3QA=)
+
+springdoc:
+  swagger-ui:
+    doc-expansion: none
+    tags-sorter: alpha
+    operations-sorter: method
+    display-request-duration: true
+    model-converters:
+      pageable-converter:
+        enabled: true

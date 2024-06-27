@@ -1,6 +1,7 @@
 package com.example.icebutler_server.user.controller;
 
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.dto.response.SwaggerApiSuccess;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import com.example.icebutler_server.user.dto.LoginUserReq;
@@ -9,7 +10,16 @@ import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.dto.response.MyNotificationRes;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
+import com.example.icebutler_server.user.dto.response.PostUserRes;
 import com.example.icebutler_server.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -19,19 +29,25 @@ import org.springframework.data.domain.Pageable;
 @RestController
 @RequestMapping(value = "/users")
 @RequiredArgsConstructor
+@Tag(name = "User", description = "유저 API")
+// @SecurityRequirement(name = "Bearer")
 public class UserController {
 
   private final UserService userService;
 
+  @Operation(summary = "유저 회원가입", description = "유저가 회원가입한다.")
+  @SwaggerApiSuccess(implementation = PostUserRes.class)
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "400", description = "부적절한 소셜로그인 provider 입력입니다.\t\n 사용자 이메일 값을 찾아올 수 없습니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class))),})
   @ResponseBody
   @PostMapping("/join")
-  public ResponseCustom<?> join(@RequestBody PostUserReq postUserReq) {
+  public ResponseCustom<PostUserRes> join(@RequestBody PostUserReq postUserReq) {
     return ResponseCustom.OK(userService.join(postUserReq));
   }
 
   @ResponseBody
   @PostMapping("/login")
-  public ResponseCustom<?> login(@RequestBody LoginUserReq loginUserReq) {
+  public ResponseCustom<PostUserRes> login(@RequestBody LoginUserReq loginUserReq) {
     return ResponseCustom.OK(userService.login(loginUserReq));
   }
 
@@ -39,7 +55,7 @@ public class UserController {
   @ResponseBody
   @PatchMapping("/profile")
   public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
-                                         @IsLogin LoginStatus loginStatus) {
+                                         @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
     userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
     return ResponseCustom.OK();
   }
@@ -82,7 +98,7 @@ public class UserController {
   //유저 닉네임 검색 조회
   @GetMapping("/search")
   public ResponseCustom<?> searchNickname(
-          @RequestParam String nickname
+          @Parameter(name = "nickname", description = "닉네임") @RequestParam String nickname
   ) {
     return ResponseCustom.OK(userService.searchNickname(nickname));
   }

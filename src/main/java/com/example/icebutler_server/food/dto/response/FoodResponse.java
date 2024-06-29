@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-@Schema(name = "FoodResponse", description = "식품 검색 정보(장바구니용)")
+@Schema(name = "FoodResponse", description = "장바구니 내 식품 정보")
 public class FoodResponse {
     @Schema(name = "식품 ID")
     private Long foodIdx;

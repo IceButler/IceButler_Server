@@ -1,16 +1,23 @@
 package com.example.icebutler_server.fridge.controller;
 
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
+import com.example.icebutler_server.fridge.dto.fridge.response.*;
 import com.example.icebutler_server.fridge.exception.FridgeTypeNotFoundException;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.fridge.service.MultiFridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
+import com.example.icebutler_server.global.dto.response.SwaggerApiSuccess;
 import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
 import com.example.icebutler_server.global.util.Constant;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -20,180 +27,286 @@ import java.util.List;
 @RequestMapping("/fridges")
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Fridge", description = "냉장고 API")
 public class FridgeController {
 
-  private final FridgeServiceImpl fridgeService;
-  private final MultiFridgeServiceImpl multiFridgeService;
+    private final FridgeServiceImpl fridgeService;
+    private final MultiFridgeServiceImpl multiFridgeService;
 
-  @GetMapping("/health")
-  public ResponseCustom<Void> healthCheck() {
-    return ResponseCustom.OK();
-  }
-
-  // 냉장고 추가
-  @Auth
-  @PostMapping("/register")
-  public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
-                                          @RequestParam(value = "fridgeType") String fridgeType,
-                                          @IsLogin LoginStatus loginStatus) {
-    if(fridgeType.equals(Constant.FRIDGE)){
-      return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
-    } else if(fridgeType.equals(Constant.MULTI_FRIDGE)){
-      return ResponseCustom.OK(multiFridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
-    } else {
-      throw new FridgeTypeNotFoundException();
+    @GetMapping("/health")
+    public ResponseCustom<Void> healthCheck() {
+        return ResponseCustom.OK();
     }
-  }
 
-  // 냉장고 업데이트
-  @Auth
-  @PatchMapping("/{fridgeIdx}")
-  public ResponseCustom<?> modifyFridge(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                        @RequestBody FridgeModifyReq fridgeModifyReq,
-                                        @IsLogin LoginStatus loginStatus) {
-    fridgeService.modifyFridge(fridgeIdx, fridgeModifyReq, loginStatus.getUserIdx());
-    return ResponseCustom.OK();
-  }
+    @Operation(summary = "냉장고 추가", description = "냉장고를 추가한다.")
+    @SwaggerApiSuccess(implementation = ResponseCustom.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "냉장고 이름를 입력하지 않았습니다.\t\n" +
+                    "존재하지 않는 냉장고 유형입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @PostMapping("/register")
+    public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
+                                            @Parameter(name = "냉장고 타입") @RequestParam String fridgeType,
+                                            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        if (fridgeType.equals(Constant.FRIDGE)) {
+            return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
+        } else if (fridgeType.equals(Constant.MULTI_FRIDGE)) {
+            return ResponseCustom.OK(multiFridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
+        } else {
+            throw new FridgeTypeNotFoundException();
+        }
+    }
 
-  // 냉장고 삭제
-  @Auth
-  @PatchMapping("/{fridgeIdx}/remove")
-  public ResponseCustom<?> removeFridge(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                        @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.removeFridge(fridgeIdx, loginStatus.getUserIdx()));
-  }
+    @Operation(summary = "냉장고 수정", description = "냉장고를 수정한다.")
+    @SwaggerApiSuccess(implementation = ResponseCustom.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "냉장고 이름를 입력하지 않았습니다.\t\n" +
+                    "존재하지 않는 냉장고 유형입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @PatchMapping("/{fridgeIdx}")
+    public ResponseCustom<?> modifyFridge(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                          @RequestBody FridgeModifyReq fridgeModifyReq,
+                                          @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        fridgeService.modifyFridge(fridgeIdx, fridgeModifyReq, loginStatus.getUserIdx());
+        return ResponseCustom.OK();
+    }
 
-  @Auth
-  @PatchMapping("/{fridgeIdx}/remove/each")
-  public ResponseCustom<?> removeFridgeUser(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                            @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.removeFridgeUser(fridgeIdx, loginStatus.getUserIdx()));
-  }
+    @Operation(summary = "냉장고 삭제", description = "냉장고를 삭제한다.")
+    @SwaggerApiSuccess(implementation = ResponseCustom.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.\t\n" +
+                    "올바르지 않은 접근 권한입니다.\t\n" +
+                    "올바르지 않은 냉장고 삭제 조건입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @PatchMapping("/{fridgeIdx}/remove")
+    public ResponseCustom<Long> removeFridge(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                             @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        return ResponseCustom.OK(fridgeService.removeFridge(fridgeIdx, loginStatus.getUserIdx()));
+    }
 
-  // [Get] 냉장고 식품 전체 조회
-  @Auth
-  @GetMapping("/{fridgeIdx}/foods")
-  public ResponseCustom<FridgeMainRes> getFoods(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                                @IsLogin LoginStatus loginStatus,
-                                                @RequestParam(required = false) String category) {
-    return ResponseCustom.OK(fridgeService.getFoods(fridgeIdx, loginStatus.getUserIdx(), category));
-  }
+    @Operation(summary = "냉장고 사용자 삭제", description = "냉장고 사용자를 삭제한다.")
+    @SwaggerApiSuccess(implementation = ResponseCustom.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.\t\n" +
+                    "올바르지 않은 접근 권한입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @PatchMapping("/{fridgeIdx}/remove/each")
+    public ResponseCustom<Long> removeFridgeUser(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                                 @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        return ResponseCustom.OK(fridgeService.removeFridgeUser(fridgeIdx, loginStatus.getUserIdx()));
+    }
 
-  // 냉장고 내 식품 검색 조회
-  @Auth
-  @GetMapping("/{fridgeIdx}/search")
-  public ResponseCustom<List<FridgeFoodsRes>> searchFridgeFood(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                                               @RequestParam(value = "keyword") String keyword,
-                                                               @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.searchFridgeFood(fridgeIdx, loginStatus.getUserIdx(), keyword));
-  }
-
-  // 냉장고 내 식품 상세 조회
-  @Auth
-  @GetMapping("/{fridgeIdx}/foods/{fridgeFoodIdx}")
-  public ResponseCustom<?> getFridgeFood(@PathVariable Long fridgeIdx,
-                                         @PathVariable Long fridgeFoodIdx,
-                                         @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(fridgeService.getFridgeFood(fridgeIdx, fridgeFoodIdx, loginStatus.getUserIdx()));
-  }
-
-  // 냉장고 내 식품 추가
-  @Auth
-  @PostMapping("/{fridgeIdx}/food")
-  public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodsReq fridgeFoodsReq,
-                                         @PathVariable Long fridgeIdx,
-                                         @IsLogin LoginStatus loginStatus) {
-    fridgeService.addFridgeFood(fridgeFoodsReq, fridgeIdx, loginStatus.getUserIdx());
-    return ResponseCustom.OK();
-  }
-
-  // 냉장고 내 식품 수정
-  @Auth
-  @PatchMapping("/{fridgeIdx}/foods/{fridgeFoodIdx}")
-  public ResponseCustom<?> modifyFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
-                                            @PathVariable Long fridgeIdx,
-                                            @PathVariable Long fridgeFoodIdx,
-                                            @IsLogin LoginStatus loginStatus) {
-    fridgeService.modifyFridgeFood(fridgeIdx, fridgeFoodIdx, fridgeFoodReq, loginStatus.getUserIdx());
-    return ResponseCustom.OK();
-  }
-
-  // 냉장고 내 식품 삭제(폐기/섭취)
-  @Auth
-  @DeleteMapping("/{fridgeIdx}/foods")
-  public ResponseCustom<?> deleteFridgeFood(@RequestBody DeleteFridgeFoodsReq deleteFridgeFoodsReq,
-                                            @RequestParam String type,
-                                            @PathVariable Long fridgeIdx,
-                                            @IsLogin LoginStatus loginStatus) {
-    fridgeService.deleteFridgeFood(deleteFridgeFoodsReq, type, fridgeIdx, loginStatus.getUserIdx());
-    return ResponseCustom.OK();
-  }
-
-  //냉장고 내 유저 조회
-  @Auth
-  @GetMapping("{fridgeIdx}/members")
-  public ResponseCustom<?> getMembers(
-          @PathVariable(name = "fridgeIdx") Long fridgeIdx,
-          @IsLogin LoginStatus loginStatus
-  ) {
-    return ResponseCustom.OK(fridgeService.searchMembers(fridgeIdx, loginStatus.getUserIdx()));
-  }
-
-  //냉장고 선택
-  @Auth
-  @GetMapping("/select")
-  public ResponseCustom<?> selectFridges(
-          @IsLogin LoginStatus loginStatus
-  ) {
-    return ResponseCustom.OK(fridgeService.selectFridges(loginStatus.getUserIdx()));
-  }
-
-  //마이 냉장고 전체 조회
-  @Auth
-  @GetMapping("")
-  public ResponseCustom<?> myFridge(
-//          @PathVariable(name = "fridgeIdx") Long fridgeIdx,
-          @IsLogin LoginStatus loginStatus
-  ) {
-    return ResponseCustom.OK(fridgeService.myFridge(loginStatus.getUserIdx()));
-  }
-
-  /**
-   * [Get] 냉장고 통계 (낭비/소비)
-   */
-  @Auth
-  @GetMapping("/{fridgeIdx}/statistics")
-  public ResponseCustom<?> getFridgeFoodStatistics(@PathVariable(name = "fridgeIdx") Long fridgeIdx,
-                                                   @RequestParam String deleteCategory,
-                                                   @RequestParam Integer year,
-                                                   @RequestParam Integer month,
-                                                   @IsLogin LoginStatus status){
-    return ResponseCustom.OK(fridgeService.getFridgeFoodStatistics(fridgeIdx, deleteCategory, status.getUserIdx(), year, month));
-  }
+    @Operation(summary = "냉장고 식품 전체 조회(카테고리별)", description = "냉장고 내 식품을 전체조회한다.")
+    @SwaggerApiSuccess(implementation = FridgeMainRes.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 카테고리입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @GetMapping("/{fridgeIdx}/foods")
+    public ResponseCustom<FridgeMainRes> getFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                                  @Parameter(hidden = true) @IsLogin LoginStatus loginStatus,
+                                                  @Parameter(name = "식품 카테고리") @RequestParam(required = false) String category) {
+        return ResponseCustom.OK(fridgeService.getFoods(fridgeIdx, loginStatus.getUserIdx(), category));
+    }
 
 
-  // 알림
-  @Scheduled(cron="0 50 18 * * ?", zone="GMT+9:00")
-  public void notifyFridgeFood() {
-    fridgeService.notifyFridgeFood();
-    multiFridgeService.notifyFridgeFood();
-  }
+    @Operation(summary = "냉장고 식품 검색 조회", description = "냉장고 내 식품을 검색한다.")
+    @SwaggerApiSuccess(implementation = FridgeFoodsRes.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 냉장고를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @GetMapping("/{fridgeIdx}/search")
+    public ResponseCustom<List<FridgeFoodsRes>> searchFridgeFood(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                                                 @Parameter(name = "식품명") @RequestParam String keyword,
+                                                                 @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        return ResponseCustom.OK(fridgeService.searchFridgeFood(fridgeIdx, loginStatus.getUserIdx(), keyword));
+    }
 
-  // 레시피 정보 전달 api
+    @Operation(summary = "냉장고 식품 상세 조회", description = "냉장고 내 식품을 상세 조회한다.")
+    @SwaggerApiSuccess(implementation = FridgeFoodsRes.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고 내 식품을 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @GetMapping("/{fridgeIdx}/foods/{fridgeFoodIdx}")
+    public ResponseCustom<FridgeFoodRes> getFridgeFood(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                                       @Parameter(name = "냉장고 내 식품 ID") @PathVariable Long fridgeFoodIdx,
+                                                       @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        return ResponseCustom.OK(fridgeService.getFridgeFood(fridgeIdx, fridgeFoodIdx, loginStatus.getUserIdx()));
+    }
 
-  /**
-   * [Get] 사용자가 속한 가정용/공용 냉장고 food list
-   */
-  // todo: 토큰 추가하기
-  @GetMapping("/food-lists")
-  public ResponseCustom<?> getFridgeUserFoodList(@RequestParam(name = "fridgeIdx", required = false) Long fridgeIdx,
-                                                                        @RequestParam(name = "multiFridgeIdx", required = false) Long multiFridgeIdx,
-                                                                        @RequestParam(name = "userIdx") Long userIdx){
-    if(fridgeIdx != null && multiFridgeIdx == null){
-      return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, userIdx));
-    }else if(multiFridgeIdx != null && fridgeIdx == null) {
-      return ResponseCustom.OK(this.multiFridgeService.getFridgeUserFoodList(multiFridgeIdx, userIdx));
-    }else throw new FridgeTypeNotFoundException();
+    @Operation(summary = "냉장고 식품 추가", description = "냉장고 내 식품을 추가한다.")
+    @SwaggerApiSuccess(implementation = ResponseCustom.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 카테고리입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @PostMapping("/{fridgeIdx}/food")
+    public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodsReq fridgeFoodsReq,
+                                           @Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        fridgeService.addFridgeFood(fridgeFoodsReq, fridgeIdx, loginStatus.getUserIdx());
+        return ResponseCustom.OK();
+    }
 
-  }
+    @Operation(summary = "냉장고 식품 수정", description = "냉장고 내 식품을 수정한다.")
+    @SwaggerApiSuccess(implementation = ResponseCustom.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 카테고리입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고 내 식품을 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @PatchMapping("/{fridgeIdx}/foods/{fridgeFoodIdx}")
+    public ResponseCustom<?> modifyFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
+                                              @Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                              @Parameter(name = "냉장고 내 식품 ID") @PathVariable Long fridgeFoodIdx,
+                                              @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        fridgeService.modifyFridgeFood(fridgeIdx, fridgeFoodIdx, fridgeFoodReq, loginStatus.getUserIdx());
+        return ResponseCustom.OK();
+    }
+
+    @Operation(summary = "냉장고 식품 삭제", description = "냉장고 내 식품을 삭제한다.")
+    @SwaggerApiSuccess(implementation = ResponseCustom.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 식품삭제 타입입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
+                    "요청한 id를 가진 냉장고 내 식품을 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @DeleteMapping("/{fridgeIdx}/foods")
+    public ResponseCustom<?> deleteFridgeFood(@RequestBody DeleteFridgeFoodsReq deleteFridgeFoodsReq,
+                                              @Parameter(name = "삭제 타입(폐기/섭취)") @RequestParam String type,
+                                              @Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                              @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        fridgeService.deleteFridgeFood(deleteFridgeFoodsReq, type, fridgeIdx, loginStatus.getUserIdx());
+        return ResponseCustom.OK();
+    }
+
+    @Operation(summary = "냉장고 멤버 조회", description = "냉장고의 멤버를 조회한다.")
+    @SwaggerApiSuccess(implementation = FridgeUserMainRes.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 냉장고를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @GetMapping("{fridgeIdx}/members")
+    public ResponseCustom<?> getMembers(
+            @Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus
+    ) {
+        return ResponseCustom.OK(fridgeService.searchMembers(fridgeIdx, loginStatus.getUserIdx()));
+    }
+
+    @Operation(summary = "냉장고 선택목록 조회", description = "냉장고 선택목록을 조회한다.")
+    @SwaggerApiSuccess(implementation = SelectFridgesMainRes.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @GetMapping("/select")
+    public ResponseCustom<SelectFridgesMainRes> selectFridges(
+            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus
+    ) {
+        return ResponseCustom.OK(fridgeService.selectFridges(loginStatus.getUserIdx()));
+    }
+
+    @Operation(summary = "냉장고 목록 조회", description = "냉장고 목록을 조회한다.")
+    @SwaggerApiSuccess(implementation = ResponseCustom.class)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+    })
+    @Auth
+    @GetMapping("")
+    public ResponseCustom<GetFridgesMainRes> myFridge(
+            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus
+    ) {
+        return ResponseCustom.OK(fridgeService.myFridge(loginStatus.getUserIdx()));
+    }
+
+    /**
+     * [Get] 냉장고 통계 (낭비/소비)
+     */
+    @Auth
+    @GetMapping("/{fridgeIdx}/statistics")
+    public ResponseCustom<?> getFridgeFoodStatistics(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+                                                     @Parameter(name = "통계 타입(낭비/소비)") @RequestParam String deleteCategory,
+                                                     @Parameter(name = "연도") @RequestParam Integer year,
+                                                     @Parameter(name = "월") @RequestParam Integer month,
+                                                     @Parameter(hidden = true) @IsLogin LoginStatus status) {
+        return ResponseCustom.OK(fridgeService.getFridgeFoodStatistics(fridgeIdx, deleteCategory, status.getUserIdx(), year, month));
+    }
+
+
+    // 알림
+    @Scheduled(cron = "0 50 18 * * ?", zone = "GMT+9:00")
+    public void notifyFridgeFood() {
+        fridgeService.notifyFridgeFood();
+        multiFridgeService.notifyFridgeFood();
+    }
+
+    // 레시피 정보 전달 api
+
+    /**
+     * [Get] 사용자가 속한 가정용/공용 냉장고 food list
+     */
+    // todo: 토큰 추가하기
+    @GetMapping("/food-lists")
+    public ResponseCustom<?> getFridgeUserFoodList(@Parameter(name = "냉장고 ID") @RequestParam(required = false) Long fridgeIdx,
+                                                   @Parameter(name = "공용냉장고 ID(삭제예정)") @RequestParam(required = false) Long multiFridgeIdx,
+                                                   @Parameter(name = "사용자 ID") @RequestParam Long userIdx) {
+        if (fridgeIdx != null && multiFridgeIdx == null) {
+            return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, userIdx));
+        } else if (multiFridgeIdx != null && fridgeIdx == null) {
+            return ResponseCustom.OK(this.multiFridgeService.getFridgeUserFoodList(multiFridgeIdx, userIdx));
+        } else throw new FridgeTypeNotFoundException();
+
+    }
 }

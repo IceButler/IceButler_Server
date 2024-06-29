@@ -33,7 +33,8 @@ public class CartController {
     private final CartServiceImpl cartService;
 
     @Operation(summary = "장바구니 식품 조회", description = "장바구니 식품 목록을 조회한다.")
-    @SwaggerApiSuccess(implementation = CartResponse.class)@ApiResponses(value = {
+    @SwaggerApiSuccess(implementation = CartResponse.class)
+    @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
             @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +

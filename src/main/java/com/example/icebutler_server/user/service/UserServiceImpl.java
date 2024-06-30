@@ -8,9 +8,9 @@ import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepositor
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;
+import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.global.util.redis.RedisTemplateService;
 import com.example.icebutler_server.global.util.redis.RedisUtils;
-import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.LoginUserReq;
 import com.example.icebutler_server.user.dto.assembler.UserAssembler;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
@@ -23,11 +23,10 @@ import com.example.icebutler_server.user.exception.*;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;

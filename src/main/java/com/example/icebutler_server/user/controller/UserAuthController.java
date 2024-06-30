@@ -9,8 +9,6 @@ import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.response.MyNotificationRes;
 import com.example.icebutler_server.user.dto.response.MyProfileRes;
-import com.example.icebutler_server.user.dto.response.PostNickNameRes;
-import com.example.icebutler_server.user.dto.response.PostUserRes;
 import com.example.icebutler_server.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +21,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 

@@ -49,7 +49,7 @@ public class FridgeController {
     })
     @Auth
     @PostMapping("/register")
-    public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
+    public ResponseCustom<Long> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
                                             @Parameter(name = "냉장고 타입") @RequestParam String fridgeType,
                                             @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
         if (fridgeType.equals(Constant.FRIDGE)) {
@@ -236,7 +236,7 @@ public class FridgeController {
     })
     @Auth
     @GetMapping("{fridgeIdx}/members")
-    public ResponseCustom<?> getMembers(
+    public ResponseCustom<FridgeUserMainRes> getMembers(
             @Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
             @Parameter(hidden = true) @IsLogin LoginStatus loginStatus
     ) {
@@ -258,7 +258,7 @@ public class FridgeController {
     }
 
     @Operation(summary = "냉장고 목록 조회", description = "냉장고 목록을 조회한다.")
-    @SwaggerApiSuccess(implementation = ResponseCustom.class)
+    @SwaggerApiSuccess(implementation = GetFridgesMainRes.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),

@@ -5,6 +5,7 @@ import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.user.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,11 +20,17 @@ import static com.example.icebutler_server.user.entity.QUser.user;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "FridgeRes", description = "가정용 냉장고 정보")
 public class FridgeRes {
+  @Schema(name = "fridgeIdx", description = "냉장고 ID")
   private Long fridgeIdx;
+  @Schema(name = "fridgeName", description = "냉장고 이름")
   private String fridgeName;
+  @Schema(name = "comment", description = "냉장고 설명")
   private String comment;
+  @Schema(name = "users", description = "냉장고 유저 정보")
   private List<FridgeUserRes> users;
+  @Schema(name = "userCnt", description = "냉장고 유저수")
   private Integer userCnt;
 
   public static FridgeRes toDto(Fridge fridge, List<List<FridgeUser>> fridgeUserList) {

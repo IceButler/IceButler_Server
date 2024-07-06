@@ -2,11 +2,6 @@ package com.example.icebutler_server.fridge.dto.response;
 
 import com.example.icebutler_server.fridge.entity.Fridge;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
-import com.example.icebutler_server.fridge.entity.fridge.Fridge;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
-import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
-import com.example.icebutler_server.global.entity.FridgeRole;
-import com.example.icebutler_server.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

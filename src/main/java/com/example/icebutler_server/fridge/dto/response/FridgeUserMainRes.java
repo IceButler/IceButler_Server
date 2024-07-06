@@ -1,7 +1,6 @@
 package com.example.icebutler_server.fridge.dto.response;
 
 import com.example.icebutler_server.fridge.entity.FridgeUser;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

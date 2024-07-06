@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.icebutler_server.global.util.Constant.FRIDGE;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -22,7 +20,7 @@ public class SelectFridgesMainRes {
   public static SelectFridgesMainRes toDto(List<FridgeUser> fridgeUsers) {
     SelectFridgesMainRes selectFridgesMainRes = new SelectFridgesMainRes();
 
-    selectFridgesMainRes.fridgeList = fridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getFridge().getFridgeName(), m.getFridge().getId(), FRIDGE)).collect(Collectors.toList());
+    selectFridgesMainRes.fridgeList = fridgeUsers.stream().map(m -> SelectFridgeRes.toDto(m.getFridge().getFridgeName(), m.getFridge().getId())).collect(Collectors.toList());
 
     return selectFridgesMainRes;
   }

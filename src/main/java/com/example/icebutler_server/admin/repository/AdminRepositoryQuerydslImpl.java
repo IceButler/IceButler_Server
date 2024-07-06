@@ -37,7 +37,7 @@ public class AdminRepositoryQuerydslImpl implements  AdminRepositoryQuerydsl{
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(user.userIdx.desc())
+                .orderBy(user.id.desc())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory

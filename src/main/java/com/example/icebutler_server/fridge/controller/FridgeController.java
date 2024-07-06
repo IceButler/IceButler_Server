@@ -3,13 +3,11 @@ package com.example.icebutler_server.fridge.controller;
 import com.example.icebutler_server.fridge.dto.fridge.request.*;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
-import com.example.icebutler_server.fridge.exception.FridgeTypeNotFoundException;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
-import com.example.icebutler_server.global.util.Constant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +30,8 @@ public class FridgeController {
   @Auth
   @PostMapping("/register")
   public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
-                                          @RequestParam(value = "fridgeType") String fridgeType,
                                           @IsLogin LoginStatus loginStatus) {
-    if(fridgeType.equals(Constant.FRIDGE)){
-      return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
-    } else {
-      throw new FridgeTypeNotFoundException();
-    }
+    return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
   }
 
   // 냉장고 업데이트
@@ -177,15 +170,12 @@ public class FridgeController {
   // 레시피 정보 전달 api
 
   /**
-   * [Get] 사용자가 속한 가정용 냉장고 food list
+   * [Get] 사용자가 속한 냉장고 food list
    */
   // todo: 토큰 추가하기
   @GetMapping("/food-lists")
   public ResponseCustom<?> getFridgeUserFoodList(@RequestParam(name = "fridgeIdx", required = false) Long fridgeIdx,
                                                                         @RequestParam(name = "userIdx") Long userIdx){
-    if(fridgeIdx != null){
-      return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, userIdx));
-    } else throw new FridgeTypeNotFoundException();
-
+    return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, userIdx));
   }
 }

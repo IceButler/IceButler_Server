@@ -1,5 +1,7 @@
 package com.example.icebutler_server.global.dto.response;
 
+import com.example.icebutler_server.global.exception.ReturnCode;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
@@ -7,137 +9,44 @@ import org.springframework.lang.Nullable;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@ToString
-@NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class ResponseCustom<T>{
 
+    private String code;
+    private String message;
+    private int httpStatus;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
-    private LocalDateTime transaction_time;
-    private HttpStatus status;
-    private String description;
-    private int statusCode;
+    private LocalDateTime timeStamp;
 
-    @Builder
-    public ResponseCustom(T data, LocalDateTime transaction_time, HttpStatus status, String description, int statusCode) {
+    // 성공
+    public ResponseCustom(T data) {
         this.data = data;
-        this.transaction_time = transaction_time;
-        this.status = status;
-        this.description = description;
-        this.statusCode = statusCode;
+        this.timeStamp = LocalDateTime.now();
+        this.httpStatus = HttpStatus.OK.value();
+        this.message = ReturnCode.SUCCESS.getMessage();
+        this.code = ReturnCode.SUCCESS.getCode();
     }
 
-    // OK
-    public static <T> ResponseCustom<T> CREATED(@Nullable T data) {
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.OK)
-                .statusCode(HttpStatus.OK.value())
-                .data(data)
-                .build();
+    // 에러
+    public ResponseCustom(ReturnCode returnCode) {
+        this.data = null;
+        this.timeStamp = LocalDateTime.now();
+        this.httpStatus = returnCode.status.value();
+        this.message = returnCode.getMessage();
+        this.code = returnCode.getCode();
     }
 
-    public static <T> ResponseCustom<T> OK(@Nullable T data) {
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.OK)
-                .statusCode(HttpStatus.OK.value())
-                .data(data)
-                .build();
+    public static <T> ResponseCustom<T> success() {
+        return new ResponseCustom<>(null);
     }
 
-    public static <T> ResponseCustom<T> OK() {
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.OK)
-                .statusCode(HttpStatus.OK.value())
-                .build();
+    public static <T> ResponseCustom<T> success(@Nullable T data) {
+        return new ResponseCustom<>(data);
     }
 
-    public static <T> ResponseCustom<T> BAD_REQUEST(@Nullable String description){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST)
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .description(description)
-                .build();
-    }
-
-    public static <T> ResponseCustom<T> BAD_REQUEST(@Nullable T data){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST)
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .data(data)
-                .build();
-    }
-
-    public static <T> ResponseCustom<T> NOT_FOUND(@Nullable T data){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND)
-                .statusCode(HttpStatus.NOT_FOUND.value())
-                .data(data)
-                .build();
-    }
-
-    public static <T> ResponseCustom<T> NOT_FOUND(@Nullable String description){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND)
-                .statusCode(HttpStatus.NOT_FOUND.value())
-                .description(description)
-                .build();
-    }
-
-    public static <T> ResponseCustom<T> FORBIDDEN(){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.FORBIDDEN)
-                .statusCode(HttpStatus.FORBIDDEN.value())
-                .build();
-    }
-
-    public static <T> ResponseCustom<T> FORBIDDEN(String description){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.FORBIDDEN)
-                .statusCode(HttpStatus.FORBIDDEN.value())
-                .description(description)
-                .build();
-    }
-
-
-
-    public static <T> ResponseCustom<T> UNAUTHORIZED(){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.UNAUTHORIZED)
-                .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .build();
-    }
-
-    public static <T> ResponseCustom<T> INTERNAL_SERVER_ERROR(){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .build();
-    }
-
-    public static <T> ResponseCustom<T> INTERNAL_SERVER_ERROR(String description){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .description(description)
-                .build();
-    }
-
-    public static <T> ResponseCustom<T> JWT_EXPIRED(){
-        return (ResponseCustom<T>) ResponseCustom.builder()
-                .transaction_time(LocalDateTime.now())
-                .description("JWT_EXPIRED")
-                .statusCode(441)
-                .build();
+    public static <T> ResponseCustom<T> error(ReturnCode returnCode) {
+        return new ResponseCustom<>(returnCode);
     }
 }

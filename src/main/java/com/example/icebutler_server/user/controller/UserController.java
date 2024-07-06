@@ -38,7 +38,7 @@ public class UserController {
   @ResponseBody
   @PostMapping("/join")
   public ResponseCustom<PostUserRes> join(@RequestBody PostUserReq postUserReq) {
-    return ResponseCustom.OK(userService.join(postUserReq));
+    return ResponseCustom.success(userService.join(postUserReq));
   }
 
   @Operation(summary = "유저 로그인", description = "유저가 로그인한다.")
@@ -52,7 +52,7 @@ public class UserController {
   @ResponseBody
   @PostMapping("/login")
   public ResponseCustom<PostUserRes> login(@RequestBody LoginUserReq loginUserReq) {
-    return ResponseCustom.OK(userService.login(loginUserReq));
+    return ResponseCustom.success(userService.login(loginUserReq));
   }
 
   @Operation(summary = "유저 닉네임 중복 조회", description = "닉네임 중복 여부를 조회한다.")
@@ -63,7 +63,7 @@ public class UserController {
   @ResponseBody
   @PostMapping("/nickname")
   public ResponseCustom<PostNickNameRes> checkNickname(@RequestBody PostNicknameReq postNicknameReq) {
-    return ResponseCustom.OK(userService.checkNickname(postNicknameReq));
+    return ResponseCustom.success(userService.checkNickname(postNicknameReq));
   }
 
   @Operation(summary = "유저 닉네임 검색 조회", description = "닉네임으로 유저를 검색한다.")
@@ -71,7 +71,7 @@ public class UserController {
   @GetMapping("/search")
   public ResponseCustom<List<NickNameRes>> searchNickname(
           @Parameter(name = "nickname", description = "닉네임") @RequestParam String nickname) {
-    return ResponseCustom.OK(userService.searchNickname(nickname));
+    return ResponseCustom.success(userService.searchNickname(nickname));
   }
 
 }

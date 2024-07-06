@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,10 +47,10 @@ public class FoodController {
     @GetMapping("")
     public ResponseCustom<List<FoodRes>> searchFood(@Parameter(name = "category", description = "식품 카테고리") @RequestParam(required = false) String category,
                                                     @Parameter(name = "word", description = "검색어")@RequestParam(required = false) String word) {
-        if(category != null && word != null) return ResponseCustom.OK(foodService.getAllFoodByCategoryAndWord(category, word));
-        else if(category != null) return ResponseCustom.OK(foodService.getAllFoodByCategory(category));
-        else if(word != null) return ResponseCustom.OK(foodService.getAllFoodByWord(word));
-        else return ResponseCustom.OK(foodService.getAllFood());
+        if(category != null && word != null) return ResponseCustom.success(foodService.getAllFoodByCategoryAndWord(category, word));
+        else if(category != null) return ResponseCustom.success(foodService.getAllFoodByCategory(category));
+        else if(word != null) return ResponseCustom.success(foodService.getAllFoodByWord(word));
+        else return ResponseCustom.success(foodService.getAllFood());
     }
 
     @Operation(summary = "식품 바코드 조회", description = "바코드 번호로 식품을 조회한다.")
@@ -61,7 +59,7 @@ public class FoodController {
             content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
     @GetMapping("/barcode")
     public ResponseCustom<BarcodeFoodRes> searchByBarcode(@RequestParam String code_num) throws IOException, org.json.simple.parser.ParseException {
-        return ResponseCustom.OK(foodService.searchByBarcode(code_num));
+        return ResponseCustom.success(foodService.searchByBarcode(code_num));
     }
 
     @GetMapping("/hihitest")

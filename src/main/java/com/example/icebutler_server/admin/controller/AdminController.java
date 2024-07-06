@@ -1,10 +1,8 @@
 package com.example.icebutler_server.admin.controller;
 
-import com.example.icebutler_server.admin.dto.condition.SearchCond;
 import com.example.icebutler_server.admin.dto.request.*;
 import com.example.icebutler_server.admin.dto.response.*;
 import com.example.icebutler_server.admin.dto.response.AdminResponse;
-import com.example.icebutler_server.admin.dto.response.LoginResponse;
 import com.example.icebutler_server.admin.dto.response.LogoutResponse;
 import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
 import com.example.icebutler_server.admin.dto.response.PostAdminRes;
@@ -16,7 +14,6 @@ import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.*;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
 import com.example.icebutler_server.global.sqs.FoodData;
-import com.example.icebutler_server.user.dto.response.MyProfileRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,13 +38,13 @@ public class AdminController {
     @PostMapping("/join")
     public ResponseCustom<AdminResponse> join(@RequestBody JoinRequest request)
     {
-        return ResponseCustom.OK(adminService.join(request));
+        return ResponseCustom.success(adminService.join(request));
     }
 
     @PostMapping("/login")
     public ResponseCustom<PostAdminRes> login(@RequestBody LoginRequest request)
     {
-        return ResponseCustom.OK(adminService.login(request));
+        return ResponseCustom.success(adminService.login(request));
     }
 
     @Admin
@@ -55,7 +52,7 @@ public class AdminController {
     public ResponseCustom<LogoutResponse> logout(@IsAdminLogin AdminLoginStatus loginStatus)
     {
         adminService.logout(loginStatus.getAdminIdx());
-        return ResponseCustom.OK();
+        return ResponseCustom.success();
     }
 
     @Admin
@@ -67,7 +64,7 @@ public class AdminController {
             @RequestParam(defaultValue = "true") boolean active
     )
     {
-        return ResponseCustom.OK(adminService.search(pageable, nickname, active,loginStatus.getAdminIdx()));
+        return ResponseCustom.success(adminService.search(pageable, nickname, active,loginStatus.getAdminIdx()));
     }
 
     @Admin
@@ -79,7 +76,7 @@ public class AdminController {
     )
     {
         adminService.withdraw(userIdx, loginStatus.getAdminIdx(), request.getHeader("Authorization"));
-        return ResponseCustom.OK();
+        return ResponseCustom.success();
     }
 
     // 식품조회
@@ -89,7 +86,7 @@ public class AdminController {
     ,@IsAdminLogin AdminLoginStatus loginStatus
     )
     {
-        return ResponseCustom.OK(adminService.searchFoods(cond, pageable,loginStatus.getAdminIdx()));
+        return ResponseCustom.success(adminService.searchFoods(cond, pageable,loginStatus.getAdminIdx()));
     }
 
     // 식품수정
@@ -101,7 +98,7 @@ public class AdminController {
     )
     {
         adminService.modifyFood(foodIdx, request,loginStatus.getAdminIdx());
-        return ResponseCustom.OK();
+        return ResponseCustom.success();
     }
 
     // 식품삭제
@@ -111,7 +108,7 @@ public class AdminController {
             ,@IsAdminLogin AdminLoginStatus loginStatus
     ) {
         adminService.removeFoods(foodIdx,loginStatus.getAdminIdx());
-        return ResponseCustom.OK();
+        return ResponseCustom.success();
     }
 
     @GetMapping("/sqs-test")
@@ -126,6 +123,6 @@ public class AdminController {
         foodRepository.save(testFood);
         amazonSQSSender.sendMessage(FoodData.toDto(testFood));
 
-        return ResponseCustom.OK();
+        return ResponseCustom.success();
     }
 }

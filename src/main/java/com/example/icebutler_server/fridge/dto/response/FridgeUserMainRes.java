@@ -1,6 +1,8 @@
 package com.example.icebutler_server.fridge.dto.response;
 
 import com.example.icebutler_server.fridge.entity.FridgeUser;
+import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +15,9 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "FridgeUserMainRes", description = "냉장고 멤버 정보")
 public class FridgeUserMainRes {
+    @Schema(name = "fridgeUsers", description = "냉장고 멤버 정보")
     List<FridgeUsersRes> fridgeUsers;
 
     public static FridgeUserMainRes doDto(List<FridgeUser> fridgeUsers){

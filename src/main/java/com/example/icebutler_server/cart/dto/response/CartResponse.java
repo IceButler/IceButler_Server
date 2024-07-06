@@ -3,6 +3,7 @@ package com.example.icebutler_server.cart.dto.response;
 import com.example.icebutler_server.cart.entity.CartFood;
 import com.example.icebutler_server.food.dto.response.FoodResponse;
 import com.example.icebutler_server.food.entity.FoodCategory;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -14,8 +15,11 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Data
 @Getter
+@Schema(name = "CartResponse", description = "장바구니 정보")
 public class CartResponse {
+    @Schema(name = "category", description = "식품 카테고리")
     private String category;
+    @Schema(name = "cartFoods", description = "장바구니 내 식품목록")
     private List<FoodResponse> cartFoods;
 
     @Builder

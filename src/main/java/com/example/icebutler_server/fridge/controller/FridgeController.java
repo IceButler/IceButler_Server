@@ -34,13 +34,6 @@ public class FridgeController {
         return ResponseCustom.OK();
     }
 
-    // 냉장고 추가
-    @Auth
-    @PostMapping("/register")
-    public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
-                                            @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
-    }
 
     @Operation(summary = "냉장고 추가", description = "냉장고를 추가한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
@@ -54,7 +47,6 @@ public class FridgeController {
     @Auth
     @PostMapping("/register")
     public ResponseCustom<Long> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
-                                               @Parameter(name = "냉장고 타입") @RequestParam String fridgeType,
                                                @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
         return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
     }

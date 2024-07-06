@@ -18,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE food SET is_enable = false, update_at = current_timestamp WHERE food_id = ?")
+@SQLDelete(sql = "UPDATE food SET is_enable = false, updated_at = current_timestamp WHERE id = ?")
 @EntityListeners(FoodEntityListener.class)
 public class Food extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)

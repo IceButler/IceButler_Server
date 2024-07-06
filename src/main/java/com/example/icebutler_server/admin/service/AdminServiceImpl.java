@@ -110,7 +110,7 @@ public class AdminServiceImpl implements AdminService {
             return searchFoods;
         }
 
-        Page<Food> all = foodRepository.findByIsEnableOrderByUpdateAtDesc(true, pageable);
+        Page<Food> all = foodRepository.findByIsEnableOrderByUpdatedAtDesc(true, pageable);
         searchFoods = all.map(SearchFoodsResponse::toDto);
         return searchFoods;
     }

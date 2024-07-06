@@ -1,0 +1,12 @@
+package com.example.icebutler_server.fridge.repository;
+
+import com.example.icebutler_server.fridge.entity.Fridge;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface FridgeRepository extends JpaRepository<Fridge, Long> {
+    Optional<Fridge> findByIdAndIsEnable(Long fridgeIdx, Boolean isEnable);
+}

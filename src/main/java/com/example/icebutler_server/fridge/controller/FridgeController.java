@@ -1,16 +1,13 @@
 package com.example.icebutler_server.fridge.controller;
 
-import com.example.icebutler_server.fridge.dto.fridge.request.*;
-import com.example.icebutler_server.fridge.dto.fridge.response.*;
-import com.example.icebutler_server.fridge.exception.FridgeTypeNotFoundException;
+import com.example.icebutler_server.fridge.dto.request.*;
+import com.example.icebutler_server.fridge.dto.response.*;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
-import com.example.icebutler_server.fridge.service.MultiFridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.dto.response.SwaggerApiSuccess;
 import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.resolver.LoginStatus;
-import com.example.icebutler_server.global.util.Constant;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,11 +28,18 @@ import java.util.List;
 public class FridgeController {
 
     private final FridgeServiceImpl fridgeService;
-    private final MultiFridgeServiceImpl multiFridgeService;
 
     @GetMapping("/health")
     public ResponseCustom<Void> healthCheck() {
         return ResponseCustom.OK();
+    }
+
+    // 냉장고 추가
+    @Auth
+    @PostMapping("/register")
+    public ResponseCustom<?> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
+                                            @IsLogin LoginStatus loginStatus) {
+        return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
     }
 
     @Operation(summary = "냉장고 추가", description = "냉장고를 추가한다.")
@@ -50,15 +54,9 @@ public class FridgeController {
     @Auth
     @PostMapping("/register")
     public ResponseCustom<Long> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
-                                            @Parameter(name = "냉장고 타입") @RequestParam String fridgeType,
-                                            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        if (fridgeType.equals(Constant.FRIDGE)) {
-            return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
-        } else if (fridgeType.equals(Constant.MULTI_FRIDGE)) {
-            return ResponseCustom.OK(multiFridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
-        } else {
-            throw new FridgeTypeNotFoundException();
-        }
+                                               @Parameter(name = "냉장고 타입") @RequestParam String fridgeType,
+                                               @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
+        return ResponseCustom.OK(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserIdx()));
     }
 
     @Operation(summary = "냉장고 수정", description = "냉장고를 수정한다.")
@@ -289,24 +287,17 @@ public class FridgeController {
     @Scheduled(cron = "0 50 18 * * ?", zone = "GMT+9:00")
     public void notifyFridgeFood() {
         fridgeService.notifyFridgeFood();
-        multiFridgeService.notifyFridgeFood();
     }
 
     // 레시피 정보 전달 api
 
     /**
-     * [Get] 사용자가 속한 가정용/공용 냉장고 food list
+     * [Get] 사용자가 속한 냉장고 food list
      */
     // todo: 토큰 추가하기
     @GetMapping("/food-lists")
-    public ResponseCustom<?> getFridgeUserFoodList(@Parameter(name = "냉장고 ID") @RequestParam(required = false) Long fridgeIdx,
-                                                   @Parameter(name = "공용냉장고 ID(삭제예정)") @RequestParam(required = false) Long multiFridgeIdx,
-                                                   @Parameter(name = "사용자 ID") @RequestParam Long userIdx) {
-        if (fridgeIdx != null && multiFridgeIdx == null) {
-            return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, userIdx));
-        } else if (multiFridgeIdx != null && fridgeIdx == null) {
-            return ResponseCustom.OK(this.multiFridgeService.getFridgeUserFoodList(multiFridgeIdx, userIdx));
-        } else throw new FridgeTypeNotFoundException();
-
+    public ResponseCustom<?> getFridgeUserFoodList(@RequestParam(name = "fridgeIdx", required = false) Long fridgeIdx,
+                                                   @RequestParam(name = "userIdx") Long userIdx) {
+        return ResponseCustom.OK(this.fridgeService.getFridgeUserFoodList(fridgeIdx, userIdx));
     }
 }

@@ -1,28 +1,24 @@
 package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.alarm.service.NotificationServiceImpl;
-import com.example.icebutler_server.cart.dto.cart.assembler.CartAssembler;
-import com.example.icebutler_server.cart.repository.cart.CartRepository;
+import com.example.icebutler_server.cart.dto.assembler.CartAssembler;
+import com.example.icebutler_server.cart.repository.CartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.food.repository.FoodRepository;
-import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeAssembler;
-import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeFoodAssembler;
-import com.example.icebutler_server.fridge.dto.fridge.request.*;
-import com.example.icebutler_server.fridge.dto.fridge.response.*;
-import com.example.icebutler_server.fridge.entity.fridge.Fridge;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeUser;
+import com.example.icebutler_server.fridge.dto.assembler.FridgeAssembler;
+import com.example.icebutler_server.fridge.dto.assembler.FridgeFoodAssembler;
+import com.example.icebutler_server.fridge.dto.request.*;
+import com.example.icebutler_server.fridge.dto.response.*;
+import com.example.icebutler_server.fridge.entity.Fridge;
+import com.example.icebutler_server.fridge.entity.FridgeFood;
+import com.example.icebutler_server.fridge.entity.FridgeUser;
 import com.example.icebutler_server.fridge.exception.*;
-import com.example.icebutler_server.fridge.repository.fridge.FridgeFood.FridgeFoodRepository;
-import com.example.icebutler_server.fridge.repository.fridge.FridgeRepository;
-import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepository;
-import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeRepository;
-import com.example.icebutler_server.fridge.repository.multiFridge.MultiFridgeUserRepository;
+import com.example.icebutler_server.fridge.repository.FridgeFood.FridgeFoodRepository;
+import com.example.icebutler_server.fridge.repository.FridgeRepository;
+import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
 import com.example.icebutler_server.global.sqs.FoodData;
@@ -46,14 +42,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FridgeServiceImpl implements FridgeService {
 
-    private final FridgeRepository fridgeRepository;
-    private final FridgeUserRepository fridgeUserRepository;
-    private final MultiFridgeRepository multiFridgeRepository;
-    private final MultiFridgeUserRepository multiFridgeUserRepository;
-    private final UserRepository userRepository;
-    private final FridgeFoodRepository fridgeFoodRepository;
-    private final FoodRepository foodRepository;
-    private final CartRepository cartRepository;
+  private final FridgeRepository fridgeRepository;
+  private final FridgeUserRepository fridgeUserRepository;
+  private final UserRepository userRepository;
+  private final FridgeFoodRepository fridgeFoodRepository;
+  private final FoodRepository foodRepository;
+  private final CartRepository cartRepository;
 
     private final FridgeAssembler fridgeAssembler;
     private final FridgeFoodAssembler fridgeFoodAssembler;
@@ -122,9 +116,8 @@ public class FridgeServiceImpl implements FridgeService {
             this.fridgeAssembler.toUpdateFridgeOwner(owner, newOwner);
         }
 
-        // 냉장고 정보 (이름, 설명) 업데이트
-        if (!StringUtils.hasText(updateFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
-        this.fridgeAssembler.toUpdateBasicMultiFridgeInfo(fridge, updateFridgeReq);
+    // 냉장고 정보 (이름, 설명) 업데이트
+    if (!StringUtils.hasText(updateFridgeReq.getFridgeName())) throw new FridgeNameEmptyException();
 
         // 멤버 업데이트
         if (updateFridgeReq.getMembers() != null) {
@@ -283,13 +276,13 @@ public class FridgeServiceImpl implements FridgeService {
         deleteFridgeFoods.forEach(food -> food.removeWithStatus(deleteStatus));
     }
 
-    @Override
-    //냉장고 내 유저 조회
-    public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx) {
-        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeIdx, true)
-                .orElseThrow(FridgeNotFoundException::new);
-        return FridgeUserMainRes.doDto(fridgeUserRepository.findByFridgeAndIsEnable(fridge, true));
-    }
+  @Override
+  //냉장고 내 유저 조회
+  public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx){
+    Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeIdx, true)
+            .orElseThrow(FridgeNotFoundException::new);
+    return FridgeUserMainRes.doDto(fridgeUserRepository.findByFridgeAndIsEnable(fridge,true));
+  }
 
     @Override
     public FridgeFoodsStatistics getFridgeFoodStatistics(Long fridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month) {
@@ -307,10 +300,10 @@ public class FridgeServiceImpl implements FridgeService {
         return this.fridgeFoodAssembler.toFoodStatisticsByDeleteStatus(deleteStatusList);
     }
 
-    public SelectFridgesMainRes selectFridges(Long userIdx) {
-        User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
-        return SelectFridgesMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user, true), multiFridgeUserRepository.findByUserAndIsEnable(user, true));
-    }
+  public SelectFridgesMainRes selectFridges(Long userIdx) {
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    return SelectFridgesMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user, true));
+  }
 
     public GetFridgesMainRes myFridge(Long userIdx) {
         User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
@@ -320,14 +313,9 @@ public class FridgeServiceImpl implements FridgeService {
         List<Fridge> fridges = fridgeUsers.stream().map(m -> fridgeRepository.findByIdAndIsEnable(m.getFridge().getId(), true).orElseThrow(FridgeNotFoundException::new)).collect(Collectors.toList());
         List<List<FridgeUser>> fridgeUserListList = fridges.stream().map(m -> fridgeUserRepository.findByFridgeAndIsEnableOrderByRoleDesc(m, true)).collect(Collectors.toList());
 
-        // 공용 냉장고 조회
-        List<MultiFridgeUser> multiFridgeUsers = multiFridgeUserRepository.findByUserAndIsEnable(user, true);
-        List<MultiFridge> multiFridges = multiFridgeUsers.stream().map(m -> multiFridgeRepository.findByIdAndIsEnable(m.getMultiFridge().getId(), true).orElseThrow(FridgeNotFoundException::new)).collect(Collectors.toList());
-        List<List<MultiFridgeUser>> multiFridgeUserListList = multiFridges.stream().map(m -> multiFridgeUserRepository.findByMultiFridgeAndIsEnableOrderByRoleDesc(m, true)).collect(Collectors.toList());
+    return GetFridgesMainRes.toDto(fridgeUserListList, userIdx);
 
-        return GetFridgesMainRes.toDto(fridgeUserListList, multiFridgeUserListList, userIdx);
-
-    }
+  }
 
     //  사용자가 속한 가정용/공용 냉장고 food list
     public RecipeFridgeFoodListsRes getFridgeUserFoodList(Long fridgeIdx, Long userIdx) {

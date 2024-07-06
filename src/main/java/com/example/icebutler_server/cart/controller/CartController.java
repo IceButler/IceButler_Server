@@ -4,7 +4,6 @@ import com.example.icebutler_server.cart.dto.request.AddFoodToCartRequest;
 import com.example.icebutler_server.cart.dto.request.RemoveFoodFromCartRequest;
 import com.example.icebutler_server.cart.dto.response.CartResponse;
 import com.example.icebutler_server.cart.service.CartServiceImpl;
-import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.dto.response.SwaggerApiSuccess;
 import com.example.icebutler_server.global.resolver.Auth;
@@ -46,7 +45,7 @@ public class CartController {
     @GetMapping("/{fridgeIdx}/foods")
     public ResponseCustom<List<CartResponse>> getCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
                                                            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.OK(cartService.getCartFoods(fridgeIdx, loginStatus.getUserIdx()));
+        return ResponseCustom.success(cartService.getCartFoods(fridgeIdx, loginStatus.getUserIdx()));
     }
 
     @Operation(summary = "장바구니 식품 추가", description = "장바구니에 식품을 추가한다.")
@@ -66,7 +65,7 @@ public class CartController {
                                           @RequestBody AddFoodToCartRequest request,
                                           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
         cartService.addCartFoods(fridgeIdx, request, loginStatus.getUserIdx());
-        return ResponseCustom.OK();
+        return ResponseCustom.success();
     }
 
     @Operation(summary = "장바구니 식품 삭제", description = "장바구니의 식품을 삭제한다.")
@@ -86,6 +85,6 @@ public class CartController {
                                              @RequestBody RemoveFoodFromCartRequest request,
                                              @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
         cartService.deleteCartFoods(fridgeIdx, request, loginStatus.getUserIdx());
-        return ResponseCustom.OK();
+        return ResponseCustom.success();
     }
 }

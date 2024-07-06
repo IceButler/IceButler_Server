@@ -40,7 +40,7 @@ public class UserAuthController {
   @Auth
   @GetMapping("/renew")
   public ResponseCustom<String> accessToken(@Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(tokenUtils.accessExpiration(loginStatus.getUserIdx()));
+    return ResponseCustom.success(tokenUtils.accessExpiration(loginStatus.getUserIdx()));
   }
 
   @Operation(summary = "유저 프로필 수정", description = "유저 프로필을 수정한다.")
@@ -54,7 +54,7 @@ public class UserAuthController {
   public ResponseCustom<?> modifyProfile(@RequestBody PatchProfileReq patchProfileReq,
                                          @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
     userService.modifyProfile(loginStatus.getUserIdx(), patchProfileReq);
-    return ResponseCustom.OK();
+    return ResponseCustom.success();
   }
 
   @Operation(summary = "유저 탈퇴", description = "유저를 탈퇴한다.")
@@ -69,7 +69,7 @@ public class UserAuthController {
   public ResponseCustom<?> deleteUser(
           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
     userService.deleteUser(loginStatus.getUserIdx());
-    return ResponseCustom.OK();
+    return ResponseCustom.success();
   }
 
   @Operation(summary = "유저 로그아웃", description = "유저를 로그아웃한다.")
@@ -82,7 +82,7 @@ public class UserAuthController {
   public ResponseCustom<?> logout(
           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
     userService.logout(loginStatus.getUserIdx());
-    return ResponseCustom.OK();
+    return ResponseCustom.success();
   }
 
   @Operation(summary = "유저 프로필 조회", description = "유저 프로필을 조회한다.")
@@ -94,7 +94,7 @@ public class UserAuthController {
   @GetMapping("")
   public ResponseCustom<MyProfileRes> profile(
           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-    return ResponseCustom.OK(userService.checkProfile(loginStatus.getUserIdx()));
+    return ResponseCustom.success(userService.checkProfile(loginStatus.getUserIdx()));
   }
 
   @Operation(summary = "유저 알림 목록", description = "유저 알림 목록을 조회한다.")
@@ -107,7 +107,7 @@ public class UserAuthController {
   public ResponseCustom<Page<MyNotificationRes>> getUserNotification(
           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus,
           @PageableDefault(size = 10) Pageable pageable) {
-    return ResponseCustom.OK(userService.getUserNotification(loginStatus.getUserIdx(), pageable));
+    return ResponseCustom.success(userService.getUserNotification(loginStatus.getUserIdx(), pageable));
   }
 
 }

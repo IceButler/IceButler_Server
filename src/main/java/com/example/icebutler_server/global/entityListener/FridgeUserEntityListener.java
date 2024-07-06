@@ -1,7 +1,7 @@
 package com.example.icebutler_server.global.entityListener;
 
-import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
-import com.example.icebutler_server.fridge.repository.fridge.FridgeFood.FridgeFoodRepository;
+import com.example.icebutler_server.fridge.entity.FridgeUser;
+import com.example.icebutler_server.fridge.repository.FridgeFood.FridgeFoodRepository;
 import com.example.icebutler_server.global.util.BeanUtils;
 
 import javax.persistence.PreRemove;

@@ -1,24 +1,24 @@
 package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.alarm.service.NotificationServiceImpl;
-import com.example.icebutler_server.cart.dto.cart.assembler.CartAssembler;
-import com.example.icebutler_server.cart.repository.cart.CartRepository;
+import com.example.icebutler_server.cart.dto.assembler.CartAssembler;
+import com.example.icebutler_server.cart.repository.CartRepository;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.food.repository.FoodRepository;
-import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeAssembler;
-import com.example.icebutler_server.fridge.dto.fridge.assembler.FridgeFoodAssembler;
-import com.example.icebutler_server.fridge.dto.fridge.request.*;
-import com.example.icebutler_server.fridge.dto.fridge.response.*;
-import com.example.icebutler_server.fridge.entity.fridge.Fridge;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
+import com.example.icebutler_server.fridge.dto.assembler.FridgeAssembler;
+import com.example.icebutler_server.fridge.dto.assembler.FridgeFoodAssembler;
+import com.example.icebutler_server.fridge.dto.request.*;
+import com.example.icebutler_server.fridge.dto.response.*;
+import com.example.icebutler_server.fridge.entity.Fridge;
+import com.example.icebutler_server.fridge.entity.FridgeFood;
+import com.example.icebutler_server.fridge.entity.FridgeUser;
 import com.example.icebutler_server.fridge.exception.*;
-import com.example.icebutler_server.fridge.repository.fridge.FridgeFood.FridgeFoodRepository;
-import com.example.icebutler_server.fridge.repository.fridge.FridgeRepository;
-import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepository;
+import com.example.icebutler_server.fridge.repository.FridgeFood.FridgeFoodRepository;
+import com.example.icebutler_server.fridge.repository.FridgeRepository;
+import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
 import com.example.icebutler_server.global.sqs.FoodData;
@@ -276,7 +276,7 @@ public class FridgeServiceImpl implements FridgeService {
 
   @Override
   //냉장고 내 유저 조회
-  public FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx){
+  public FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx){
     Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeIdx, true)
             .orElseThrow(FridgeNotFoundException::new);
     return FridgeUserMainRes.doDto(fridgeUserRepository.findByFridgeAndIsEnable(fridge,true));

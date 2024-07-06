@@ -1,0 +1,13 @@
+package com.example.icebutler_server.cart.dto.request;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@NoArgsConstructor
+@Data
+public class AddFoodToCartRequest {
+    private List<AddFoodRequest> foodRequests;
+
+}

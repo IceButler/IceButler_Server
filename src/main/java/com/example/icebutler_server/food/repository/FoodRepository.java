@@ -1,6 +1,5 @@
 package com.example.icebutler_server.food.repository;
 
-import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import org.springframework.data.domain.Page;
@@ -28,5 +27,5 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
   Food findByFoodNameAndIsEnable(String foodName, boolean status);
 
-  Page<Food> findByIsEnableOrderByUpdateAtDesc(boolean status, Pageable pageable);
+  Page<Food> findByIsEnableOrderByUpdatedAtDesc(boolean status, Pageable pageable);
 }

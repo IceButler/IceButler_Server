@@ -20,7 +20,7 @@ public class BaseEntity implements Serializable {
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     @Setter
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
@@ -30,12 +30,12 @@ public class BaseEntity implements Serializable {
     public void prePersist(){
         LocalDateTime now = LocalDateTime.now();
         createdAt = now;
-        updateAt = now;
+        updatedAt = now;
     }
 
     @PreUpdate
     public void preUpdate(){
-        updateAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
 }

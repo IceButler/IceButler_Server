@@ -1,9 +1,8 @@
 package com.example.icebutler_server.food.controller;
 
-import com.example.icebutler_server.cart.dto.cart.request.AddFoodRequest;
+import com.example.icebutler_server.cart.dto.request.AddFoodRequest;
 import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.food.service.FoodServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor

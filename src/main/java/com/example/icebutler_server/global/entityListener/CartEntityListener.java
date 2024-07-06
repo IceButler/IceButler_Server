@@ -1,7 +1,7 @@
 package com.example.icebutler_server.global.entityListener;
 
-import com.example.icebutler_server.cart.entity.cart.Cart;
-import com.example.icebutler_server.cart.repository.cart.CartFoodRepository;
+import com.example.icebutler_server.cart.entity.Cart;
+import com.example.icebutler_server.cart.repository.CartFoodRepository;
 import com.example.icebutler_server.global.util.BeanUtils;
 
 import javax.persistence.PreRemove;

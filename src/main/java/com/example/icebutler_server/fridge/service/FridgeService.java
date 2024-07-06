@@ -1,7 +1,7 @@
 package com.example.icebutler_server.fridge.service;
 
-import com.example.icebutler_server.fridge.dto.fridge.request.*;
-import com.example.icebutler_server.fridge.dto.fridge.response.*;
+import com.example.icebutler_server.fridge.dto.request.*;
+import com.example.icebutler_server.fridge.dto.response.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +17,7 @@ public interface FridgeService {
   void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeIdx, Long userIdx);
   void modifyFridgeFood(Long fridgeIdx, Long fridgeFoodIdx, FridgeFoodReq fridgeFoodReq, Long userIdx);
   void deleteFridgeFood(DeleteFridgeFoodsReq deleteFridgeFoodsReq, String deleteType, Long fridgeIdx, Long userIdx);
-  FridgeUserMainRes searchMembers(Long fridgeIdx,Long userIdx);
+  FridgeUserMainRes searchMembers(Long fridgeIdx, Long userIdx);
   FridgeFoodsStatistics getFridgeFoodStatistics(Long fridgeIdx, String deleteCategory, Long userIdx, Integer year, Integer month);
   RecipeFridgeFoodListsRes getFridgeUserFoodList(Long fridgeIdx, Long userIdx);
   void notifyFridgeFood();

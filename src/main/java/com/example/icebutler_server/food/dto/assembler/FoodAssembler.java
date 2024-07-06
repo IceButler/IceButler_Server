@@ -1,12 +1,11 @@
 package com.example.icebutler_server.food.dto.assembler;
 
-import com.example.icebutler_server.cart.dto.cart.request.AddFoodRequest;
+import com.example.icebutler_server.cart.dto.request.AddFoodRequest;
 import com.example.icebutler_server.food.dto.request.FoodReq;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
+import com.example.icebutler_server.fridge.dto.request.FridgeFoodReq;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

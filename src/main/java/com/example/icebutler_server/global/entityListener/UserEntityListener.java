@@ -1,6 +1,6 @@
 package com.example.icebutler_server.global.entityListener;
 
-import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepository;
+import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
 import com.example.icebutler_server.global.util.BeanUtils;
 import com.example.icebutler_server.user.entity.User;
 

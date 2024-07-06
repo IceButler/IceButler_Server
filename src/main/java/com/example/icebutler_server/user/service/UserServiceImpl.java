@@ -1,10 +1,10 @@
 package com.example.icebutler_server.user.service;
 
 import com.example.icebutler_server.alarm.repository.PushNotificationRepository;
-import com.example.icebutler_server.fridge.entity.fridge.Fridge;
-import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
-import com.example.icebutler_server.fridge.repository.fridge.FridgeRepository;
-import com.example.icebutler_server.fridge.repository.fridge.FridgeUserRepository;
+import com.example.icebutler_server.fridge.entity.Fridge;
+import com.example.icebutler_server.fridge.entity.FridgeUser;
+import com.example.icebutler_server.fridge.repository.FridgeRepository;
+import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;

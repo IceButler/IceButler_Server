@@ -1,8 +1,8 @@
 package com.example.icebutler_server.fridge.controller;
 
-import com.example.icebutler_server.fridge.dto.fridge.request.*;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsRes;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeMainRes;
+import com.example.icebutler_server.fridge.dto.request.*;
+import com.example.icebutler_server.fridge.dto.response.FridgeFoodsRes;
+import com.example.icebutler_server.fridge.dto.response.FridgeMainRes;
 import com.example.icebutler_server.fridge.service.FridgeServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.Auth;

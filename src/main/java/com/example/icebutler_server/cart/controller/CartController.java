@@ -1,8 +1,8 @@
 package com.example.icebutler_server.cart.controller;
 
-import com.example.icebutler_server.cart.dto.cart.request.AddFoodToCartRequest;
-import com.example.icebutler_server.cart.dto.cart.request.RemoveFoodFromCartRequest;
-import com.example.icebutler_server.cart.dto.cart.response.CartResponse;
+import com.example.icebutler_server.cart.dto.request.AddFoodToCartRequest;
+import com.example.icebutler_server.cart.dto.request.RemoveFoodFromCartRequest;
+import com.example.icebutler_server.cart.dto.response.CartResponse;
 import com.example.icebutler_server.cart.service.CartServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.resolver.Auth;

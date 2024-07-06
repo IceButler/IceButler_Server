@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE user SET is_enable = false, update_at = current_timestamp WHERE user_id = ?")
+@SQLDelete(sql = "UPDATE user SET is_enable = false, updated_at = current_timestamp WHERE id = ?")
 @EntityListeners(UserEntityListener.class)
 public class User extends BaseEntity {
 

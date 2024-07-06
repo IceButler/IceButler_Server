@@ -1,6 +1,5 @@
 package com.example.icebutler_server.fridge.dto.fridge.assembler;
 
-import com.example.icebutler_server.fridge.dto.fridge.request.FridgeModifyReq;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeRegisterReq;
 import com.example.icebutler_server.fridge.dto.fridge.response.UpdateMembersRes;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
@@ -30,10 +29,6 @@ public class FridgeAssembler {
   public void toUpdateFridgeOwner(FridgeUser owner, FridgeUser newOwner) {
     owner.changeFridgeMember(owner.getUser());
     newOwner.changeFridgeOwner(newOwner.getUser());
-  }
-
-  public void toUpdateBasicMultiFridgeInfo(Fridge fridge, FridgeModifyReq updateFridgeReq) {
-    fridge.updateBasicFridgeInfo(updateFridgeReq.getFridgeName(), updateFridgeReq.getFridgeComment());
   }
 
   public UpdateMembersRes toUpdateFridgeMembers(List<User> newMembers, List<FridgeUser> fridgeUsers) {

@@ -1,7 +1,6 @@
 package com.example.icebutler_server.fridge.dto.fridge.response;
 
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridgeFood;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,14 +19,6 @@ public class SearchFridgeFoodRes {
   private List<SearchFoodRes> searchFoods;
 
   public static SearchFridgeFoodRes toDto(List<FridgeFood> searchFoods, Long fridgeIdx, Long userIdx) {
-    SearchFridgeFoodRes searchFridgeFoodRes = new SearchFridgeFoodRes();
-    searchFridgeFoodRes.searchFoods = searchFoods.stream().map(m -> SearchFoodRes.toDto(m.getId(), m.getFoodDetailName())).collect(Collectors.toList());
-    searchFridgeFoodRes.fridgeIdx = fridgeIdx;
-    searchFridgeFoodRes.userIdx = userIdx;
-    return searchFridgeFoodRes;
-  }
-
-  public static SearchFridgeFoodRes toMultiDto(List<MultiFridgeFood> searchFoods, Long fridgeIdx, Long userIdx) {
     SearchFridgeFoodRes searchFridgeFoodRes = new SearchFridgeFoodRes();
     searchFridgeFoodRes.searchFoods = searchFoods.stream().map(m -> SearchFoodRes.toDto(m.getId(), m.getFoodDetailName())).collect(Collectors.toList());
     searchFridgeFoodRes.fridgeIdx = fridgeIdx;

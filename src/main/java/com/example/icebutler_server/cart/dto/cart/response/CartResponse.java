@@ -1,7 +1,6 @@
 package com.example.icebutler_server.cart.dto.cart.response;
 
 import com.example.icebutler_server.cart.entity.cart.CartFood;
-import com.example.icebutler_server.cart.entity.multiCart.MultiCartFood;
 import com.example.icebutler_server.food.dto.response.FoodResponse;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import lombok.Builder;
@@ -26,14 +25,6 @@ public class CartResponse {
     }
 
     public static CartResponse toDto(List<CartFood> cartFoods, FoodCategory category) {
-        CartResponse cartResponse = new CartResponse();
-        cartResponse.category = category.getName();
-        cartResponse.cartFoods = cartFoods.stream()
-                .map(cf -> FoodResponse.toDto(cf.getFood())).collect(Collectors.toList());
-        return cartResponse;
-    }
-
-    public static CartResponse toMultiDto(List<MultiCartFood> cartFoods, FoodCategory category) {
         CartResponse cartResponse = new CartResponse();
         cartResponse.category = category.getName();
         cartResponse.cartFoods = cartFoods.stream()

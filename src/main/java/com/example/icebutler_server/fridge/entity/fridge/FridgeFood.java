@@ -71,7 +71,7 @@ public class FridgeFood extends BaseEntity {
     this.fridgeFoodImgKey = imgUrl;
   }
 
-  public void updateMultiFridgeFoodOwner(User newOwner) {
+  public void updateFridgeFoodOwner(User newOwner) {
     this.owner = newOwner;
   }
 

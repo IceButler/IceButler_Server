@@ -3,7 +3,6 @@ package com.example.icebutler_server.fridge.dto.fridge.assembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.dto.fridge.request.FridgeFoodReq;
-import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodRes;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodStatistics;
 import com.example.icebutler_server.fridge.dto.fridge.response.FridgeFoodsStatistics;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
@@ -48,7 +47,7 @@ public class FridgeFoodAssembler {
     }
 
     public void toUpdateFridgeFoodOwner(FridgeFood modifyFridgeFood, User newOwner) {
-        modifyFridgeFood.updateMultiFridgeFoodOwner(newOwner);
+        modifyFridgeFood.updateFridgeFoodOwner(newOwner);
     }
 
     public FridgeFoodsStatistics toFoodStatisticsByDeleteStatus(Map<FoodCategory, Long> deleteStatusList) {

@@ -7,7 +7,6 @@ import com.example.icebutler_server.fridge.dto.fridge.response.FridgeDiscardRes;
 import com.example.icebutler_server.fridge.entity.fridge.Fridge;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeFood;
 import com.example.icebutler_server.fridge.entity.fridge.FridgeUser;
-import com.example.icebutler_server.fridge.entity.multiFridge.MultiFridge;
 
 import java.util.List;
 

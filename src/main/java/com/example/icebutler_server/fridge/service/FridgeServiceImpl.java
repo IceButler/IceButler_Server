@@ -1,7 +1,7 @@
 package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.alarm.service.NotificationServiceImpl;
-import com.example.icebutler_server.cart.dto.assembler.CartAssembler;
+import com.example.icebutler_server.cart.entity.Cart;
 import com.example.icebutler_server.cart.repository.CartRepository;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
@@ -50,7 +50,6 @@ public class FridgeServiceImpl implements FridgeService {
 
     private final FridgeAssembler fridgeAssembler;
     private final FridgeFoodAssembler fridgeFoodAssembler;
-    private final CartAssembler cartAssembler;
 
     private final AmazonSQSSender amazonSQSSender;
     private final NotificationServiceImpl alarmService;
@@ -88,7 +87,7 @@ public class FridgeServiceImpl implements FridgeService {
         fridgeUserRepository.saveAll(fridgeUsers);
 
         // fridge - cart 연관관계 추가
-        cartRepository.save(cartAssembler.toEntity(fridge));
+        cartRepository.save(Cart.toEntity(fridge));
 
         users.forEach(f -> {
             try {

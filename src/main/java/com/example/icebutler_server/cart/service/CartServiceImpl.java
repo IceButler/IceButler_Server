@@ -1,6 +1,5 @@
 package com.example.icebutler_server.cart.service;
 
-import com.example.icebutler_server.cart.dto.assembler.CartFoodAssembler;
 import com.example.icebutler_server.cart.dto.request.AddFoodRequest;
 import com.example.icebutler_server.cart.dto.request.AddFoodToCartRequest;
 import com.example.icebutler_server.cart.dto.request.RemoveFoodFromCartRequest;
@@ -45,7 +44,6 @@ public class CartServiceImpl implements CartService {
     private final FridgeRepository fridgeRepository;
     private final FridgeUserRepository fridgeUserRepository;
     private final CartRepository cartRepository;
-    private final CartFoodAssembler cartFoodAssembler;
     private final AmazonSQSSender amazonSQSSender;
 
     // 장바구니 식품 조회
@@ -90,7 +88,7 @@ public class CartServiceImpl implements CartService {
                     for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getId())) return false;
                     return true;
                 })
-                .map((food) -> cartFoodAssembler.toEntity(cart, food))
+                .map((food) -> CartFood.toEntity(cart, food))
                 .collect(Collectors.toList());
 
         cartFoodRepository.saveAll(cartFoods);

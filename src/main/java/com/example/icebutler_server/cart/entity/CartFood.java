@@ -34,4 +34,10 @@ public class CartFood extends BaseEntity {
         this.cart = cart;
     }
 
+    public static CartFood toEntity(Cart cart, Food food) {
+        return CartFood.builder()
+                .cart(cart)
+                .food(food)
+                .build();
+    }
 }

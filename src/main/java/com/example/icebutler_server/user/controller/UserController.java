@@ -32,9 +32,10 @@ public class UserController {
   @Operation(summary = "유저 회원가입", description = "유저가 회원가입한다.")
   @SwaggerApiSuccess(implementation = PostUserRes.class)
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "400", description = "부적절한 소셜로그인 provider 입력입니다.\t\n " +
-                  "사용자 이메일 값을 찾아올 수 없습니다.",
-                  content = @Content(schema = @Schema(implementation = ResponseCustom.class)))})
+          @ApiResponse(responseCode = "400", description = "(U0000)부적절한 소셜로그인 provider 입력입니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+          @ApiResponse(responseCode = "401", description = "(U0001)관리자에 의해 서비스 이용이 제한되었습니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+          @ApiResponse(responseCode = "404", description = "(U0002)사용자 이메일 값을 찾아올 수 없습니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
+  })
   @ResponseBody
   @PostMapping("/join")
   public ResponseCustom<PostUserRes> join(@RequestBody PostUserReq postUserReq) {
@@ -44,10 +45,9 @@ public class UserController {
   @Operation(summary = "유저 로그인", description = "유저가 로그인한다.")
   @SwaggerApiSuccess(implementation = PostUserRes.class)
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "400", description = "부적절한 소셜로그인 provider 입력입니다.\t\n " +
-                  "사용자 이메일 값을 찾아올 수 없습니다.",
-                  content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-          @ApiResponse(responseCode = "403", description = "이미 탈퇴한 회원입니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
+          @ApiResponse(responseCode = "400", description = "(U0000)부적절한 소셜로그인 provider 입력입니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+          @ApiResponse(responseCode = "404", description = "(U0002)사용자 이메일 값을 찾아올 수 없습니다." +
+                                                          "(U0003)이미 탈퇴한 회원입니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
   })
   @ResponseBody
   @PostMapping("/login")
@@ -58,7 +58,7 @@ public class UserController {
   @Operation(summary = "유저 닉네임 중복 조회", description = "닉네임 중복 여부를 조회한다.")
   @SwaggerApiSuccess(implementation = PostNickNameRes.class)
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "400", description = "올바르지 않은 닉네임 형식입니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
+          @ApiResponse(responseCode = "400", description = "(U0004)올바르지 않은 닉네임 형식입니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
   })
   @ResponseBody
   @PostMapping("/nickname")

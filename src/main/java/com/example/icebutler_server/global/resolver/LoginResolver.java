@@ -1,7 +1,7 @@
 package com.example.icebutler_server.global.resolver;
 
+import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.global.util.TokenUtils;
-import com.example.icebutler_server.user.exception.AuthAnnotationIsNowhereException;
 import com.sun.istack.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -14,6 +14,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.Objects;
+
+import static com.example.icebutler_server.global.exception.ReturnCode.INTERNAL_SERVER_ERROR;
 
 
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class LoginResolver implements HandlerMethodArgumentResolver{
         Auth auth = parameter.getMethodAnnotation(Auth.class);
 
         if (auth == null)
-            throw new AuthAnnotationIsNowhereException();
+            throw new BaseException(INTERNAL_SERVER_ERROR);
 
         String accessToken = webRequest.getHeader(Objects.requireNonNull(env.getProperty("jwt.auth-header")));
         if(accessToken == null || !tokenUtils.isValidToken(tokenUtils.parseJustTokenFromFullToken(accessToken)))

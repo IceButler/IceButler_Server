@@ -3,9 +3,11 @@ package com.example.icebutler_server.user.service;
 import com.example.icebutler_server.alarm.repository.PushNotificationRepository;
 import com.example.icebutler_server.fridge.entity.Fridge;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
+import com.example.icebutler_server.fridge.exception.CannotDeleteFridgeException;
 import com.example.icebutler_server.fridge.repository.FridgeRepository;
 import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
 import com.example.icebutler_server.global.entity.FridgeRole;
+import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
 import com.example.icebutler_server.global.resolver.IsLogin;
 import com.example.icebutler_server.global.util.TokenUtils;
@@ -19,7 +21,6 @@ import com.example.icebutler_server.user.dto.request.PostUserReq;
 import com.example.icebutler_server.user.dto.response.*;
 import com.example.icebutler_server.user.entity.Provider;
 import com.example.icebutler_server.user.entity.User;
-import com.example.icebutler_server.user.exception.*;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.icebutler_server.global.exception.ReturnCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +54,7 @@ public class UserServiceImpl implements UserService {
     User user = checkUserInfo(postUserReq.getEmail(), postUserReq.getProvider());
     if (user == null) user = saveUser(postUserReq);
     // 정지된 회원은 재가입 불가
-    if (user.getIsDenied().equals(true)) throw new AccessDeniedUserException();
+    if (user.getIsDenied().equals(true)) throw new BaseException(UNAUTHORIZED_USER);
     // 자진 탈퇴 회원은 재가입 처리
     if (user.getIsEnable().equals(false)) user=saveUser(postUserReq); // 새로운 행 추가
 
@@ -65,7 +68,7 @@ public class UserServiceImpl implements UserService {
     User user = checkUserInfo(loginUserReq.getEmail(), loginUserReq.getProvider());
 
     if (user != null) {
-      if (user.getIsEnable().equals(false)) throw new AlreadyWithdrawUserException();
+      if (user.getIsEnable().equals(false)) throw new BaseException(ALREADY_WITHDRAWN_USER);
       user.login(loginUserReq.getFcmToken());
       return PostUserRes.toDto(tokenUtils.createToken(user));
     }
@@ -74,8 +77,8 @@ public class UserServiceImpl implements UserService {
 
 
   public User checkUserInfo(String email, String provider) {
-    if (Provider.getProviderByName(provider) == null) throw new ProviderMissingValueException();
-    if (!StringUtils.hasText(email)) throw new UserEmailMissingValueException();
+    if (Provider.getProviderByName(provider) == null) throw new BaseException(INVALID_PROVIDER);
+    if (!StringUtils.hasText(email)) throw new BaseException(NOT_FOUND_EMAIL);
 
     return userRepository.findByEmailAndProvider(email, Provider.getProviderByName(provider));
   }
@@ -94,7 +97,7 @@ public class UserServiceImpl implements UserService {
   // 프로필 설정
   @Transactional
   public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
 
     if (StringUtils.hasText(patchProfileReq.getNickname())) user.modifyProfileNickName(patchProfileReq.getNickname());
     if (StringUtils.hasText(patchProfileReq.getProfileImgKey())) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
@@ -105,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
   // 닉네임 중복 확인
   public PostNickNameRes checkNickname(PostNicknameReq postNicknameReq) {
-    if (!userAssembler.isValidNickname(postNicknameReq.getNickname())) throw new InvalidUserNickNameException();
+    if (!userAssembler.isValidNickname(postNicknameReq.getNickname())) throw new BaseException(INVALID_NICKNAME);
     Boolean existence = userRepository.existsByNickname(postNicknameReq.getNickname());
 
     return PostNickNameRes.toDto(postNicknameReq.getNickname(), existence);
@@ -115,7 +118,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void deleteUser(Long userIdx) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
     List<FridgeUser> fridgeOwners = fridgeUserRepository.findByUserAndRoleAndIsEnable(user, FridgeRole.OWNER, true);
     for (FridgeUser fridgeOwner : fridgeOwners) {
       Fridge fridge = fridgeOwner.getFridge();
@@ -135,7 +138,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void logout(Long userIdx) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
     redisTemplateService.deleteUserRefreshToken(userIdx.toString());
     user.logout();
   }
@@ -143,7 +146,7 @@ public class UserServiceImpl implements UserService {
   //마이페이지 조회
   @Override
   public MyProfileRes checkProfile(Long userIdx) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
 
     return MyProfileRes.toDto(user);
 
@@ -158,7 +161,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Page<MyNotificationRes> getUserNotification(Long userIdx, Pageable pageable) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
     return this.userAssembler.toUserNotificationList(this.pushNotificationRepository.findByUserOrderByCreatedAtDesc(user, pageable));
   }
 

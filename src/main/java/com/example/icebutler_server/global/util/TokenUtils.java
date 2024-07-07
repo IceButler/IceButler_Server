@@ -1,9 +1,8 @@
 package com.example.icebutler_server.global.util;
 
+import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.global.util.redis.RedisTemplateService;
-import com.example.icebutler_server.user.dto.request.UserAuthTokenReq;
 import com.example.icebutler_server.user.entity.User;
-import com.example.icebutler_server.user.exception.TokenExpirationException;
 import io.jsonwebtoken.*;
 import io.netty.handler.codec.compression.CompressionException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.Objects;
+
+import static com.example.icebutler_server.global.exception.ReturnCode.EXPIRED_TOKEN;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -201,7 +202,7 @@ public class TokenUtils {
               .parseClaimsJws(justToken)
               .getBody();
     } catch (ExpiredJwtException e) {
-      throw new TokenExpirationException();
+      throw new BaseException(EXPIRED_TOKEN);
     }
   }
 
@@ -240,9 +241,9 @@ public class TokenUtils {
     @Transactional
     public String accessExpiration(Long userIdx) {
         String userRefreshToken = redisTemplateService.getUserRefreshToken(userIdx.toString());
-      if (userRefreshToken == null) throw new TokenExpirationException();
+      if (userRefreshToken == null) throw new BaseException(EXPIRED_TOKEN);
       String refreshNickname = getNicknameFromFullToken(userRefreshToken);
-      if (refreshNickname.isEmpty()) throw new TokenExpirationException();
+      if (refreshNickname.isEmpty()) throw new BaseException(EXPIRED_TOKEN);
 
         //토큰이 만료되었을 경우.
         return createAccessToken(userIdx, refreshNickname);

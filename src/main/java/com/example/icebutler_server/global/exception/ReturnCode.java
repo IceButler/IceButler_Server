@@ -18,6 +18,9 @@ public enum ReturnCode {
     ALREADY_EXIST_FOOD_NAME("F0002", HttpStatus.CONFLICT, "중복된 음식 이름입니다."),
     NOT_FOUND_FOOD_DELETE_STATUS("F0003", HttpStatus.NOT_FOUND, "존재하지 않는 식품삭제 타입입니다."),
 
+    // Cart
+    NOT_FOUND_CART("C0000", HttpStatus.NOT_FOUND, "장바구니를 찾을 수 없습니다."),
+
 
 
 

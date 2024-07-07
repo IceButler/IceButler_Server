@@ -7,7 +7,6 @@ import com.example.icebutler_server.cart.dto.request.RemoveFoodFromCartRequest;
 import com.example.icebutler_server.cart.dto.response.CartResponse;
 import com.example.icebutler_server.cart.entity.Cart;
 import com.example.icebutler_server.cart.entity.CartFood;
-import com.example.icebutler_server.cart.exception.CartNotFoundException;
 import com.example.icebutler_server.cart.repository.CartFoodRepository;
 import com.example.icebutler_server.cart.repository.CartRepository;
 import com.example.icebutler_server.food.entity.Food;
@@ -18,6 +17,7 @@ import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
 import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
 import com.example.icebutler_server.fridge.repository.FridgeRepository;
 import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
+import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
 import com.example.icebutler_server.global.sqs.FoodData;
 import com.example.icebutler_server.user.entity.User;
@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_CART;
 
 
 @RequiredArgsConstructor
@@ -107,6 +109,6 @@ public class CartServiceImpl implements CartService {
         User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
         Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
-        return cartRepository.findByFridge_IdAndIsEnable(fridgeIdx, true).orElseThrow(CartNotFoundException::new);
+        return cartRepository.findByFridge_IdAndIsEnable(fridgeIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_CART));
     }
 }

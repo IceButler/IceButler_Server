@@ -14,7 +14,6 @@ import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.global.util.redis.RedisTemplateService;
 import com.example.icebutler_server.global.util.redis.RedisUtils;
 import com.example.icebutler_server.user.dto.LoginUserReq;
-import com.example.icebutler_server.user.dto.assembler.UserAssembler;
 import com.example.icebutler_server.user.dto.request.PatchProfileReq;
 import com.example.icebutler_server.user.dto.request.PostNicknameReq;
 import com.example.icebutler_server.user.dto.request.PostUserReq;
@@ -30,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.example.icebutler_server.global.exception.ReturnCode.*;
@@ -41,7 +42,6 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final FridgeUserRepository fridgeUserRepository;
   private final FridgeRepository fridgeRepository;
-  private final UserAssembler userAssembler;
   private final TokenUtils tokenUtils;
   private final RedisUtils redisUtils;
 
@@ -108,10 +108,21 @@ public class UserServiceImpl implements UserService {
 
   // 닉네임 중복 확인
   public PostNickNameRes checkNickname(PostNicknameReq postNicknameReq) {
-    if (!userAssembler.isValidNickname(postNicknameReq.getNickname())) throw new BaseException(INVALID_NICKNAME);
+    if (!isValidNickname(postNicknameReq.getNickname())) throw new BaseException(INVALID_NICKNAME);
     Boolean existence = userRepository.existsByNickname(postNicknameReq.getNickname());
 
     return PostNickNameRes.toDto(postNicknameReq.getNickname(), existence);
+  }
+
+  private Boolean isValidNickname(String nickname) {
+    boolean err = false;
+    String regex = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,8}$";
+    Pattern p = Pattern.compile(regex);
+    Matcher m = p.matcher(nickname);
+    if(m.matches()) {
+      err = true;
+    }
+    return err;
   }
 
   //유저 탈퇴
@@ -162,7 +173,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Page<MyNotificationRes> getUserNotification(Long userIdx, Pageable pageable) {
     User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-    return this.userAssembler.toUserNotificationList(this.pushNotificationRepository.findByUserOrderByCreatedAtDesc(user, pageable));
+    return MyNotificationRes.toUserNotificationList(this.pushNotificationRepository.findByUserOrderByCreatedAtDesc(user, pageable));
   }
 
 }

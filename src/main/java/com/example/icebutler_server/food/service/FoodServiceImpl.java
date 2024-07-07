@@ -5,8 +5,8 @@ import com.example.icebutler_server.food.dto.request.FoodReq;
 import com.example.icebutler_server.food.dto.response.BarcodeFoodRes;
 import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.FoodCategory;
-import com.example.icebutler_server.food.exception.BarcodeFoodNotFoundException;
 import com.example.icebutler_server.food.repository.FoodRepository;
+import com.example.icebutler_server.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,10 +21,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_BARCODE_FOOD;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -82,7 +82,7 @@ public class FoodServiceImpl implements FoodService{
         JSONObject obj = getJsonObjectByParser(sb);
         JSONObject result = (JSONObject) obj.get("I2570");
         JSONArray row = (JSONArray) result.get("row");
-        if (row == null) throw new BarcodeFoodNotFoundException();
+        if (row == null) throw new BaseException(NOT_FOUND_BARCODE_FOOD);
         JSONObject data =  (JSONObject) row.get(0);
         return (String) data.get("PRDT_NM");
     }

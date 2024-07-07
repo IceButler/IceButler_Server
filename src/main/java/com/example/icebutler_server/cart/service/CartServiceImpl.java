@@ -10,7 +10,6 @@ import com.example.icebutler_server.cart.entity.CartFood;
 import com.example.icebutler_server.cart.exception.CartNotFoundException;
 import com.example.icebutler_server.cart.repository.CartFoodRepository;
 import com.example.icebutler_server.cart.repository.CartRepository;
-import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
@@ -28,7 +27,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -43,7 +43,6 @@ public class CartServiceImpl implements CartService {
     private final FridgeRepository fridgeRepository;
     private final FridgeUserRepository fridgeUserRepository;
     private final CartRepository cartRepository;
-    private final FoodAssembler foodAssembler;
     private final CartFoodAssembler cartFoodAssembler;
     private final AmazonSQSSender amazonSQSSender;
 
@@ -74,7 +73,7 @@ public class CartServiceImpl implements CartService {
         for(AddFoodRequest foodRequest : request.getFoodRequests()) {
             Food food = this.foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
             if(food == null) {
-                food = this.foodRepository.save(foodAssembler.toEntity(foodRequest));
+                food = this.foodRepository.save(Food.toEntity(foodRequest));
                 amazonSQSSender.sendMessage(FoodData.toDto(food));
             }
             foodRequests.add(food);

@@ -3,7 +3,6 @@ package com.example.icebutler_server.fridge.service;
 import com.example.icebutler_server.alarm.service.NotificationServiceImpl;
 import com.example.icebutler_server.cart.dto.assembler.CartAssembler;
 import com.example.icebutler_server.cart.repository.CartRepository;
-import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
@@ -51,7 +50,6 @@ public class FridgeServiceImpl implements FridgeService {
 
     private final FridgeAssembler fridgeAssembler;
     private final FridgeFoodAssembler fridgeFoodAssembler;
-    private final FoodAssembler foodAssembler;
     private final CartAssembler cartAssembler;
 
     private final AmazonSQSSender amazonSQSSender;
@@ -211,7 +209,7 @@ public class FridgeServiceImpl implements FridgeService {
             }
             Food food = foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
                     .orElseGet(() -> {
-                        Food save = foodRepository.save(foodAssembler.toEntity(fridgeFoodReq));
+                        Food save = foodRepository.save(Food.toEntity(fridgeFoodReq));
                         amazonSQSSender.sendMessage(FoodData.toDto(save));
                         return save;
                     });
@@ -236,7 +234,7 @@ public class FridgeServiceImpl implements FridgeService {
         if (!modifyFridgeFood.getFood().getFoodName().equals(fridgeFoodReq.getFoodName())) {
             Food food = this.foodRepository.findByFoodName(fridgeFoodReq.getFoodName())
                     .orElseGet(() -> {
-                        Food save = foodRepository.save(foodAssembler.toEntity(fridgeFoodReq));
+                        Food save = foodRepository.save(Food.toEntity(fridgeFoodReq));
                         amazonSQSSender.sendMessage(FoodData.toDto(save));
                         return save;
                     });

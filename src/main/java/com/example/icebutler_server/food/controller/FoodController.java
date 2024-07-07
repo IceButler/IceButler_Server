@@ -1,7 +1,6 @@
 package com.example.icebutler_server.food.controller;
 
 import com.example.icebutler_server.cart.dto.request.AddFoodRequest;
-import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.dto.response.BarcodeFoodRes;
 import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.Food;
@@ -38,7 +37,6 @@ public class FoodController {
     private final AmazonSQSSender amazonSQSSender;
 
     private final FoodRepository foodRepository;
-    private final FoodAssembler foodAssembler;
 
     @Operation(summary = "식품 검색", description = "식품을 검색한다.")
     @SwaggerApiSuccess(implementation = FoodRes.class)
@@ -69,7 +67,7 @@ public class FoodController {
         addFoodRequest.setFoodName("맛없는 고기");
         addFoodRequest.setFoodCategory("육류");
 
-        Food food = this.foodRepository.save(foodAssembler.toEntity(addFoodRequest));
+        Food food = this.foodRepository.save(Food.toEntity(addFoodRequest));
         FoodData foodData = FoodData.toDto(food);
         amazonSQSSender.sendMessage(FoodData.toDto(food));
     }

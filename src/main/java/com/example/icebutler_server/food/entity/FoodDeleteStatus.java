@@ -1,9 +1,11 @@
 package com.example.icebutler_server.food.entity;
 
-import com.example.icebutler_server.food.exception.FoodDeleteStatusNotFoundException;
+import com.example.icebutler_server.global.exception.BaseException;
 import lombok.Getter;
 
 import java.util.Arrays;
+
+import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_FOOD_DELETE_STATUS;
 
 @Getter
 public enum FoodDeleteStatus {
@@ -19,6 +21,6 @@ public enum FoodDeleteStatus {
     public static FoodDeleteStatus getFoodDeleteStatusByName(String name){
         return Arrays.stream(FoodDeleteStatus.values())
                 .filter(r -> r.getName().equals(name))
-                .findAny().orElseThrow(FoodDeleteStatusNotFoundException::new);
+                .findAny().orElseThrow(() -> new BaseException(NOT_FOUND_FOOD_DELETE_STATUS));
     }
 }

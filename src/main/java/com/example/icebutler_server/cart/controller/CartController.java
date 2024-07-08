@@ -36,9 +36,9 @@ public class CartController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+            @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.\t\n" +
                     "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
-                    "요청한 id를 가진 장바구니를 찾을 수 없습니다.",
+                    "(C0000)장바구니를 찾을 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
@@ -53,10 +53,10 @@ public class CartController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+            @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.\t\n" +
                     "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
-                    "요청한 id를 가진 장바구니를 찾을 수 없습니다.\t\n" +
-                    "존재하지 않는 카테고리입니다.",
+                    "(C0000)장바구니를 찾을 수 없습니다.\t\n" +
+                    "(F0000)존재하지 않는 카테고리입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
@@ -73,10 +73,10 @@ public class CartController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "요청한 id를 가진 유저를 찾을 수 없습니다.\t\n" +
+            @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.\t\n" +
                     "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
-                    "요청한 id를 가진 장바구니를 찾을 수 없습니다.\t\n" +
-                    "존재하지 않는 카테고리입니다.",
+                    "(C0000)장바구니를 찾을 수 없습니다.\t\n" +
+                    "(F0000)존재하지 않는 카테고리입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth

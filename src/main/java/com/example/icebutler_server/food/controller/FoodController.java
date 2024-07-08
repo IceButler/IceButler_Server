@@ -1,7 +1,6 @@
 package com.example.icebutler_server.food.controller;
 
 import com.example.icebutler_server.cart.dto.request.AddFoodRequest;
-import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.dto.response.BarcodeFoodRes;
 import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.Food;
@@ -38,11 +37,10 @@ public class FoodController {
     private final AmazonSQSSender amazonSQSSender;
 
     private final FoodRepository foodRepository;
-    private final FoodAssembler foodAssembler;
 
     @Operation(summary = "식품 검색", description = "식품을 검색한다.")
     @SwaggerApiSuccess(implementation = FoodRes.class)
-    @ApiResponse(responseCode = "400", description = "존재하지 않는 카테고리입니다.",
+    @ApiResponse(responseCode = "404", description = "(F0000)존재하지 않는 카테고리입니다.",
             content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
     @GetMapping("")
     public ResponseCustom<List<FoodRes>> searchFood(@Parameter(name = "category", description = "식품 카테고리") @RequestParam(required = false) String category,
@@ -55,7 +53,7 @@ public class FoodController {
 
     @Operation(summary = "식품 바코드 조회", description = "바코드 번호로 식품을 조회한다.")
     @SwaggerApiSuccess(implementation = BarcodeFoodRes.class)
-    @ApiResponse(responseCode = "400", description = "해당 바코드의 상품을 찾을 수 없습니다.",
+    @ApiResponse(responseCode = "404", description = "(F00001)해당 바코드의 상품을 찾을 수 없습니다.",
             content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
     @GetMapping("/barcode")
     public ResponseCustom<BarcodeFoodRes> searchByBarcode(@RequestParam String code_num) throws IOException, org.json.simple.parser.ParseException {
@@ -69,7 +67,7 @@ public class FoodController {
         addFoodRequest.setFoodName("맛없는 고기");
         addFoodRequest.setFoodCategory("육류");
 
-        Food food = this.foodRepository.save(foodAssembler.toEntity(addFoodRequest));
+        Food food = this.foodRepository.save(Food.toEntity(addFoodRequest));
         FoodData foodData = FoodData.toDto(food);
         amazonSQSSender.sendMessage(FoodData.toDto(food));
     }

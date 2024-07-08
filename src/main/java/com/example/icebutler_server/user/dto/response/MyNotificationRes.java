@@ -1,9 +1,11 @@
 package com.example.icebutler_server.user.dto.response;
 
+import com.example.icebutler_server.alarm.entity.PushNotification;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -23,5 +25,13 @@ public class MyNotificationRes {
         this.pushNotificationType = pushNotificationType;
         this.notificationInfo = notificationInfo;
         this.createdAt = createdAt;
+    }
+
+    public static Page<MyNotificationRes> toUserNotificationList(Page<PushNotification> notifications) {
+        return notifications.map(n -> MyNotificationRes.builder()
+                .pushNotificationType(n.getPushNotificationType())
+                .notificationInfo(n.getNotificationInfo())
+                .createdAt(n.getCreatedAt())
+                .build());
     }
 }

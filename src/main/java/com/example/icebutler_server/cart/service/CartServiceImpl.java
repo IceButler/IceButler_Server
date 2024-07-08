@@ -1,16 +1,13 @@
 package com.example.icebutler_server.cart.service;
 
-import com.example.icebutler_server.cart.dto.assembler.CartFoodAssembler;
 import com.example.icebutler_server.cart.dto.request.AddFoodRequest;
 import com.example.icebutler_server.cart.dto.request.AddFoodToCartRequest;
 import com.example.icebutler_server.cart.dto.request.RemoveFoodFromCartRequest;
 import com.example.icebutler_server.cart.dto.response.CartResponse;
 import com.example.icebutler_server.cart.entity.Cart;
 import com.example.icebutler_server.cart.entity.CartFood;
-import com.example.icebutler_server.cart.exception.CartNotFoundException;
 import com.example.icebutler_server.cart.repository.CartFoodRepository;
 import com.example.icebutler_server.cart.repository.CartRepository;
-import com.example.icebutler_server.food.dto.assembler.FoodAssembler;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
@@ -19,17 +16,21 @@ import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
 import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
 import com.example.icebutler_server.fridge.repository.FridgeRepository;
 import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
+import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
 import com.example.icebutler_server.global.sqs.FoodData;
 import com.example.icebutler_server.user.entity.User;
-import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_CART;
+import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_USER;
 
 
 @RequiredArgsConstructor
@@ -43,8 +44,6 @@ public class CartServiceImpl implements CartService {
     private final FridgeRepository fridgeRepository;
     private final FridgeUserRepository fridgeUserRepository;
     private final CartRepository cartRepository;
-    private final FoodAssembler foodAssembler;
-    private final CartFoodAssembler cartFoodAssembler;
     private final AmazonSQSSender amazonSQSSender;
 
     // 장바구니 식품 조회
@@ -74,7 +73,7 @@ public class CartServiceImpl implements CartService {
         for(AddFoodRequest foodRequest : request.getFoodRequests()) {
             Food food = this.foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
             if(food == null) {
-                food = this.foodRepository.save(foodAssembler.toEntity(foodRequest));
+                food = this.foodRepository.save(Food.toEntity(foodRequest));
                 amazonSQSSender.sendMessage(FoodData.toDto(food));
             }
             foodRequests.add(food);
@@ -89,7 +88,7 @@ public class CartServiceImpl implements CartService {
                     for (Long foodInIdx : foodsInNowCart) if(foodInIdx.equals(f.getId())) return false;
                     return true;
                 })
-                .map((food) -> cartFoodAssembler.toEntity(cart, food))
+                .map((food) -> CartFood.toEntity(cart, food))
                 .collect(Collectors.toList());
 
         cartFoodRepository.saveAll(cartFoods);
@@ -105,9 +104,9 @@ public class CartServiceImpl implements CartService {
     }
 
     private Cart getCart(Long userIdx, Long fridgeIdx) {
-        User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
         fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
-        return cartRepository.findByFridge_IdAndIsEnable(fridgeIdx, true).orElseThrow(CartNotFoundException::new);
+        return cartRepository.findByFridge_IdAndIsEnable(fridgeIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_CART));
     }
 }

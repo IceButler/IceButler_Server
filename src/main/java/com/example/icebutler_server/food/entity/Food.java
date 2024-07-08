@@ -1,6 +1,9 @@
 package com.example.icebutler_server.food.entity;
 
 import com.example.icebutler_server.admin.dto.request.ModifyFoodRequest;
+import com.example.icebutler_server.cart.dto.request.AddFoodRequest;
+import com.example.icebutler_server.food.dto.request.FoodReq;
+import com.example.icebutler_server.fridge.dto.request.FridgeFoodReq;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.entityListener.FoodEntityListener;
 import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
@@ -14,6 +17,9 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
+
+import static com.example.icebutler_server.global.util.Constant.Food.ICON_EXTENSION;
+import static com.example.icebutler_server.global.util.Constant.Food.IMG_FOLDER;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Getter
@@ -59,6 +65,38 @@ public class Food extends BaseEntity {
 
     public void toUpdateCategory(FoodCategory foodCategory) {
         this.foodCategory = foodCategory;
+    }
+
+    public static Food toEntity(FoodReq request) {
+        return Food.builder()
+                .foodName(request.getFoodName())
+                .foodImgKey(request.getFoodImgKey())
+                // TODO 큐에서 전달 받을 때 category value 값을 받아서 우선 변경, 해당 부분 통일 필요
+                .foodCategory(FoodCategory.valueOf(request.getFoodCategory()))
+                .uuid(request.getUuid())
+                .build();
+    }
+
+    public static Food toEntity(FridgeFoodReq request) {
+        FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(request.getFoodCategory());
+        String foodImageKey = IMG_FOLDER + foodCategory.toString() + ICON_EXTENSION;
+        return Food.builder()
+                .foodName(request.getFoodName())
+                .foodCategory(FoodCategory.getFoodCategoryByName(request.getFoodCategory()))
+                .foodImgKey(foodImageKey)
+                .uuid(UUID.randomUUID())
+                .build();
+    }
+
+    public static Food toEntity(AddFoodRequest request) {
+        FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(request.getFoodCategory());
+        String foodImageKey = IMG_FOLDER + foodCategory.toString() + ICON_EXTENSION;
+        return Food.builder()
+                .foodName(request.getFoodName())
+                .foodImgKey(foodImageKey)
+                .foodCategory(foodCategory)
+                .uuid(UUID.randomUUID())
+                .build();
     }
 }
 

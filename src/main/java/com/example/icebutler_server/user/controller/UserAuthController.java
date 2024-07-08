@@ -28,8 +28,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping(value = "/users")
 @RestController
-@Tag(name = "User", description = "유저 API (인증 필요)")
- @SecurityRequirement(name = "Bearer")
+@Tag(name = "UserAuth", description = "유저 API (인증 필요)")
+@SecurityRequirement(name = "Bearer")
 public class UserAuthController {
 
   private final TokenUtils tokenUtils;
@@ -46,8 +46,8 @@ public class UserAuthController {
   @Operation(summary = "유저 프로필 수정", description = "유저 프로필을 수정한다.")
   @SwaggerApiSuccess(implementation = ResponseCustom.class)
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "404", description = "요청한 idx를 가진 유저를 찾을 수 없습니다.",
-                  content = @Content(schema = @Schema(implementation = ResponseCustom.class)))})
+          @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
+  })
   @Auth
   @ResponseBody
   @PatchMapping("/profile")
@@ -62,8 +62,8 @@ public class UserAuthController {
   @ApiResponses(value = {
           @ApiResponse(responseCode = "400", description = "해당 냉장고에 멤버가 있어서 삭제할 수 없습니다.",
                   content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-          @ApiResponse(responseCode = "404", description = "요청한 idx를 가진 유저를 찾을 수 없습니다.",
-                  content = @Content(schema = @Schema(implementation = ResponseCustom.class)))})
+          @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
+  })
   @Auth
   @DeleteMapping("/delete")
   public ResponseCustom<?> deleteUser(
@@ -75,8 +75,8 @@ public class UserAuthController {
   @Operation(summary = "유저 로그아웃", description = "유저를 로그아웃한다.")
   @SwaggerApiSuccess(implementation = ResponseCustom.class)
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "404", description = "요청한 idx를 가진 유저를 찾을 수 없습니다.",
-                  content = @Content(schema = @Schema(implementation = ResponseCustom.class)))})
+          @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+  })
   @Auth
   @PostMapping("/logout")
   public ResponseCustom<?> logout(
@@ -88,8 +88,8 @@ public class UserAuthController {
   @Operation(summary = "유저 프로필 조회", description = "유저 프로필을 조회한다.")
   @SwaggerApiSuccess(implementation = MyProfileRes.class)
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "404", description = "요청한 idx를 가진 유저를 찾을 수 없습니다.",
-                  content = @Content(schema = @Schema(implementation = ResponseCustom.class)))})
+          @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
+  })
   @Auth
   @GetMapping("")
   public ResponseCustom<MyProfileRes> profile(
@@ -100,8 +100,8 @@ public class UserAuthController {
   @Operation(summary = "유저 알림 목록", description = "유저 알림 목록을 조회한다.")
   @SwaggerApiSuccess(implementation = MyNotificationRes.class)
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "404", description = "요청한 idx를 가진 유저를 찾을 수 없습니다.",
-                  content = @Content(schema = @Schema(implementation = ResponseCustom.class)))})
+          @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.", content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+  })
   @Auth
   @GetMapping("/notification")
   public ResponseCustom<Page<MyNotificationRes>> getUserNotification(

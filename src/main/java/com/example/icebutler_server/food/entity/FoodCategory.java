@@ -1,10 +1,11 @@
 package com.example.icebutler_server.food.entity;
 
-import com.example.icebutler_server.food.exception.FoodCategoryNotFoundException;
+import com.example.icebutler_server.global.exception.BaseException;
 import lombok.Getter;
 
 import java.util.Arrays;
 
+import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_FOOD_CATEGORY;
 import static com.example.icebutler_server.global.util.Constant.Food.ICON_EXTENSION;
 import static com.example.icebutler_server.global.util.Constant.Food.IMG_FOLDER;
 
@@ -33,7 +34,7 @@ public enum FoodCategory{
   public static FoodCategory getFoodCategoryByName(String name){
     return Arrays.stream(FoodCategory.values())
             .filter(r -> r.getName().equals(name))
-            .findAny().orElseThrow(FoodCategoryNotFoundException::new);
+            .findAny().orElseThrow(() -> new BaseException(NOT_FOUND_FOOD_CATEGORY));
   }
 }
 

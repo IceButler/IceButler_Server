@@ -2,37 +2,40 @@ package com.example.icebutler_server.admin.service;
 
 
 import com.example.icebutler_server.admin.dto.assembler.AdminAssembler;
-import com.example.icebutler_server.admin.dto.request.*;
+import com.example.icebutler_server.admin.dto.request.JoinRequest;
+import com.example.icebutler_server.admin.dto.request.LoginRequest;
+import com.example.icebutler_server.admin.dto.request.ModifyFoodRequest;
 import com.example.icebutler_server.admin.dto.response.AdminResponse;
-import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
-import com.example.icebutler_server.admin.exception.AlreadyExistEmailException;
-import com.example.icebutler_server.admin.exception.FoodNotFoundException;
-import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.admin.dto.response.PostAdminRes;
+import com.example.icebutler_server.admin.dto.response.SearchFoodsResponse;
 import com.example.icebutler_server.admin.dto.response.UserResponse;
 import com.example.icebutler_server.admin.entity.Admin;
 import com.example.icebutler_server.admin.exception.AdminNotFoundException;
+import com.example.icebutler_server.admin.exception.AlreadyExistEmailException;
+import com.example.icebutler_server.admin.exception.FoodNotFoundException;
 import com.example.icebutler_server.admin.exception.PasswordNotMatchException;
 import com.example.icebutler_server.admin.repository.AdminRepository;
+import com.example.icebutler_server.food.entity.Food;
+import com.example.icebutler_server.food.repository.FoodRepository;
+import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.global.feign.dto.AdminReq;
 import com.example.icebutler_server.global.feign.feignClient.RecipeServerClient;
 import com.example.icebutler_server.global.feign.publisher.RecipeServerEventPublisherImpl;
-import com.example.icebutler_server.global.util.redis.RedisTemplateService;
 import com.example.icebutler_server.global.util.TokenUtils;
+import com.example.icebutler_server.global.util.redis.RedisTemplateService;
 import com.example.icebutler_server.user.entity.User;
-import com.example.icebutler_server.user.exception.UserNotFoundException;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_USER;
 
 @RequiredArgsConstructor
 @Service
@@ -73,7 +76,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void logout(Long adminIdx)
     {
-        Admin admin = adminRepository.findByIdAndIsEnable(adminIdx, true).orElseThrow(UserNotFoundException::new);
+        Admin admin = adminRepository.findByIdAndIsEnable(adminIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         admin.logout();
         redisTemplateService.deleteUserRefreshToken(admin.getId().toString());
     }
@@ -92,7 +95,7 @@ public class AdminServiceImpl implements AdminService {
     public void withdraw(Long userIdx, Long adminIdx, String authorization)
     {
         adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
-        User user = userRepository.findById(userIdx).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(userIdx).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         HashMap<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("Authorization", authorization);
         recipeServerClient.withdrawUser(userIdx, requestHeaders);

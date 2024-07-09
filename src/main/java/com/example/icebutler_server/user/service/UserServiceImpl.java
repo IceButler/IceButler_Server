@@ -3,7 +3,6 @@ package com.example.icebutler_server.user.service;
 import com.example.icebutler_server.alarm.repository.PushNotificationRepository;
 import com.example.icebutler_server.fridge.entity.Fridge;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
-import com.example.icebutler_server.fridge.exception.CannotDeleteFridgeException;
 import com.example.icebutler_server.fridge.repository.FridgeRepository;
 import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
 import com.example.icebutler_server.global.entity.FridgeRole;
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
     User user = checkUserInfo(postUserReq.getEmail(), postUserReq.getProvider());
     if (user == null) user = saveUser(postUserReq);
     // 정지된 회원은 재가입 불가
-    if (user.getIsDenied().equals(true)) throw new BaseException(UNAUTHORIZED_USER);
+    if (user.getIsDenied().equals(true)) throw new BaseException(BLOCKED_USER);
     // 자진 탈퇴 회원은 재가입 처리
     if (user.getIsEnable().equals(false)) user=saveUser(postUserReq); // 새로운 행 추가
 
@@ -78,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
   public User checkUserInfo(String email, String provider) {
     if (Provider.getProviderByName(provider) == null) throw new BaseException(INVALID_PROVIDER);
-    if (!StringUtils.hasText(email)) throw new BaseException(NOT_FOUND_EMAIL);
+    if (!StringUtils.hasText(email)) throw new BaseException(INVALID_PARAM);
 
     return userRepository.findByEmailAndProvider(email, Provider.getProviderByName(provider));
   }
@@ -135,7 +134,7 @@ public class UserServiceImpl implements UserService {
       Fridge fridge = fridgeOwner.getFridge();
       List<FridgeUser> fridgeMembers = fridgeUserRepository.findByFridgeAndRoleAndIsEnable(fridge, FridgeRole.MEMBER, true);
       if (fridgeMembers.size() > 0) {
-        throw new CannotDeleteFridgeException();
+        throw new BaseException(STILL_MEMBER_EXIST);
       }
       fridgeRepository.delete(fridge);
     }

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
-import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_FOOD_DELETE_STATUS;
+import static com.example.icebutler_server.global.exception.ReturnCode.INVALID_FOOD_DELETE_STATUS;
 
 @Getter
 public enum FoodDeleteStatus {
@@ -21,6 +21,6 @@ public enum FoodDeleteStatus {
     public static FoodDeleteStatus getFoodDeleteStatusByName(String name){
         return Arrays.stream(FoodDeleteStatus.values())
                 .filter(r -> r.getName().equals(name))
-                .findAny().orElseThrow(() -> new BaseException(NOT_FOUND_FOOD_DELETE_STATUS));
+                .findAny().orElseThrow(() -> new BaseException(INVALID_FOOD_DELETE_STATUS));
     }
 }

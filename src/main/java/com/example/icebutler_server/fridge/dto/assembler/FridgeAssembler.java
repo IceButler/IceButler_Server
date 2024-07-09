@@ -5,15 +5,17 @@ import com.example.icebutler_server.fridge.dto.response.UpdateMembersRes;
 import com.example.icebutler_server.fridge.entity.Fridge;
 import com.example.icebutler_server.fridge.entity.FridgeFood;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
-import com.example.icebutler_server.fridge.exception.FridgeRemoveException;
-import com.example.icebutler_server.fridge.exception.PermissionDeniedException;
 import com.example.icebutler_server.global.entity.FridgeRole;
+import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.icebutler_server.global.exception.ReturnCode.NO_PERMISSION;
+import static com.example.icebutler_server.global.exception.ReturnCode.STILL_MEMBER_EXIST;
 
 @Component
 @RequiredArgsConstructor
@@ -64,14 +66,9 @@ public class FridgeAssembler {
     return UpdateMembersRes.toDto(withDrawMember, checkNewMember);
   }
 
-//  public List<Food> searchFridgeFood(List<FridgeFood> fridgeFoods, String keyword) {
-//
-//    return null;
-//  }
-
   public void removeFridge(FridgeUser owner, Fridge fridge, List<FridgeUser> fridgeUsers, List<FridgeFood> fridgeFoods) {
-    if (owner.getRole() != FridgeRole.OWNER) throw new PermissionDeniedException();
-    if(fridgeUsers.size() > 1) throw new FridgeRemoveException();
+    if (owner.getRole() != FridgeRole.OWNER) throw new BaseException(NO_PERMISSION);
+    if(fridgeUsers.size() > 1) throw new BaseException(STILL_MEMBER_EXIST);
 
     fridgeUsers.forEach(FridgeUser::remove);
 //    fridgeFoods.forEach(FridgeFood::remove);

@@ -12,8 +12,6 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.fridge.entity.Fridge;
-import com.example.icebutler_server.fridge.exception.FridgeNotFoundException;
-import com.example.icebutler_server.fridge.exception.FridgeUserNotFoundException;
 import com.example.icebutler_server.fridge.repository.FridgeRepository;
 import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
 import com.example.icebutler_server.global.exception.BaseException;
@@ -29,9 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_CART;
-import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND_USER;
-
+import static com.example.icebutler_server.global.exception.ReturnCode.*;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -105,8 +101,8 @@ public class CartServiceImpl implements CartService {
 
     private Cart getCart(Long userIdx, Long fridgeIdx) {
         User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeIdx, true).orElseThrow(FridgeNotFoundException::new);
-        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(FridgeUserNotFoundException::new);
+        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
+        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
         return cartRepository.findByFridge_IdAndIsEnable(fridgeIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_CART));
     }
 }

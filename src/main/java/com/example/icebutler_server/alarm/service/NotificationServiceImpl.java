@@ -1,7 +1,7 @@
 package com.example.icebutler_server.alarm.service;
 
 import com.example.icebutler_server.alarm.dto.FcmMessage;
-import com.example.icebutler_server.alarm.dto.assembler.NotificationAssembler;
+import com.example.icebutler_server.alarm.entity.PushNotification;
 import com.example.icebutler_server.alarm.repository.PushNotificationRepository;
 import com.example.icebutler_server.global.util.Constant;
 import com.example.icebutler_server.user.entity.User;
@@ -26,7 +26,6 @@ public class NotificationServiceImpl implements NotificationService {
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/icebutler-46914/messages:send";
     private final ObjectMapper objectMapper;
     private final PushNotificationRepository notificationRepository;
-    private final NotificationAssembler notificationAssembler;
 
     // TODO 냉장고 유저 탈퇴 로직 리팩 후 호출
     @Transactional
@@ -36,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
         if(user.getFcmToken()!=null){
             FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
             Response response = sendMessage(objectMapper.writeValueAsString(message));
-            this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
+            this.notificationRepository.save(PushNotification.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
         }
     }
     // TODO 냉장고 유저 초대 리펙 후 호출
@@ -47,7 +46,7 @@ public class NotificationServiceImpl implements NotificationService {
         if(user.getFcmToken()!=null) {
             FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), Constant.PushNotification.FRIDGE, messageBody);
             Response response = sendMessage(objectMapper.writeValueAsString(message));
-            this.notificationRepository.save(this.notificationAssembler.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
+            this.notificationRepository.save(PushNotification.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
         }
     }
 
@@ -58,7 +57,7 @@ public class NotificationServiceImpl implements NotificationService {
         if(user.getFcmToken()!=null) {
             FcmMessage message = FcmMessage.makeMessage(user.getFcmToken(), fridgeName, messageBody);
             Response response = sendMessage(objectMapper.writeValueAsString(message));
-            this.notificationRepository.save(this.notificationAssembler.toEntity(fridgeName, messageBody, user));
+            this.notificationRepository.save(PushNotification.toEntity(fridgeName, messageBody, user));
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.icebutler_server.fridge.dto.assembler;
+package com.example.icebutler_server.global.util;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

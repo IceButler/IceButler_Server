@@ -7,7 +7,7 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.food.repository.FoodRepository;
-import com.example.icebutler_server.fridge.dto.assembler.FridgeFoodAssembler;
+import com.example.icebutler_server.global.util.FridgeUtils;
 import com.example.icebutler_server.fridge.dto.request.*;
 import com.example.icebutler_server.fridge.dto.response.*;
 import com.example.icebutler_server.fridge.entity.Fridge;
@@ -20,6 +20,7 @@ import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
 import com.example.icebutler_server.global.sqs.FoodData;
+import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +49,6 @@ public class FridgeServiceImpl implements FridgeService {
     private final FridgeFoodRepository fridgeFoodRepository;
     private final FoodRepository foodRepository;
     private final CartRepository cartRepository;
-    private final FridgeFoodAssembler fridgeFoodAssembler;
 
     private final AmazonSQSSender amazonSQSSender;
     private final NotificationServiceImpl alarmService;
@@ -254,7 +255,7 @@ public class FridgeServiceImpl implements FridgeService {
                         return save;
                     });
 
-            fridgeFoods.add(fridgeFoodAssembler.toEntity(owner, fridge, food, fridgeFoodReq));
+            fridgeFoods.add(FridgeFood.toEntity(owner, fridge, food, fridgeFoodReq));
         }
         fridgeFoodRepository.saveAll(fridgeFoods);
     }
@@ -278,20 +279,25 @@ public class FridgeServiceImpl implements FridgeService {
                         amazonSQSSender.sendMessage(FoodData.toDto(save));
                         return save;
                     });
-            this.fridgeFoodAssembler.toUpdateFridgeFoodInfo(modifyFridgeFood, food);
+            modifyFridgeFood.updateFridgeFoodInfo(food);
         }
 
-        this.fridgeFoodAssembler.toUpdateBasicFridgeFoodInfo(modifyFridgeFood, fridgeFoodReq);
+        modifyFridgeFood.updateFridgeFoodInfo(
+                fridgeFoodReq.getFoodDetailName(),
+                fridgeFoodReq.getMemo(),
+                LocalDate.parse(fridgeFoodReq.getShelfLife()),
+                fridgeFoodReq.getImgKey()
+        );
 
         if (fridgeFoodReq.getOwnerIdx() == null)
-            this.fridgeFoodAssembler.toUpdateFridgeFoodOwner(modifyFridgeFood, null);
+            modifyFridgeFood.updateFridgeFoodOwner(null);
         else {
             User newOwner = this.userRepository.findByIdAndIsEnable(fridgeFoodReq.getOwnerIdx(), true)
                     .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
             this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, newOwner, true)
                     .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
             if (!newOwner.equals(modifyFridgeFood.getOwner()))
-                this.fridgeFoodAssembler.toUpdateFridgeFoodOwner(modifyFridgeFood, newOwner);
+                modifyFridgeFood.updateFridgeFoodOwner(newOwner);
         }
     }
 
@@ -335,7 +341,22 @@ public class FridgeServiceImpl implements FridgeService {
             deleteStatusList.put(category, foodSize);
         }
 
-        return this.fridgeFoodAssembler.toFoodStatisticsByDeleteStatus(deleteStatusList);
+        return toFoodStatisticsByDeleteStatus(deleteStatusList);
+    }
+
+    private FridgeFoodsStatistics toFoodStatisticsByDeleteStatus(Map<FoodCategory, Long> deleteStatusList) {
+        int sum = 0;
+        for(Long value : deleteStatusList.values()){
+            sum += value.intValue();
+        }
+        List<FridgeFoodStatistics> foodStatisticsList = new ArrayList<>();
+
+        for(Map.Entry<FoodCategory, Long> deleteStatus: deleteStatusList.entrySet()){
+            foodStatisticsList.add(new FridgeFoodStatistics(deleteStatus.getKey().getName(), AwsS3ImageUrlUtil.toUrl(deleteStatus.getKey().getImage()) , FridgeUtils.calPercentage(deleteStatus.getValue().intValue(), sum), deleteStatus.getValue().intValue()));
+        }
+        // sorting
+        foodStatisticsList.sort((fs1, fs2) -> (fs2.getCount() - fs1.getCount()));
+        return FridgeFoodsStatistics.toDto(foodStatisticsList);
     }
 
     public SelectFridgesMainRes selectFridges(Long userIdx) {

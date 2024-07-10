@@ -1,6 +1,6 @@
 package com.example.icebutler_server.fridge.dto.response;
 
-import com.example.icebutler_server.fridge.dto.assembler.FridgeUtils;
+import com.example.icebutler_server.global.util.FridgeUtils;
 import com.example.icebutler_server.fridge.entity.FridgeFood;
 import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import io.swagger.v3.oas.annotations.media.Schema;

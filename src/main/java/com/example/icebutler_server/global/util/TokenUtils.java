@@ -21,7 +21,7 @@ import static com.example.icebutler_server.global.exception.ReturnCode.EXPIRED_T
 @RequiredArgsConstructor
 @Component
 public class TokenUtils {
-  public static final String USER_IDX = "userIdx";
+  public static final String USER_ID = "userId";
   public static final String NICKNAME = "nickname";
 
   public static final String EMAIL = "email";
@@ -86,17 +86,17 @@ public class TokenUtils {
     return access_token + COMMA + refresh_token;
   }
 
-  public String createToken(Long idx, String email) {
-    String access_token = this.createAccessTokenEmail(idx, email);
-    String refresh_token = this.createRefreshTokenEmail(idx, email);
+  public String createToken(Long id, String email) {
+    String access_token = this.createAccessTokenEmail(id, email);
+    String refresh_token = this.createRefreshTokenEmail(id, email);
     return access_token + COMMA + refresh_token;
   }
 
-  public String createAccessToken(Long userIdx, String nickname) {
+  public String createAccessToken(Long userId, String nickname) {
     Claims claims = Jwts.claims()
             .setSubject(accessName)
             .setIssuedAt(new Date());
-    claims.put(USER_IDX, userIdx);
+    claims.put(USER_ID, userId);
     claims.put(NICKNAME, nickname);
     Date ext = new Date();
     ext.setTime(ext.getTime() + Long.parseLong(Objects.requireNonNull(accessExTime)));
@@ -109,11 +109,11 @@ public class TokenUtils {
     return tokenType + ONE_BLOCK + accessToken;
   }
 
-  public String createRefreshToken(Long userIdx, String nickname) {
+  public String createRefreshToken(Long userId, String nickname) {
     Claims claims = Jwts.claims()
             .setSubject(refreshName)
             .setIssuedAt(new Date());
-    claims.put(USER_IDX, userIdx);
+    claims.put(USER_ID, userId);
     claims.put(NICKNAME, nickname);
     Date ext = new Date();
     ext.setTime(ext.getTime() + Long.parseLong(Objects.requireNonNull(refreshExTime)));
@@ -123,15 +123,15 @@ public class TokenUtils {
             .setExpiration(ext)
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact();
-    redisTemplateService.setUserRefreshToken(userIdx.toString(), tokenType + ONE_BLOCK + refreshToken);
+    redisTemplateService.setUserRefreshToken(userId.toString(), tokenType + ONE_BLOCK + refreshToken);
     return tokenType + ONE_BLOCK + refreshToken;
   }
 
-  public String createAccessTokenEmail(Long userIdx, String email) {
+  public String createAccessTokenEmail(Long userId, String email) {
     Claims claims = Jwts.claims()
             .setSubject(accessName)
             .setIssuedAt(new Date());
-    claims.put(USER_IDX, userIdx);
+    claims.put(USER_ID, userId);
     claims.put(EMAIL, email);
     Date ext = new Date();
     ext.setTime(ext.getTime() + Long.parseLong(Objects.requireNonNull(accessExTime)));
@@ -144,11 +144,11 @@ public class TokenUtils {
     return tokenType + ONE_BLOCK + accessToken;
   }
 
-  public String createRefreshTokenEmail(Long userIdx, String email) {
+  public String createRefreshTokenEmail(Long userId, String email) {
     Claims claims = Jwts.claims()
             .setSubject(refreshName)
             .setIssuedAt(new Date());
-    claims.put(USER_IDX, userIdx);
+    claims.put(USER_ID, userId);
     claims.put(EMAIL, email);
     Date ext = new Date();
     ext.setTime(ext.getTime() + Long.parseLong(Objects.requireNonNull(refreshExTime)));
@@ -158,7 +158,7 @@ public class TokenUtils {
             .setExpiration(ext)
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact();
-    redisTemplateService.setUserRefreshToken(userIdx.toString(), tokenType + ONE_BLOCK + refreshToken);
+    redisTemplateService.setUserRefreshToken(userId.toString(), tokenType + ONE_BLOCK + refreshToken);
     return tokenType + ONE_BLOCK + refreshToken;
   }
 
@@ -221,7 +221,7 @@ public class TokenUtils {
   }
 
   public String getUserIdFromFullToken(String fullToken) {
-    return String.valueOf(getJwtBodyFromJustToken(parseJustTokenFromFullToken(fullToken)).get(USER_IDX));
+    return String.valueOf(getJwtBodyFromJustToken(parseJustTokenFromFullToken(fullToken)).get(USER_ID));
   }
 
   public String getNicknameFromFullToken(String fullToken) {
@@ -239,14 +239,14 @@ public class TokenUtils {
   }
 
     @Transactional
-    public String accessExpiration(Long userIdx) {
-        String userRefreshToken = redisTemplateService.getUserRefreshToken(userIdx.toString());
+    public String accessExpiration(Long userId) {
+        String userRefreshToken = redisTemplateService.getUserRefreshToken(userId.toString());
       if (userRefreshToken == null) throw new BaseException(EXPIRED_TOKEN);
       String refreshNickname = getNicknameFromFullToken(userRefreshToken);
       if (refreshNickname.isEmpty()) throw new BaseException(EXPIRED_TOKEN);
 
         //토큰이 만료되었을 경우.
-        return createAccessToken(userIdx, refreshNickname);
+        return createAccessToken(userId, refreshNickname);
     }
 
 }

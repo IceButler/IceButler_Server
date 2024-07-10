@@ -49,12 +49,12 @@ public class LoginResolver implements HandlerMethodArgumentResolver{
         if(accessToken == null || !tokenUtils.isValidToken(tokenUtils.parseJustTokenFromFullToken(accessToken)))
             return LoginStatus.getNotLoginStatus();
 
-        Long userIdx = Long.valueOf(tokenUtils.getUserIdFromFullToken(accessToken));
+        Long userId = Long.valueOf(tokenUtils.getUserIdFromFullToken(accessToken));
 
-        if (!auth.optional() && userIdx == null) {
+        if (!auth.optional() && userId == null) {
             return LoginStatus.getNotLoginStatus();
         }
 
-        return LoginStatus.builder().isLogin(true).userIdx(userIdx).build();
+        return LoginStatus.builder().isLogin(true).userId(userId).build();
     }
 }

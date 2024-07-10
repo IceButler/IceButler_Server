@@ -7,17 +7,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class UserResponse {
-    private Long userIdx;
+    private Long userId;
     private String nickname;
     private String email;
     private String provider;
     private boolean isDenied;
 
-
-    public static UserResponse toDto(User user)
-    {
+    public static UserResponse toDto(User user) {
         UserResponse userResponse = new UserResponse();
-        userResponse.userIdx = user.getId();
+        userResponse.userId = user.getId();
         userResponse.nickname = user.getNickname();
         userResponse.email = user.getEmail();
         userResponse.provider = user.getProvider().getName();

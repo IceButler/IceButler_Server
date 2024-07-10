@@ -13,17 +13,17 @@ public class RedisTemplateServiceImpl implements RedisTemplateService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public void deleteUserRefreshToken(String userIdx){
-        if(redisTemplate.opsForValue().get(userIdx)!=null) redisTemplate.delete(userIdx);
+    public void deleteUserRefreshToken(String userId){
+        if(redisTemplate.opsForValue().get(userId)!=null) redisTemplate.delete(userId);
     }
 
 //    @Nullable
     @Transactional(readOnly = true)
-    public String getUserRefreshToken(@NotNull String userIdx) {
-        return redisTemplate.opsForValue().get(userIdx);
+    public String getUserRefreshToken(@NotNull String userId) {
+        return redisTemplate.opsForValue().get(userId);
     }
 
-    public void setUserRefreshToken(@NotNull String userIdx, String refreshToken) {
-        redisTemplate.opsForValue().set(userIdx, refreshToken);
+    public void setUserRefreshToken(@NotNull String userId, String refreshToken) {
+        redisTemplate.opsForValue().set(userId, refreshToken);
     }
 }

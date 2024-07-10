@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Schema(name = "MyProfileRes", description = "유저 프로필 조회 정보")
 public class MyProfileRes {
-    @Schema(name = "userIdx", description = "유저 ID")
-    private Long userIdx;
+    @Schema(name = "userId", description = "유저 ID")
+    private Long userId;
     @Schema(name = "nickname", description = "유저 닉네임")
     private String nickname;
     @Schema(name = "profileImgUrl", description = "유저 프로필 이미지 URL")
@@ -21,8 +21,8 @@ public class MyProfileRes {
     private String email;
 
     @Builder
-    public MyProfileRes(Long userIdx, String nickname, String profileImgUrl, String email) {
-        this.userIdx = userIdx;
+    public MyProfileRes(Long userId, String nickname, String profileImgUrl, String email) {
+        this.userId = userId;
         this.nickname = nickname;
         this.profileImgUrl = profileImgUrl;
         this.email = email;
@@ -30,7 +30,7 @@ public class MyProfileRes {
 
     public static MyProfileRes toDto(User user) {
         MyProfileResBuilder builder = MyProfileRes.builder()
-                .userIdx(user.getId())
+                .userId(user.getId())
                 .nickname(user.getNickname())
                 .email(user.getEmail());
 

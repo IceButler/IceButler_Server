@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Repository
 public interface FridgeFoodRepository extends JpaRepository<FridgeFood, Long>, FridgeFoodCustom {
-    Optional<FridgeFood> findByIdAndFridgeAndIsEnable(Long fridgeFoodIdx, Fridge fridge, Boolean status);
+    Optional<FridgeFood> findByIdAndFridgeAndIsEnable(Long fridgeFoodId, Fridge fridge, Boolean status);
     List<FridgeFood> findByFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(Fridge fridge, FoodCategory foodCategory, Boolean status);
     List<FridgeFood> findByFridgeAndIsEnableOrderByShelfLife(Fridge fridge, Boolean status);
     List<FridgeFood> findByFoodDetailNameContainingAndFridgeAndIsEnable(String keyword, Fridge fridge, Boolean isEnable);

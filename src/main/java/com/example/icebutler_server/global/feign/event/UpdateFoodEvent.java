@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Getter
 public class UpdateFoodEvent {
-  private Long foodIdx;
+  private Long foodId;
   private String foodName;
   private String foodImgKey;
   private FoodCategory foodCategory;
@@ -17,7 +17,7 @@ public class UpdateFoodEvent {
 
   public static UpdateFoodEvent toEvent(Food food){
     UpdateFoodEvent foodJoinEvent = new UpdateFoodEvent();
-    foodJoinEvent.foodIdx = food.getId();
+    foodJoinEvent.foodId = food.getId();
     foodJoinEvent.foodName = food.getFoodName();
     foodJoinEvent.foodImgKey = food.getFoodImgKey();
     foodJoinEvent.foodCategory = food.getFoodCategory();
@@ -27,7 +27,7 @@ public class UpdateFoodEvent {
 
   public FoodReq toDto() {
     return FoodReq.builder()
-            .foodIdx(foodIdx)
+            .foodId(foodId)
             .foodName(foodName)
             .foodImgKey(foodImgKey)
             .foodCategory(foodCategory)

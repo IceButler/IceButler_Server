@@ -42,10 +42,10 @@ public class CartController {
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @GetMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<List<CartResponse>> getCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+    @GetMapping("/{fridgeId}/foods")
+    public ResponseCustom<List<CartResponse>> getCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeId,
                                                            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(cartService.getCartFoods(fridgeIdx, loginStatus.getUserIdx()));
+        return ResponseCustom.success(cartService.getCartFoods(fridgeId, loginStatus.getUserId()));
     }
 
     @Operation(summary = "장바구니 식품 추가", description = "장바구니에 식품을 추가한다.")
@@ -60,11 +60,11 @@ public class CartController {
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @PostMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<?> addCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+    @PostMapping("/{fridgeId}/foods")
+    public ResponseCustom<?> addCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeId,
                                           @RequestBody AddFoodToCartRequest request,
                                           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        cartService.addCartFoods(fridgeIdx, request, loginStatus.getUserIdx());
+        cartService.addCartFoods(fridgeId, request, loginStatus.getUserId());
         return ResponseCustom.success();
     }
 
@@ -80,11 +80,11 @@ public class CartController {
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @DeleteMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<?> deleteCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+    @DeleteMapping("/{fridgeId}/foods")
+    public ResponseCustom<?> deleteCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeId,
                                              @RequestBody RemoveFoodFromCartRequest request,
                                              @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        cartService.deleteCartFoods(fridgeIdx, request, loginStatus.getUserIdx());
+        cartService.deleteCartFoods(fridgeId, request, loginStatus.getUserId());
         return ResponseCustom.success();
     }
 }

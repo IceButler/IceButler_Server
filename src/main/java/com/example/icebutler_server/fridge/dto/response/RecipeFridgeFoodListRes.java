@@ -12,5 +12,5 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecipeFridgeFoodListRes {
-  private UUID foodIdx;
+  private UUID foodId;
 }

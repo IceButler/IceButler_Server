@@ -8,12 +8,12 @@ import lombok.Data;
 public class SelectFridgeRes {
   @Schema(name = "fridgeName", description = "냉장고 이름")
   private String fridgeName;
-  @Schema(name = "fridgeIdx", description = "냉장고 ID")
-  private Long fridgeIdx;
+  @Schema(name = "fridgeId", description = "냉장고 ID")
+  private Long fridgeId;
 
-  public static SelectFridgeRes toDto(String fridgeName, Long fridgeIdx) {
+  public static SelectFridgeRes toDto(String fridgeName, Long fridgeId) {
     SelectFridgeRes selectFridgeRes = new SelectFridgeRes();
-    selectFridgeRes.fridgeIdx = fridgeIdx;
+    selectFridgeRes.fridgeId = fridgeId;
     selectFridgeRes.fridgeName = fridgeName;
     return selectFridgeRes;
   }

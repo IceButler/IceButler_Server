@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Schema(name = "FoodRes", description = "식품 검색 정보")
 public class FoodRes {
     @Schema(name = "식품 ID")
-    private Long foodIdx;
+    private Long foodId;
     @Schema(name = "식품명")
     private String foodName;
     @Schema(name = "식품 카테고리")
@@ -25,7 +25,7 @@ public class FoodRes {
 
     public static FoodRes toDto(Food food) {
         return FoodRes.builder()
-                .foodIdx(food.getId())
+                .foodId(food.getId())
                 .foodName(food.getFoodName())
                 .foodCategory(food.getFoodCategory().getName())
                 .foodImgUrl(AwsS3ImageUrlUtil.toUrl(food.getFoodImgKey()))

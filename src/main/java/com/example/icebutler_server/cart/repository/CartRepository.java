@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
-    Optional<Cart> findByFridge_IdAndIsEnable(Long fridgeIdx, boolean status);
+    Optional<Cart> findByFridge_IdAndIsEnable(Long fridgeId, boolean status);
     void deleteByFridge(Fridge fridge);
 }

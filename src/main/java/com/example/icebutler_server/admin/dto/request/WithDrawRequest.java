@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class WithDrawRequest {
-    private Long userIdx;
+    private Long userId;
 }

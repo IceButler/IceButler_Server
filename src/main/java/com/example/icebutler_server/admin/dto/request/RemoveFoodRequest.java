@@ -6,5 +6,5 @@ import lombok.Getter;
 @Data
 @Getter
 public class RemoveFoodRequest {
-  private Long foodIdx;
+  private Long foodId;
 }

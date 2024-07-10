@@ -95,8 +95,8 @@ public class UserServiceImpl implements UserService {
 
   // 프로필 설정
   @Transactional
-  public void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+  public void modifyProfile(@IsLogin Long userId, PatchProfileReq patchProfileReq) {
+    User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
 
     if (StringUtils.hasText(patchProfileReq.getNickname())) user.modifyProfileNickName(patchProfileReq.getNickname());
     if (StringUtils.hasText(patchProfileReq.getProfileImgKey())) user.modifyProfileImgKey(patchProfileReq.getProfileImgKey());
@@ -127,8 +127,8 @@ public class UserServiceImpl implements UserService {
   //유저 탈퇴
   @Override
   @Transactional
-  public void deleteUser(Long userIdx) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+  public void deleteUser(Long userId) {
+    User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
     List<FridgeUser> fridgeOwners = fridgeUserRepository.findByUserAndRoleAndIsEnable(user, FridgeRole.OWNER, true);
     for (FridgeUser fridgeOwner : fridgeOwners) {
       Fridge fridge = fridgeOwner.getFridge();
@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
       fridgeRepository.delete(fridge);
     }
     user.deleteUser();
-    redisTemplateService.deleteUserRefreshToken(userIdx.toString());
+    redisTemplateService.deleteUserRefreshToken(userId.toString());
 //    user.setIsEnable(false);
     recipeServerEventPublisher.deleteUser(user);
   }
@@ -147,16 +147,16 @@ public class UserServiceImpl implements UserService {
   //유저 로그아웃
   @Override
   @Transactional
-  public void logout(Long userIdx) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-    redisTemplateService.deleteUserRefreshToken(userIdx.toString());
+  public void logout(Long userId) {
+    User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+    redisTemplateService.deleteUserRefreshToken(userId.toString());
     user.logout();
   }
 
   //마이페이지 조회
   @Override
-  public MyProfileRes checkProfile(Long userIdx) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+  public MyProfileRes checkProfile(Long userId) {
+    User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
 
     return MyProfileRes.toDto(user);
 
@@ -170,8 +170,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Page<MyNotificationRes> getUserNotification(Long userIdx, Pageable pageable) {
-    User user = userRepository.findByIdAndIsEnable(userIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+  public Page<MyNotificationRes> getUserNotification(Long userId, Pageable pageable) {
+    User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
     return MyNotificationRes.toUserNotificationList(this.pushNotificationRepository.findByUserOrderByCreatedAtDesc(user, pageable));
   }
 

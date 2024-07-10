@@ -17,7 +17,7 @@ public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
 
   Optional<FridgeUser> findByFridgeAndUserAndRoleAndIsEnable(Fridge fridge, User user, FridgeRole fridgeRole, Boolean status);
 
-  Optional<FridgeUser> findByFridgeAndUser_IdAndRoleAndIsEnableAndUser_IsEnable(Fridge fridge, Long userIdx, FridgeRole fridgeRole, Boolean status, Boolean userStatus);
+  Optional<FridgeUser> findByFridgeAndUser_IdAndRoleAndIsEnableAndUser_IsEnable(Fridge fridge, Long userId, FridgeRole fridgeRole, Boolean status, Boolean userStatus);
 
   List<FridgeUser> findByFridgeAndIsEnable(Fridge fridge, Boolean isEnable);
 

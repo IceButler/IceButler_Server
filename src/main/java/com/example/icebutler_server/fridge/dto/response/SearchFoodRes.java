@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchFoodRes {
-  private Long fridgeFoodIdx;
+  private Long fridgeFoodId;
   private String foodDetailName;
 
-  public static SearchFoodRes toDto(Long fridgeFoodIdx, String foodDetailName) {
+  public static SearchFoodRes toDto(Long fridgeFoodId, String foodDetailName) {
     SearchFoodRes searchFoodRes = new SearchFoodRes();
-    searchFoodRes.fridgeFoodIdx = fridgeFoodIdx;
+    searchFoodRes.fridgeFoodId = fridgeFoodId;
     searchFoodRes.foodDetailName = foodDetailName;
     return searchFoodRes;
   }

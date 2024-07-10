@@ -7,7 +7,6 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.food.repository.FoodRepository;
-import com.example.icebutler_server.fridge.dto.assembler.FridgeAssembler;
 import com.example.icebutler_server.fridge.dto.assembler.FridgeFoodAssembler;
 import com.example.icebutler_server.fridge.dto.request.*;
 import com.example.icebutler_server.fridge.dto.response.*;
@@ -48,8 +47,6 @@ public class FridgeServiceImpl implements FridgeService {
     private final FridgeFoodRepository fridgeFoodRepository;
     private final FoodRepository foodRepository;
     private final CartRepository cartRepository;
-
-    private final FridgeAssembler fridgeAssembler;
     private final FridgeFoodAssembler fridgeFoodAssembler;
 
     private final AmazonSQSSender amazonSQSSender;
@@ -73,7 +70,7 @@ public class FridgeServiceImpl implements FridgeService {
     @Transactional
     public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerIdx) {
         if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new BaseException(INVALID_PARAM);
-        Fridge fridge = fridgeAssembler.toEntity(registerFridgeReq);
+        Fridge fridge = Fridge.toEntity(registerFridgeReq);
         fridgeRepository.save(fridge);
 
         List<FridgeUser> fridgeUsers = new ArrayList<>();
@@ -111,7 +108,7 @@ public class FridgeServiceImpl implements FridgeService {
         // 오너 업데이트
         if (!owner.getUser().getId().equals(updateFridgeReq.getNewOwnerIdx())) {
             FridgeUser newOwner = this.fridgeUserRepository.findByFridgeAndUser_IdAndRoleAndIsEnableAndUser_IsEnable(fridge, updateFridgeReq.getNewOwnerIdx(), FridgeRole.MEMBER, true, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
-            this.fridgeAssembler.toUpdateFridgeOwner(owner, newOwner);
+            toUpdateFridgeOwner(owner, newOwner);
         }
 
         // 냉장고 정보 (이름, 설명) 업데이트
@@ -122,7 +119,7 @@ public class FridgeServiceImpl implements FridgeService {
             List<FridgeUser> members = this.fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
             List<User> newMembers = updateFridgeReq.getMembers().stream()
                     .map(m -> this.userRepository.findByIdAndIsEnable(m.getUserIdx(), true).orElseThrow(() -> new BaseException(NOT_FOUND_USER))).collect(Collectors.toList());
-            UpdateMembersRes updateMembers = this.fridgeAssembler.toUpdateFridgeMembers(newMembers, members);
+            UpdateMembersRes updateMembers = toUpdateFridgeMembers(newMembers, members);
 
             if (!updateMembers.getCheckNewMember().isEmpty()) {
                 this.fridgeUserRepository.saveAll(updateMembers.getCheckNewMember());
@@ -147,6 +144,44 @@ public class FridgeServiceImpl implements FridgeService {
         }
     }
 
+    private UpdateMembersRes toUpdateFridgeMembers(List<User> newMembers, List<FridgeUser> fridgeUsers) {
+        for (FridgeUser member : fridgeUsers) {
+            member.setIsEnable(false);
+        }
+        List<FridgeUser> checkNewMember = new ArrayList<>();
+        List<FridgeUser> withDrawMember = new ArrayList<>();
+
+        for (User user : newMembers) {
+            boolean hasMember = false;
+
+            for (FridgeUser members : fridgeUsers) {
+                if (user.equals(members.getUser())) {
+                    members.setIsEnable(true);
+                    hasMember = true;
+                }
+                if(members.getRole().equals(FridgeRole.OWNER)){
+                    members.setIsEnable(true);
+                }
+            }
+            if (!hasMember) {
+                checkNewMember.add(FridgeUser.builder()
+                        .user(user)
+                        .role(FridgeRole.MEMBER)
+                        .fridge(fridgeUsers.get(0).getFridge())
+                        .build());
+            }
+        }
+        for (FridgeUser f : fridgeUsers) {
+            if(!f.getIsEnable()) withDrawMember.add(f);
+        }
+        return UpdateMembersRes.toDto(withDrawMember, checkNewMember);
+    }
+
+    private void toUpdateFridgeOwner(FridgeUser owner, FridgeUser newOwner) {
+        owner.changeFridgeMember(owner.getUser());
+        newOwner.changeFridgeOwner(newOwner.getUser());
+    }
+
     // 냉장고 자체 삭제
     @Transactional
     public Long removeFridge(Long fridgeIdx, Long userId) {
@@ -156,7 +191,12 @@ public class FridgeServiceImpl implements FridgeService {
         List<FridgeUser> fridgeUsers = fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
         List<FridgeFood> fridgeFoods = fridgeFoodRepository.findByFridgeAndIsEnableOrderByShelfLife(fridge, true);
 
-        fridgeAssembler.removeFridge(owner, fridge, fridgeUsers, fridgeFoods);
+        if (owner.getRole() != FridgeRole.OWNER) throw new BaseException(NO_PERMISSION);
+        if(fridgeUsers.size() > 1) throw new BaseException(STILL_MEMBER_EXIST);
+
+        fridgeUsers.forEach(FridgeUser::remove);
+//        fridgeFoods.forEach(FridgeFood::remove);
+        fridge.remove();
         fridgeFoodRepository.removeFridgeFoodByFridge(false, fridge);
 
         return fridge.getId();

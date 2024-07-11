@@ -40,20 +40,21 @@ public class FoodController {
 
     @Operation(summary = "식품 검색", description = "식품을 검색한다.")
     @SwaggerApiSuccess(implementation = FoodRes.class)
-    @ApiResponse(responseCode = "404", description = "(F0000)존재하지 않는 카테고리입니다.",
+    @ApiResponse(responseCode = "400", description = "(F0000)존재하지 않는 카테고리입니다.",
             content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
     @GetMapping("")
     public ResponseCustom<List<FoodRes>> searchFood(@Parameter(name = "category", description = "식품 카테고리") @RequestParam(required = false) String category,
-                                                    @Parameter(name = "word", description = "검색어")@RequestParam(required = false) String word) {
-        if(category != null && word != null) return ResponseCustom.success(foodService.getAllFoodByCategoryAndWord(category, word));
-        else if(category != null) return ResponseCustom.success(foodService.getAllFoodByCategory(category));
-        else if(word != null) return ResponseCustom.success(foodService.getAllFoodByWord(word));
+                                                    @Parameter(name = "word", description = "검색어") @RequestParam(required = false) String word) {
+        if (category != null && word != null)
+            return ResponseCustom.success(foodService.getAllFoodByCategoryAndWord(category, word));
+        else if (category != null) return ResponseCustom.success(foodService.getAllFoodByCategory(category));
+        else if (word != null) return ResponseCustom.success(foodService.getAllFoodByWord(word));
         else return ResponseCustom.success(foodService.getAllFood());
     }
 
     @Operation(summary = "식품 바코드 조회", description = "바코드 번호로 식품을 조회한다.")
     @SwaggerApiSuccess(implementation = BarcodeFoodRes.class)
-    @ApiResponse(responseCode = "404", description = "(F00001)해당 바코드의 상품을 찾을 수 없습니다.",
+    @ApiResponse(responseCode = "404", description = "(F0001)해당 바코드의 상품을 찾을 수 없습니다.",
             content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
     @GetMapping("/barcode")
     public ResponseCustom<BarcodeFoodRes> searchByBarcode(@RequestParam String code_num) throws IOException, org.json.simple.parser.ParseException {

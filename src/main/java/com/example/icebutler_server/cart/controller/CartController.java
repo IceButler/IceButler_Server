@@ -34,11 +34,11 @@ public class CartController {
     @Operation(summary = "장바구니 식품 조회", description = "장바구니 식품 목록을 조회한다.")
     @SwaggerApiSuccess(implementation = CartResponse.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+            @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.\t\n" +
-                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
-                    "(C0000)장바구니를 찾을 수 없습니다.",
+            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
+                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
+                    "(C0000)존재하지 않는 장바구니입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
@@ -51,12 +51,13 @@ public class CartController {
     @Operation(summary = "장바구니 식품 추가", description = "장바구니에 식품을 추가한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+            @ApiResponse(responseCode = "400", description = "(F0000)존재하지 않는 카테고리입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.\t\n" +
-                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
-                    "(C0000)장바구니를 찾을 수 없습니다.\t\n" +
-                    "(F0000)존재하지 않는 카테고리입니다.",
+            @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
+                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
+                    "(C0000)존재하지 않는 장바구니입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
@@ -71,12 +72,13 @@ public class CartController {
     @Operation(summary = "장바구니 식품 삭제", description = "장바구니의 식품을 삭제한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+            @ApiResponse(responseCode = "400", description = "(F0000)존재하지 않는 카테고리입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.\t\n" +
-                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
-                    "(C0000)장바구니를 찾을 수 없습니다.\t\n" +
-                    "(F0000)존재하지 않는 카테고리입니다.",
+            @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
+                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
+                    "(C0000)존재하지 않는 장바구니입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth

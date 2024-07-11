@@ -160,7 +160,7 @@ public class FridgeServiceImpl implements FridgeService {
                     members.setIsEnable(true);
                     hasMember = true;
                 }
-                if(members.getRole().equals(FridgeRole.OWNER)){
+                if (members.getRole().equals(FridgeRole.OWNER)) {
                     members.setIsEnable(true);
                 }
             }
@@ -173,7 +173,7 @@ public class FridgeServiceImpl implements FridgeService {
             }
         }
         for (FridgeUser f : fridgeUsers) {
-            if(!f.getIsEnable()) withDrawMember.add(f);
+            if (!f.getIsEnable()) withDrawMember.add(f);
         }
         return UpdateMembersRes.toDto(withDrawMember, checkNewMember);
     }
@@ -188,12 +188,12 @@ public class FridgeServiceImpl implements FridgeService {
     public Long removeFridge(Long fridgeId, Long userId) {
         User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        FridgeUser owner = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
+        FridgeUser owner = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NO_PERMISSION));
         List<FridgeUser> fridgeUsers = fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
         List<FridgeFood> fridgeFoods = fridgeFoodRepository.findByFridgeAndIsEnableOrderByShelfLife(fridge, true);
 
         if (owner.getRole() != FridgeRole.OWNER) throw new BaseException(NO_PERMISSION);
-        if(fridgeUsers.size() > 1) throw new BaseException(STILL_MEMBER_EXIST);
+        if (fridgeUsers.size() > 1) throw new BaseException(STILL_MEMBER_EXIST);
 
         fridgeUsers.forEach(FridgeUser::remove);
 //        fridgeFoods.forEach(FridgeFood::remove);
@@ -228,7 +228,7 @@ public class FridgeServiceImpl implements FridgeService {
     public FridgeFoodRes getFridgeFood(Long fridgeId, Long fridgeFoodId, Long userId) {
         User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
+        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NO_PERMISSION));
         FridgeFood fridgeFood = fridgeFoodRepository.findByIdAndFridgeAndIsEnable(fridgeFoodId, fridge, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_FOOD));
 
         return FridgeFoodRes.toDto(fridgeFood);
@@ -239,7 +239,7 @@ public class FridgeServiceImpl implements FridgeService {
     public void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeId, Long userId) {
         User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
+        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NO_PERMISSION));
 
         List<FridgeFood> fridgeFoods = new ArrayList<>();
         for (FridgeFoodReq fridgeFoodReq : fridgeFoodsReq.getFridgeFoods()) {
@@ -268,7 +268,7 @@ public class FridgeServiceImpl implements FridgeService {
         Fridge fridge = this.fridgeRepository.findByIdAndIsEnable(fridgeId, true)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
         this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, user, true)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
+                .orElseThrow(() -> new BaseException(NO_PERMISSION));
         FridgeFood modifyFridgeFood = this.fridgeFoodRepository.findByIdAndFridgeAndIsEnable(fridgeFoodId, fridge, true)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_FOOD));
 
@@ -332,7 +332,7 @@ public class FridgeServiceImpl implements FridgeService {
     public FridgeFoodsStatistics getFridgeFoodStatistics(Long fridgeId, String deleteCategory, Long userId, Integer year, Integer month) {
         User user = this.userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         Fridge fridge = this.fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
+        this.fridgeUserRepository.findByFridgeAndUserAndIsEnable(fridge, user, true).orElseThrow(() -> new BaseException(NO_PERMISSION));
 
         Map<FoodCategory, Long> deleteStatusList = new HashMap<>();
 
@@ -346,13 +346,13 @@ public class FridgeServiceImpl implements FridgeService {
 
     private FridgeFoodsStatistics toFoodStatisticsByDeleteStatus(Map<FoodCategory, Long> deleteStatusList) {
         int sum = 0;
-        for(Long value : deleteStatusList.values()){
+        for (Long value : deleteStatusList.values()) {
             sum += value.intValue();
         }
         List<FridgeFoodStatistics> foodStatisticsList = new ArrayList<>();
 
-        for(Map.Entry<FoodCategory, Long> deleteStatus: deleteStatusList.entrySet()){
-            foodStatisticsList.add(new FridgeFoodStatistics(deleteStatus.getKey().getName(), AwsS3ImageUrlUtil.toUrl(deleteStatus.getKey().getImage()) , FridgeUtils.calPercentage(deleteStatus.getValue().intValue(), sum), deleteStatus.getValue().intValue()));
+        for (Map.Entry<FoodCategory, Long> deleteStatus : deleteStatusList.entrySet()) {
+            foodStatisticsList.add(new FridgeFoodStatistics(deleteStatus.getKey().getName(), AwsS3ImageUrlUtil.toUrl(deleteStatus.getKey().getImage()), FridgeUtils.calPercentage(deleteStatus.getValue().intValue(), sum), deleteStatus.getValue().intValue()));
         }
         // sorting
         foodStatisticsList.sort((fs1, fs2) -> (fs2.getCount() - fs1.getCount()));

@@ -50,7 +50,7 @@ public class CartServiceImpl implements CartService {
         for (FoodCategory category : FoodCategory.values()) {
             List<CartFood> cartFoods = cartFoodRepository.findByCartAndFood_FoodCategoryAndIsEnableOrderByCreatedAt(cart, category, true);
             // 카테고리별 음식이 있는 경우만 응답
-            if(cartFoods.isEmpty()) continue;
+            if (cartFoods.isEmpty()) continue;
             CartResponse cartResponse = CartResponse.toDto(cartFoods, category);
             cartResponses.add(cartResponse);
         }
@@ -66,9 +66,9 @@ public class CartServiceImpl implements CartService {
         Cart cart = getCart(userId, cartId);
         // food 없는 경우 food 생성
         List<Food> foodRequests = new ArrayList<>();
-        for(AddFoodRequest foodRequest : request.getFoodRequests()) {
+        for (AddFoodRequest foodRequest : request.getFoodRequests()) {
             Food food = this.foodRepository.findByFoodNameAndFoodCategory(foodRequest.getFoodName(), FoodCategory.getFoodCategoryByName(foodRequest.getFoodCategory()));
-            if(food == null) {
+            if (food == null) {
                 food = this.foodRepository.save(Food.toEntity(foodRequest));
                 amazonSQSSender.sendMessage(FoodData.toDto(food));
             }
@@ -81,7 +81,7 @@ public class CartServiceImpl implements CartService {
                 .collect(Collectors.toList());
         List<CartFood> cartFoods = foodRequests.stream()
                 .filter((f) -> {
-                    for (Long foodInId : foodsInNowCart) if(foodInId.equals(f.getId())) return false;
+                    for (Long foodInId : foodsInNowCart) if (foodInId.equals(f.getId())) return false;
                     return true;
                 })
                 .map((food) -> CartFood.toEntity(cart, food))
@@ -102,7 +102,7 @@ public class CartServiceImpl implements CartService {
     private Cart getCart(Long userId, Long fridgeId) {
         User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
+        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NO_PERMISSION));
         return cartRepository.findByFridge_IdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_CART));
     }
 }

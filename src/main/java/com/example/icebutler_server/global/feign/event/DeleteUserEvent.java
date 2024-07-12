@@ -6,14 +6,14 @@ import lombok.Getter;
 
 @Getter
 public class DeleteUserEvent {
-    private Long userIdx;
+    private Long userId;
     private String nickname;
     private String profileImgKey;
     private String email;
 
     public static DeleteUserEvent toEvent(User user){
         DeleteUserEvent userJoinEvent = new DeleteUserEvent();
-        userJoinEvent.userIdx = user.getId();
+        userJoinEvent.userId = user.getId();
         userJoinEvent.email = user.getEmail();
         userJoinEvent.nickname = user.getNickname();
         userJoinEvent.profileImgKey = user.getProfileImgKey();
@@ -22,7 +22,7 @@ public class DeleteUserEvent {
 
     public UserReq toDto() {
         return UserReq.builder()
-                .userIdx(this.userIdx)
+                .userId(this.userId)
                 .nickname(this.nickname)
                 .email(this.email)
                 .profileImgKey(this.profileImgKey).build();

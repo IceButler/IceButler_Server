@@ -49,12 +49,12 @@ public class AdminResolver implements HandlerMethodArgumentResolver{
         if(accessToken == null || !tokenUtils.isValidToken(tokenUtils.parseJustTokenFromFullToken(accessToken)))
             return AdminLoginStatus.getNotAdminLoginStatus();
 
-        Long adminIdx = Long.valueOf(tokenUtils.getUserIdFromFullToken(accessToken));
+        Long adminId = Long.valueOf(tokenUtils.getUserIdFromFullToken(accessToken));
 
-        if (!admin.optional() && adminIdx == null) {
+        if (!admin.optional() && adminId == null) {
             return AdminLoginStatus.getNotAdminLoginStatus();
         }
 
-        return AdminLoginStatus.builder().isLogin(true).adminIdx(adminIdx).build();
+        return AdminLoginStatus.builder().isLogin(true).adminId(adminId).build();
     }
 }

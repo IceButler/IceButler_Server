@@ -34,57 +34,59 @@ public class CartController {
     @Operation(summary = "장바구니 식품 조회", description = "장바구니 식품 목록을 조회한다.")
     @SwaggerApiSuccess(implementation = CartResponse.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+            @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.\t\n" +
-                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
-                    "(C0000)장바구니를 찾을 수 없습니다.",
+            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
+                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
+                    "(C0000)존재하지 않는 장바구니입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @GetMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<List<CartResponse>> getCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+    @GetMapping("/{fridgeId}/foods")
+    public ResponseCustom<List<CartResponse>> getCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeId,
                                                            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(cartService.getCartFoods(fridgeIdx, loginStatus.getUserIdx()));
+        return ResponseCustom.success(cartService.getCartFoods(fridgeId, loginStatus.getUserId()));
     }
 
     @Operation(summary = "장바구니 식품 추가", description = "장바구니에 식품을 추가한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+            @ApiResponse(responseCode = "400", description = "(F0000)존재하지 않는 카테고리입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.\t\n" +
-                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
-                    "(C0000)장바구니를 찾을 수 없습니다.\t\n" +
-                    "(F0000)존재하지 않는 카테고리입니다.",
+            @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
+                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
+                    "(C0000)존재하지 않는 장바구니입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @PostMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<?> addCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+    @PostMapping("/{fridgeId}/foods")
+    public ResponseCustom<?> addCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeId,
                                           @RequestBody AddFoodToCartRequest request,
                                           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        cartService.addCartFoods(fridgeIdx, request, loginStatus.getUserIdx());
+        cartService.addCartFoods(fridgeId, request, loginStatus.getUserId());
         return ResponseCustom.success();
     }
 
     @Operation(summary = "장바구니 식품 삭제", description = "장바구니의 식품을 삭제한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "403", description = "냉장고의 멤버가 아닙니다.",
+            @ApiResponse(responseCode = "400", description = "(F0000)존재하지 않는 카테고리입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0005)해당 유저를 찾을 수 없습니다.\t\n" +
-                    "요청한 id를 가진 냉장고를 찾을 수 없습니다.\t\n" +
-                    "(C0000)장바구니를 찾을 수 없습니다.\t\n" +
-                    "(F0000)존재하지 않는 카테고리입니다.",
+            @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
+                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
+                    "(C0000)존재하지 않는 장바구니입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @DeleteMapping("/{fridgeIdx}/foods")
-    public ResponseCustom<?> deleteCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeIdx,
+    @DeleteMapping("/{fridgeId}/foods")
+    public ResponseCustom<?> deleteCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeId,
                                              @RequestBody RemoveFoodFromCartRequest request,
                                              @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        cartService.deleteCartFoods(fridgeIdx, request, loginStatus.getUserIdx());
+        cartService.deleteCartFoods(fridgeId, request, loginStatus.getUserId());
         return ResponseCustom.success();
     }
 }

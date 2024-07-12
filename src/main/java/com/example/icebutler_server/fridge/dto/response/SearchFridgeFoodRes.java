@@ -14,15 +14,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchFridgeFoodRes {
-  private Long fridgeIdx;
-  private Long userIdx;
+  private Long fridgeId;
+  private Long userId;
   private List<SearchFoodRes> searchFoods;
 
-  public static SearchFridgeFoodRes toDto(List<FridgeFood> searchFoods, Long fridgeIdx, Long userIdx) {
+  public static SearchFridgeFoodRes toDto(List<FridgeFood> searchFoods, Long fridgeId, Long userId) {
     SearchFridgeFoodRes searchFridgeFoodRes = new SearchFridgeFoodRes();
     searchFridgeFoodRes.searchFoods = searchFoods.stream().map(m -> SearchFoodRes.toDto(m.getId(), m.getFoodDetailName())).collect(Collectors.toList());
-    searchFridgeFoodRes.fridgeIdx = fridgeIdx;
-    searchFridgeFoodRes.userIdx = userIdx;
+    searchFridgeFoodRes.fridgeId = fridgeId;
+    searchFridgeFoodRes.userId = userId;
     return searchFridgeFoodRes;
   }
 }

@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Schema(name = "FridgeRes", description = "가정용 냉장고 정보")
 public class FridgeRes {
-  @Schema(name = "fridgeIdx", description = "냉장고 ID")
-  private Long fridgeIdx;
+  @Schema(name = "fridgeId", description = "냉장고 ID")
+  private Long fridgeId;
   @Schema(name = "fridgeName", description = "냉장고 이름")
   private String fridgeName;
   @Schema(name = "comment", description = "냉장고 설명")
@@ -36,7 +36,7 @@ public class FridgeRes {
     }
 
     FridgeRes fridgeRes = new FridgeRes();
-    fridgeRes.fridgeIdx = fridge.getId();
+    fridgeRes.fridgeId = fridge.getId();
     fridgeRes.fridgeName = fridge.getFridgeName();
     fridgeRes.comment = fridge.getFridgeComment();
     fridgeRes.users = fridgeUsers.stream().map(m -> FridgeUserRes.toDto(m.getUser(), m.getRole())).collect(Collectors.toList());

@@ -9,7 +9,6 @@ import java.util.List;
 
 import static com.example.icebutler_server.cart.entity.QCartFood.cartFood;
 
-
 @RequiredArgsConstructor
 @Repository
 public class CartFoodQuerydslRepositoryImpl implements CartFoodQuerydslRepository{
@@ -18,12 +17,12 @@ public class CartFoodQuerydslRepositoryImpl implements CartFoodQuerydslRepositor
 
 
     @Override
-    public List<CartFood> findByCartIdAndFoodIdIn(Long cartIdx, List<Long> foodIdxes) {
+    public List<CartFood> findByCartIdAndFoodIdIn(Long cartId, List<Long> foodIds) {
                 return queryFactory
                 .selectFrom(cartFood)
                 .where(
-                        cartFood.cart.id.eq(cartIdx),
-                        cartFood.food.id.in(foodIdxes)
+                        cartFood.cart.id.eq(cartId),
+                        cartFood.food.id.in(foodIds)
                 )
                 .fetch();
     }

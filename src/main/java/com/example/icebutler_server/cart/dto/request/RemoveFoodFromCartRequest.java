@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 @Schema(name = "RemoveFoodFromCartRequest", description = "장바구니 식품 삭제 요청 정보")
 public class RemoveFoodFromCartRequest {
-    @Schema(name = "foodIdxes", description = "식품 ID 목록")
-    private List<Long> foodIdxes;
+    @Schema(name = "foodIds", description = "식품 ID 목록")
+    private List<Long> foodIds;
 }

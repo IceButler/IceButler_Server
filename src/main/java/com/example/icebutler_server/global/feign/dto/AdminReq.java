@@ -8,18 +8,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class AdminReq {
-    private Long adminIdx;
+    private Long adminId;
     private String email;
 
     @Builder
-    public AdminReq(Long adminIdx, String email) {
-        this.adminIdx = adminIdx;
+    public AdminReq(Long adminId, String email) {
+        this.adminId = adminId;
         this.email = email;
     }
 
     public static AdminReq toDto(Admin admin){
         AdminReq adminReq = new AdminReq();
-        adminReq.adminIdx = admin.getId();
+        adminReq.adminId = admin.getId();
         adminReq.email = admin.getEmail();
         return adminReq;
     }

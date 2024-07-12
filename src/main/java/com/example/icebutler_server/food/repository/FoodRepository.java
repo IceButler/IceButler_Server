@@ -21,7 +21,7 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
   List<Food> findByFoodNameContains(String foodName);
 
-  Optional<Food> findByIdAndIsEnable(Long foodIdx, boolean status);
+  Optional<Food> findByIdAndIsEnable(Long foodId, boolean status);
 
   Page<Food> findByFoodNameContainsAndIsEnable(String cond, boolean status, Pageable pageable);
 

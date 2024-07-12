@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @Schema(name = "FridgeUserRes", description = "냉장고 유저 정보")
 public class FridgeUserRes {
-    @Schema(name = "userIdx", description = "유저 ID")
-    private Long userIdx;
+    @Schema(name = "userId", description = "유저 ID")
+    private Long userId;
     @Schema(name = "nickname", description = "유저 닉네임")
     private String nickname;
     @Schema(name = "role", description = "냉장고 내 유저 역할")
@@ -26,7 +26,7 @@ public class FridgeUserRes {
 
     public static FridgeUserRes toDto(User user, FridgeRole role) {
         FridgeUserRes fridgeUserRes = new FridgeUserRes();
-        fridgeUserRes.userIdx = user.getId();
+        fridgeUserRes.userId = user.getId();
         fridgeUserRes.nickname = user.getNickname();
         fridgeUserRes.role = role;
         fridgeUserRes.profileImgUrl = AwsS3ImageUrlUtil.toUrl(user.getProfileImgKey());

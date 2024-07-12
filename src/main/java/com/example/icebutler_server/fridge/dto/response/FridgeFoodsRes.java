@@ -1,6 +1,6 @@
 package com.example.icebutler_server.fridge.dto.response;
 
-import com.example.icebutler_server.fridge.dto.assembler.FridgeUtils;
+import com.example.icebutler_server.global.util.FridgeUtils;
 import com.example.icebutler_server.fridge.entity.FridgeFood;
 import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Schema(name = "FridgeFoodsRes", description = "냉장고 식품 정보")
 public class FridgeFoodsRes {
-  @Schema(name = "fridgeFoodIdx", description = "냉장고 식품 ID")
-  private Long fridgeFoodIdx;
+  @Schema(name = "fridgeFoodId", description = "냉장고 식품 ID")
+  private Long fridgeFoodId;
   @Schema(name = "foodName", description = "냉장고 식품 이름")
   private String foodName;
   @Schema(name = "foodImgUrl", description = "냉장고 식품 이미지 URL")
@@ -26,7 +26,7 @@ public class FridgeFoodsRes {
 
   public static FridgeFoodsRes toDto(FridgeFood fridgeFood) {
     return FridgeFoodsRes.builder()
-            .fridgeFoodIdx(fridgeFood.getId())
+            .fridgeFoodId(fridgeFood.getId())
             .foodName(fridgeFood.getFood().getFoodName())
             .foodImgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFood().getFoodImgKey()))
             .shelfLife(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))

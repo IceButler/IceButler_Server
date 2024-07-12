@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 public class FoodReq {
-    private Long foodIdx;
+    private Long foodId;
     private String foodName;
     private String foodImgKey;
     private String foodCategory;

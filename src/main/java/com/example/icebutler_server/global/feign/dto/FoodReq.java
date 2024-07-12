@@ -9,15 +9,15 @@ import java.util.UUID;
 
 @Data
 public class FoodReq {
-  private Long foodIdx;
+  private Long foodId;
   private String foodName;
   private String foodImgKey;
   private FoodCategory foodCategory;
   private UUID uuid;
 
   @Builder
-  public FoodReq(Long foodIdx, String foodName, String foodImgKey, FoodCategory foodCategory, UUID uuid) {
-    this.foodIdx = foodIdx;
+  public FoodReq(Long foodId, String foodName, String foodImgKey, FoodCategory foodCategory, UUID uuid) {
+    this.foodId = foodId;
     this.foodName = foodName;
     this.foodImgKey = foodImgKey;
     this.foodCategory = foodCategory;
@@ -26,7 +26,7 @@ public class FoodReq {
 
   public static FoodReq toDto(Food food) {
     return FoodReq.builder()
-            .foodIdx(food.getId())
+            .foodId(food.getId())
             .foodName(food.getFoodName())
             .foodImgKey(food.getFoodImgKey())
             .foodCategory(food.getFoodCategory())

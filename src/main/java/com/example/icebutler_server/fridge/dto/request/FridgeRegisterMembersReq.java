@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Schema(name = "FridgeRegisterMembersReq", description = "냉장고 등록 멤버 ID")
 public class FridgeRegisterMembersReq {
-  @Schema(name = "userIdx", description = "유저 ID")
-  private Long userIdx;
+  @Schema(name = "userId", description = "유저 ID")
+  private Long userId;
 }

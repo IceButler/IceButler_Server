@@ -54,9 +54,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Transactional
     @Override
-    public AdminResponse join(JoinRequest request)
-    {
-        if(adminRepository.findByEmail(request.getEmail()).isPresent()) throw new AlreadyExistEmailException();
+    public AdminResponse join(JoinRequest request) {
+        if (adminRepository.findByEmail(request.getEmail()).isPresent()) throw new AlreadyExistEmailException();
         Admin admin = adminRepository.save(request.toAdmin(pwEncoder.encode(request.getPassword())));
         recipeServerClient.addAdmin(AdminReq.toDto(admin));
         return AdminResponse.toDto(admin);
@@ -64,19 +63,17 @@ public class AdminServiceImpl implements AdminService {
 
     @Transactional
     @Override
-    public PostAdminRes login(LoginRequest request)
-    {
+    public PostAdminRes login(LoginRequest request) {
         Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(AdminNotFoundException::new);
-        if(!pwEncoder.matches(request.getPassword(), admin.getPassword())) throw new PasswordNotMatchException();
+        if (!pwEncoder.matches(request.getPassword(), admin.getPassword())) throw new PasswordNotMatchException();
         admin.login();
         return PostAdminRes.toDto(tokenUtils.createToken(admin.getId(), admin.getEmail()));
     }
 
     @Transactional
     @Override
-    public void logout(Long adminIdx)
-    {
-        Admin admin = adminRepository.findByIdAndIsEnable(adminIdx, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+    public void logout(Long adminId) {
+        Admin admin = adminRepository.findByIdAndIsEnable(adminId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         admin.logout();
         redisTemplateService.deleteUserRefreshToken(admin.getId().toString());
     }
@@ -85,29 +82,28 @@ public class AdminServiceImpl implements AdminService {
     public Page<UserResponse> search(
             Pageable pageable,
             String nickname,
-            boolean active,Long adminIdx)
-    {
-        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
+            boolean active, Long adminId) {
+        adminRepository.findByIdAndIsEnable(adminId, true).orElseThrow(AdminNotFoundException::new);
         return adminRepository.findAllByNicknameAndActive(pageable, nickname, active);
     }
+
     @Transactional
     @Override
-    public void withdraw(Long userIdx, Long adminIdx, String authorization)
-    {
-        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
-        User user = userRepository.findById(userIdx).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+    public void withdraw(Long userId, Long adminId, String authorization) {
+        adminRepository.findByIdAndIsEnable(adminId, true).orElseThrow(AdminNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
         HashMap<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("Authorization", authorization);
-        recipeServerClient.withdrawUser(userIdx, requestHeaders);
+        recipeServerClient.withdrawUser(userId, requestHeaders);
         userRepository.delete(user);
     }
 
     @Override
-    public Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable,Long adminIdx) {
-        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
+    public Page<SearchFoodsResponse> searchFoods(String cond, Pageable pageable, Long adminId) {
+        adminRepository.findByIdAndIsEnable(adminId, true).orElseThrow(AdminNotFoundException::new);
         Page<SearchFoodsResponse> searchFoods;
 
-        if (StringUtils.hasText(cond)){
+        if (StringUtils.hasText(cond)) {
             Page<Food> searchFood = foodRepository.findByFoodNameContainsAndIsEnable(cond, true, pageable);
             searchFoods = searchFood.map(SearchFoodsResponse::toDto);
             return searchFoods;
@@ -120,9 +116,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void modifyFood(Long foodIdx, ModifyFoodRequest request,Long adminIdx) {
-        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
-        Food food = foodRepository.findByIdAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
+    public void modifyFood(Long foodId, ModifyFoodRequest request, Long adminId) {
+        adminRepository.findByIdAndIsEnable(adminId, true).orElseThrow(AdminNotFoundException::new);
+        Food food = foodRepository.findByIdAndIsEnable(foodId, true).orElseThrow(FoodNotFoundException::new);
         Food checkFood = foodRepository.findByFoodNameAndIsEnable(request.getFoodName(), true);
         if (!food.getFoodName().equals(request.getFoodName()) && checkFood != null) {
             adminAssembler.validateFoodName(checkFood, request.getFoodName());
@@ -133,9 +129,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void removeFoods(Long foodIdx,Long adminIdx) {
-        adminRepository.findByIdAndIsEnable(adminIdx,true).orElseThrow(AdminNotFoundException::new);
-        Food food = foodRepository.findByIdAndIsEnable(foodIdx, true).orElseThrow(FoodNotFoundException::new);
+    public void removeFoods(Long foodId, Long adminId) {
+        adminRepository.findByIdAndIsEnable(adminId, true).orElseThrow(AdminNotFoundException::new);
+        Food food = foodRepository.findByIdAndIsEnable(foodId, true).orElseThrow(FoodNotFoundException::new);
         foodRepository.delete(food);
         recipeServerEventPublisher.deleteFood(food);
     }

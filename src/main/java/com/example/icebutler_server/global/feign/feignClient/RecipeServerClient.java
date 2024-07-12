@@ -25,8 +25,8 @@ public interface RecipeServerClient {
     @PostMapping("/admin")
     ResponseCustom<Void> addAdmin(@RequestBody AdminReq adminReq);
 
-    @DeleteMapping("/admin/users/{userIdx}")
-    ResponseCustom<Void> withdrawUser(@PathVariable("userIdx") Long userIdx, @RequestHeader Map<String, String> requestHeader);
+    @DeleteMapping("/admin/users/{userId}")
+    ResponseCustom<Void> withdrawUser(@PathVariable Long userId, @RequestHeader Map<String, String> requestHeader);
 
     @DeleteMapping("/foods")
     void deleteFood(@RequestBody FoodReq foodReq);

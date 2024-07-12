@@ -34,4 +34,12 @@ public class PushNotification extends BaseEntity {
         this.notificationInfo = notificationInfo;
         this.user = user;
     }
+
+    public static PushNotification toEntity(String pushNotificationType, String messageBody, User user) {
+        return PushNotification.builder()
+                .pushNotificationType(pushNotificationType)
+                .notificationInfo(messageBody)
+                .user(user)
+                .build();
+    }
 }

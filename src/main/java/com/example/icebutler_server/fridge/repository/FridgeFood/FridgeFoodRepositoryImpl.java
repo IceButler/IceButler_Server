@@ -53,15 +53,15 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
     }
 
     /**
-     * select food.food_idx, food.food_name
+     * select food.food_id, food.food_name
      * from food,
      *      fridge_food as ff, fridge as f, fridge_user as fu,
      *      multi_fridge_food as mff, multi_fridge as mf, multi_fridge_user as mfu
-     * where (food.food_idx = ff.food_idx and ff.fridge_idx = f.fridge_idx and f.fridge_idx = fu.fridge_idx
-     *            and fu.user_idx = 369 and ff.is_enable = true and f.is_enable = true and fu.is_enable = true)
-     *   or ((food.food_idx = mff.food_idx and mff.multi_fridge_idx = mf.multi_fridge_idx and mf.multi_fridge_idx = mfu.multi_fridge_idx)
-     *       and (mfu.user_idx = 369 and mff.is_enable = true and mf.is_enable = true and mfu.is_enable = true))
-     * group by food.food_idx;
+     * where (food.food_id = ff.food_id and ff.fridge_id = f.fridge_id and f.fridge_id = fu.fridge_id
+     *            and fu.user_id = 369 and ff.is_enable = true and f.is_enable = true and fu.is_enable = true)
+     *   or ((food.food_id = mff.food_id and mff.multi_fridge_id = mf.multi_fridge_id and mf.multi_fridge_id = mfu.multi_fridge_id)
+     *       and (mfu.user_id = 369 and mff.is_enable = true and mf.is_enable = true and mfu.is_enable = true))
+     * group by food.food_id;
      */
 
     @Override

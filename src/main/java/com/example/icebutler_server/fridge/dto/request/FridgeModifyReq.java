@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +18,6 @@ public class FridgeModifyReq {
   private String fridgeComment;
   @Schema(name = "members", description = "냉장고 멤버 ID")
   private List<FridgeModifyMembersReq> members;
-  @Schema(name = "newOwnerIdx", description = "냉장고 주인 ID")
-  private Long newOwnerIdx;
+  @Schema(name = "newOwnerId", description = "냉장고 주인 ID")
+  private Long newOwnerId;
 }

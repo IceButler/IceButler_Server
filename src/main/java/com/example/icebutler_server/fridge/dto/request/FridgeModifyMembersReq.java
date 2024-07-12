@@ -5,14 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "FridgeModifyMembersReq", description = "냉장고 수정 멤버 요청 정보")
 public class FridgeModifyMembersReq {
-  @Schema(name = "userIdx", description = "유저 ID")
-  private Long userIdx;
+  @Schema(name = "userId", description = "유저 ID")
+  private Long userId;
 }

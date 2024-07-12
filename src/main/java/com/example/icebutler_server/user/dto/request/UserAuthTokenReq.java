@@ -9,13 +9,13 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class UserAuthTokenReq {
 
-    private Long userIdx;
+    private Long userId;
 
     private String nickname;
 
     @Builder
-    public UserAuthTokenReq(Long userIdx, String nickname) {
-        this.userIdx = userIdx;
+    public UserAuthTokenReq(Long userId, String nickname) {
+        this.userId = userId;
         this.nickname = nickname;
     }
 

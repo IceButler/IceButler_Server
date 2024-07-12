@@ -1,6 +1,6 @@
 package com.example.icebutler_server.fridge.dto.response;
 
-import com.example.icebutler_server.fridge.dto.assembler.FridgeUtils;
+import com.example.icebutler_server.global.util.FridgeUtils;
 import com.example.icebutler_server.fridge.entity.FridgeFood;
 import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,10 +17,10 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @Schema(name = "FridgeFoodRes", description = "냉장고 식품 상세 정보")
 public class FridgeFoodRes {
-  @Schema(name = "fridgeFoodIdx", description = "냉장고 ID")
-  private Long fridgeFoodIdx;
-  @Schema(name = "foodIdx", description = "식품 ID")
-  private Long foodIdx;
+  @Schema(name = "fridgeFoodId", description = "냉장고 ID")
+  private Long fridgeFoodId;
+  @Schema(name = "foodId", description = "식품 ID")
+  private Long foodId;
   @Schema(name = "foodName", description = "식품명")
   private String foodName;
   @Schema(name = "foodDetailName", description = "식품 상세명")
@@ -40,8 +40,8 @@ public class FridgeFoodRes {
 
   public static FridgeFoodRes toDto(FridgeFood fridgeFood) {
     return FridgeFoodRes.builder()
-            .fridgeFoodIdx(fridgeFood.getId())
-            .foodIdx(fridgeFood.getFood().getId())
+            .fridgeFoodId(fridgeFood.getId())
+            .foodId(fridgeFood.getFood().getId())
             .foodName(fridgeFood.getFood().getFoodName())
             .foodDetailName(fridgeFood.getFoodDetailName())
             .foodCategory(fridgeFood.getFood().getFoodCategory().getName())

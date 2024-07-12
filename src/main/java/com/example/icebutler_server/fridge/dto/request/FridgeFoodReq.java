@@ -20,8 +20,8 @@ public class FridgeFoodReq {
   private String foodCategory;
   @Schema(name = "shelfLife", description = "식품 소비기한")
   private String shelfLife;
-  @Schema(name = "ownerIdx", description = "식품 소유자 ID")
-  private Long ownerIdx;
+  @Schema(name = "ownerId", description = "식품 소유자 ID")
+  private Long ownerId;
   @Schema(name = "memo", description = "식품 메모")
   private String memo;
   @Schema(name = "imgKey", description = "식품 이미지 URL")

@@ -36,22 +36,19 @@ public class AdminController {
     private final FoodRepository foodRepository;
 
     @PostMapping("/join")
-    public ResponseCustom<AdminResponse> join(@RequestBody JoinRequest request)
-    {
+    public ResponseCustom<AdminResponse> join(@RequestBody JoinRequest request) {
         return ResponseCustom.success(adminService.join(request));
     }
 
     @PostMapping("/login")
-    public ResponseCustom<PostAdminRes> login(@RequestBody LoginRequest request)
-    {
+    public ResponseCustom<PostAdminRes> login(@RequestBody LoginRequest request) {
         return ResponseCustom.success(adminService.login(request));
     }
 
     @Admin
     @PostMapping("/logout")
-    public ResponseCustom<LogoutResponse> logout(@IsAdminLogin AdminLoginStatus loginStatus)
-    {
-        adminService.logout(loginStatus.getAdminIdx());
+    public ResponseCustom<LogoutResponse> logout(@IsAdminLogin AdminLoginStatus loginStatus) {
+        adminService.logout(loginStatus.getAdminId());
         return ResponseCustom.success();
     }
 
@@ -62,20 +59,18 @@ public class AdminController {
             Pageable pageable,
             @RequestParam(defaultValue = "") String nickname,
             @RequestParam(defaultValue = "true") boolean active
-    )
-    {
-        return ResponseCustom.success(adminService.search(pageable, nickname, active,loginStatus.getAdminIdx()));
+    ) {
+        return ResponseCustom.success(adminService.search(pageable, nickname, active, loginStatus.getAdminId()));
     }
 
     @Admin
-    @DeleteMapping("/users/{userIdx}")
+    @DeleteMapping("/users/{userId}")
     public ResponseCustom<Void> withdraw(
             @IsAdminLogin AdminLoginStatus loginStatus,
-            @PathVariable Long userIdx,
+            @PathVariable Long userId,
             HttpServletRequest request
-    )
-    {
-        adminService.withdraw(userIdx, loginStatus.getAdminIdx(), request.getHeader("Authorization"));
+    ) {
+        adminService.withdraw(userId, loginStatus.getAdminId(), request.getHeader("Authorization"));
         return ResponseCustom.success();
     }
 
@@ -83,31 +78,27 @@ public class AdminController {
     @Admin
     @GetMapping("/foods")
     public ResponseCustom<Page<SearchFoodsResponse>> searchFoods(@RequestParam String cond, Pageable pageable
-    ,@IsAdminLogin AdminLoginStatus loginStatus
-    )
-    {
-        return ResponseCustom.success(adminService.searchFoods(cond, pageable,loginStatus.getAdminIdx()));
+            , @IsAdminLogin AdminLoginStatus loginStatus
+    ) {
+        return ResponseCustom.success(adminService.searchFoods(cond, pageable, loginStatus.getAdminId()));
     }
 
     // 식품수정
     @Admin
-    @PatchMapping("/foods/{foodIdx}")
-    public ResponseCustom<Void> modifyFood(@PathVariable(name = "foodIdx") Long foodIdx,
-                                           @RequestBody ModifyFoodRequest request
-            ,@IsAdminLogin AdminLoginStatus loginStatus
-    )
-    {
-        adminService.modifyFood(foodIdx, request,loginStatus.getAdminIdx());
+    @PatchMapping("/foods/{foodId}")
+    public ResponseCustom<Void> modifyFood(@PathVariable Long foodId,
+                                           @RequestBody ModifyFoodRequest request,
+                                           @IsAdminLogin AdminLoginStatus loginStatus) {
+        adminService.modifyFood(foodId, request, loginStatus.getAdminId());
         return ResponseCustom.success();
     }
 
     // 식품삭제
     @Admin
-    @DeleteMapping("/foods/{foodIdx}")
-    public ResponseCustom<Void> removeFoods(@PathVariable(name = "foodIdx") Long foodIdx
-            ,@IsAdminLogin AdminLoginStatus loginStatus
-    ) {
-        adminService.removeFoods(foodIdx,loginStatus.getAdminIdx());
+    @DeleteMapping("/foods/{foodId}")
+    public ResponseCustom<Void> removeFoods(@PathVariable Long foodId,
+                                            @IsAdminLogin AdminLoginStatus loginStatus) {
+        adminService.removeFoods(foodId, loginStatus.getAdminId());
         return ResponseCustom.success();
     }
 

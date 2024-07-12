@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 public class NickNameRes {
     @Schema(name = "nickname", description = "닉네임")
     private  String nickname;
-    @Schema(name = "userIdx", description = "유저 ID")
-    private  Long userIdx;
+    @Schema(name = "userId", description = "유저 ID")
+    private  Long userId;
     @Schema(name = "profileImgUrl", description = "유저 프로필 이미지 URL")
     private String profileImgUrl;
 
@@ -25,7 +25,7 @@ public class NickNameRes {
     public static NickNameRes toDto(User user){
         return NickNameRes.builder()
                 .nickname(user.getNickname())
-                .userIdx(user.getId())
+                .userId(user.getId())
                 .profileImgUrl(AwsS3ImageUrlUtil.toUrl(user.getProfileImgKey()))
                 .build();
     }

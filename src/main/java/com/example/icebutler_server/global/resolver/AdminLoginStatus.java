@@ -6,11 +6,11 @@ import lombok.Data;
 @Data
 public class AdminLoginStatus {
     private Boolean isLogin;
-    private Long adminIdx;
+    private Long adminId;
     @Builder
-    public AdminLoginStatus(Boolean isLogin, Long adminIdx) {
+    public AdminLoginStatus(Boolean isLogin, Long adminId) {
         this.isLogin = isLogin;
-        this.adminIdx = adminIdx;
+        this.adminId = adminId;
     }
     public static AdminLoginStatus getNotAdminLoginStatus() {
         return new AdminLoginStatus(false, null);

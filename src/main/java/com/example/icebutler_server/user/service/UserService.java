@@ -16,17 +16,17 @@ public interface UserService {
 
   PostUserRes login(LoginUserReq loginUserReq);
 
-  void modifyProfile(@IsLogin Long userIdx, PatchProfileReq patchProfileReq);
+  void modifyProfile(@IsLogin Long userId, PatchProfileReq patchProfileReq);
 
   PostNickNameRes checkNickname(PostNicknameReq postNicknameReq);
 
-  void deleteUser(Long userIdx);
+  void deleteUser(Long userId);
 
-  void logout(Long userIdx);
+  void logout(Long userId);
 
-  MyProfileRes checkProfile(Long userIdx);
+  MyProfileRes checkProfile(Long userId);
 
   List<NickNameRes> searchNickname(String nickname);
 
-  Page<MyNotificationRes> getUserNotification(Long userIdx, Pageable pageable);
+  Page<MyNotificationRes> getUserNotification(Long userId, Pageable pageable);
 }

@@ -8,7 +8,6 @@ import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.dto.response.SwaggerApiSuccess;
 import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
-import com.example.icebutler_server.global.resolver.LoginStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,8 +43,8 @@ public class CartController {
     @Auth
     @GetMapping("/{fridgeId}/foods")
     public ResponseCustom<List<CartResponse>> getCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeId,
-                                                           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(cartService.getCartFoods(fridgeId, loginStatus.getUserId()));
+                                                           @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(cartService.getCartFoods(fridgeId, userId));
     }
 
     @Operation(summary = "장바구니 식품 추가", description = "장바구니에 식품을 추가한다.")
@@ -64,8 +63,8 @@ public class CartController {
     @PostMapping("/{fridgeId}/foods")
     public ResponseCustom<?> addCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeId,
                                           @RequestBody AddFoodToCartRequest request,
-                                          @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        cartService.addCartFoods(fridgeId, request, loginStatus.getUserId());
+                                          @Parameter(hidden = true) @IsLogin Long userId) {
+        cartService.addCartFoods(fridgeId, request, userId);
         return ResponseCustom.success();
     }
 
@@ -85,8 +84,8 @@ public class CartController {
     @DeleteMapping("/{fridgeId}/foods")
     public ResponseCustom<?> deleteCartFoods(@Parameter(name = "냉장고 ID") @PathVariable Long fridgeId,
                                              @RequestBody RemoveFoodFromCartRequest request,
-                                             @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        cartService.deleteCartFoods(fridgeId, request, loginStatus.getUserId());
+                                             @Parameter(hidden = true) @IsLogin Long userId) {
+        cartService.deleteCartFoods(fridgeId, request, userId);
         return ResponseCustom.success();
     }
 }

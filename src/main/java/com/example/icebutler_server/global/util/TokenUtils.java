@@ -163,6 +163,7 @@ public class TokenUtils {
     return tokenType + ONE_BLOCK + refreshToken;
   }
 
+  // TODO isTokenExists 까지 함께 검증하기
   public boolean isValidToken(String justToken) {
     if (justToken != null && justToken.split(ONE_BLOCK).length == 2)
       justToken = justToken.split(ONE_BLOCK)[1];

@@ -5,7 +5,6 @@ import com.example.icebutler_server.global.util.TokenUtils;
 import com.example.icebutler_server.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.env.Environment;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -21,10 +20,11 @@ import static com.example.icebutler_server.global.exception.ReturnCode.*;
 
 @RequiredArgsConstructor
 @Component
-public class LoginResolver implements HandlerMethodArgumentResolver{
+public class LoginResolver implements HandlerMethodArgumentResolver {
 
+    public static final String AUTH_HEADER_NAME = "Authorization";
+    ;
     private final TokenUtils tokenUtils;
-    private final Environment env;
     private final UserServiceImpl userService;
 
     @Override
@@ -38,20 +38,39 @@ public class LoginResolver implements HandlerMethodArgumentResolver{
                                   ModelAndViewContainer modelAndViewContainer,
                                   @NotNull NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
+        checkMethodValidation(parameter);
+        String header = getHeader(webRequest);
+        String accessToken = getAccessToken(header);
+        Long userId = getUserId(accessToken);
+        return userId;
+    }
 
-        Auth auth = parameter.getMethodAnnotation(Auth.class);
-        if(auth == null) throw new BaseException(INTERNAL_SERVER_ERROR);
+    private void checkMethodValidation(MethodParameter parameter) {
+        if (parameter.getMethodAnnotation(Auth.class) == null) {
+            throw new BaseException(INTERNAL_SERVER_ERROR);
+        }
+    }
 
-        String header = webRequest.getHeader("Authorization");
-        if(!StringUtils.hasText(header)) throw new BaseException(NULL_TOKEN);
+    private static String getHeader(NativeWebRequest webRequest) {
+        String header = webRequest.getHeader(AUTH_HEADER_NAME);
+        if (!StringUtils.hasText(header)) {
+            throw new BaseException(NULL_TOKEN);
+        }
+        return header;
+    }
 
+    private String getAccessToken(String header) {
         String accessToken = tokenUtils.separateAuthType(header);
         tokenUtils.isValidToken(accessToken);
+        if (!tokenUtils.isTokenExists(accessToken)) {
+            throw new BaseException(EXPIRED_TOKEN);
+        }
+        return accessToken;
+    }
 
+    private Long getUserId(String accessToken) {
         Long userId = Long.valueOf(tokenUtils.getJwtContents(accessToken));
-        if(!tokenUtils.isTokenExists(accessToken)) throw new BaseException(EXPIRED_TOKEN);
         userService.validateUser(userId);
-
         return userId;
     }
 }

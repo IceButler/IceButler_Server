@@ -23,7 +23,7 @@ import static com.example.icebutler_server.global.exception.ReturnCode.*;
 public class LoginResolver implements HandlerMethodArgumentResolver {
 
     public static final String AUTH_HEADER_NAME = "Authorization";
-    ;
+
     private final TokenUtils tokenUtils;
     private final UserServiceImpl userService;
 

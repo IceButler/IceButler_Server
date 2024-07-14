@@ -18,6 +18,7 @@ public enum ReturnCode {
 
     // Auth
     EXPIRED_TOKEN("A0000", HttpStatus.UNAUTHORIZED, "만료된 토큰입니다. 다시 발급해주세요."),
+    NULL_TOKEN("A0001", HttpStatus.BAD_REQUEST, "토큰을 입력해주세요."),
 
     // Cart
     NOT_FOUND_CART("C0000", HttpStatus.NOT_FOUND, "존재하지 않는 장바구니입니다."),

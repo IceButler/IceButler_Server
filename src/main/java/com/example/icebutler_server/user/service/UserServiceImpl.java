@@ -178,4 +178,8 @@ public class UserServiceImpl implements UserService {
         return MyNotificationRes.toUserNotificationList(this.pushNotificationRepository.findByUserOrderByCreatedAtDesc(user, pageable));
     }
 
+    public void validateUser(Long userId) {
+        if(!userRepository.existsByIdAndIsEnable(userId, true)) throw new BaseException(NOT_FOUND_USER);
+        if(!userRepository.existsByIdAndIsDenied(userId, false)) throw new BaseException(BLOCKED_USER);
+    }
 }

@@ -10,12 +10,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
+@RestControllerAdvice
 public class ExceptionAdvice {
     @ExceptionHandler(BaseException.class)
     protected ResponseEntity<ResponseCustom> handleBaseException(BaseException e) {

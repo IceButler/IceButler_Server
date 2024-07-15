@@ -7,7 +7,6 @@ import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.dto.response.SwaggerApiSuccess;
 import com.example.icebutler_server.global.resolver.Auth;
 import com.example.icebutler_server.global.resolver.IsLogin;
-import com.example.icebutler_server.global.resolver.LoginStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,8 +45,8 @@ public class FridgeController {
     @Auth
     @PostMapping("/register")
     public ResponseCustom<Long> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
-                                               @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(fridgeService.registerFridge(fridgeRegisterReq, loginStatus.getUserId()));
+                                               @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.registerFridge(fridgeRegisterReq, userId));
     }
 
     @Operation(summary = "냉장고 정보 수정", description = "냉장고 정보를 수정한다.")
@@ -66,8 +65,8 @@ public class FridgeController {
     @PatchMapping("/{fridgeId}")
     public ResponseCustom<?> modifyFridge(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
                                           @RequestBody FridgeModifyReq fridgeModifyReq,
-                                          @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        fridgeService.modifyFridge(fridgeId, fridgeModifyReq, loginStatus.getUserId());
+                                          @Parameter(hidden = true) @IsLogin Long userId) {
+        fridgeService.modifyFridge(fridgeId, fridgeModifyReq, userId);
         return ResponseCustom.success();
     }
 
@@ -87,8 +86,8 @@ public class FridgeController {
     @Auth
     @PatchMapping("/{fridgeId}/remove")
     public ResponseCustom<Long> removeFridge(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-                                             @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(fridgeService.removeFridge(fridgeId, loginStatus.getUserId()));
+                                             @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.removeFridge(fridgeId, userId));
     }
 
     @Operation(summary = "냉장고 사용자 삭제", description = "냉장고 사용자를 삭제한다.")
@@ -104,8 +103,8 @@ public class FridgeController {
     @Auth
     @PatchMapping("/{fridgeId}/remove/each")
     public ResponseCustom<Long> removeFridgeUser(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-                                                 @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(fridgeService.removeFridgeUser(fridgeId, loginStatus.getUserId()));
+                                                 @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.removeFridgeUser(fridgeId, userId));
     }
 
     @Operation(summary = "냉장고 식품 전체 조회(카테고리별)", description = "냉장고 내 식품을 카테고리 별로 전체조회한다.")
@@ -121,8 +120,8 @@ public class FridgeController {
     @GetMapping("/{fridgeId}/foods")
     public ResponseCustom<FridgeMainRes> getFoods(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
                                                   @Parameter(description = "식품 카테고리") @RequestParam(required = false) String category,
-                                                  @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(fridgeService.getFoods(fridgeId, loginStatus.getUserId(), category));
+                                                  @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.getFoods(fridgeId, userId, category));
     }
 
 
@@ -136,8 +135,8 @@ public class FridgeController {
     @GetMapping("/{fridgeId}/search")
     public ResponseCustom<List<FridgeFoodsRes>> searchFridgeFood(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
                                                                  @Parameter(description = "식품명") @RequestParam String keyword,
-                                                                 @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(fridgeService.searchFridgeFood(fridgeId, loginStatus.getUserId(), keyword));
+                                                                 @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.searchFridgeFood(fridgeId, userId, keyword));
     }
 
     @Operation(summary = "냉장고 식품 상세 조회", description = "냉장고 내 식품을 상세 조회한다.")
@@ -154,8 +153,8 @@ public class FridgeController {
     @GetMapping("/{fridgeId}/foods/{fridgeFoodId}")
     public ResponseCustom<FridgeFoodRes> getFridgeFood(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
                                                        @Parameter(description = "냉장고 내 식품 ID") @PathVariable Long fridgeFoodId,
-                                                       @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(fridgeService.getFridgeFood(fridgeId, fridgeFoodId, loginStatus.getUserId()));
+                                                       @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.getFridgeFood(fridgeId, fridgeFoodId, userId));
     }
 
     @Operation(summary = "냉장고 식품 추가", description = "냉장고 내 식품을 추가한다.")
@@ -174,8 +173,8 @@ public class FridgeController {
     @PostMapping("/{fridgeId}/food")
     public ResponseCustom<?> addFridgeFood(@RequestBody FridgeFoodsReq fridgeFoodsReq,
                                            @Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-                                           @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        fridgeService.addFridgeFood(fridgeFoodsReq, fridgeId, loginStatus.getUserId());
+                                           @Parameter(hidden = true) @IsLogin Long userId) {
+        fridgeService.addFridgeFood(fridgeFoodsReq, fridgeId, userId);
         return ResponseCustom.success();
     }
 
@@ -197,8 +196,8 @@ public class FridgeController {
     public ResponseCustom<?> modifyFridgeFood(@RequestBody FridgeFoodReq fridgeFoodReq,
                                               @Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
                                               @Parameter(description = "냉장고 내 식품 ID") @PathVariable Long fridgeFoodId,
-                                              @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        fridgeService.modifyFridgeFood(fridgeId, fridgeFoodId, fridgeFoodReq, loginStatus.getUserId());
+                                              @Parameter(hidden = true) @IsLogin Long userId) {
+        fridgeService.modifyFridgeFood(fridgeId, fridgeFoodId, fridgeFoodReq, userId);
         return ResponseCustom.success();
     }
 
@@ -219,8 +218,8 @@ public class FridgeController {
     public ResponseCustom<?> deleteFridgeFood(@RequestBody DeleteFridgeFoodsReq deleteFridgeFoodsReq,
                                               @Parameter(description = "삭제 타입(폐기/섭취)") @RequestParam String type,
                                               @Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-                                              @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        fridgeService.deleteFridgeFood(deleteFridgeFoodsReq, type, fridgeId, loginStatus.getUserId());
+                                              @Parameter(hidden = true) @IsLogin Long userId) {
+        fridgeService.deleteFridgeFood(deleteFridgeFoodsReq, type, fridgeId, userId);
         return ResponseCustom.success();
     }
 
@@ -234,8 +233,8 @@ public class FridgeController {
     @GetMapping("{fridgeId}/members")
     public ResponseCustom<FridgeUserMainRes> getMembers(
             @Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(fridgeService.searchMembers(fridgeId, loginStatus.getUserId()));
+            @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.searchMembers(fridgeId, userId));
     }
 
     @Operation(summary = "냉장고 선택목록 조회", description = "냉장고 선택목록을 조회한다.")
@@ -247,9 +246,9 @@ public class FridgeController {
     @Auth
     @GetMapping("/select")
     public ResponseCustom<SelectFridgesMainRes> selectFridges(
-            @Parameter(hidden = true) @IsLogin LoginStatus loginStatus
+            @Parameter(hidden = true) @IsLogin Long userId
     ) {
-        return ResponseCustom.success(fridgeService.selectFridges(loginStatus.getUserId()));
+        return ResponseCustom.success(fridgeService.selectFridges(userId));
     }
 
     @Operation(summary = "냉장고 목록 조회", description = "냉장고 목록을 조회한다.")
@@ -261,8 +260,8 @@ public class FridgeController {
     })
     @Auth
     @GetMapping("")
-    public ResponseCustom<GetFridgesMainRes> myFridge(@Parameter(hidden = true) @IsLogin LoginStatus loginStatus) {
-        return ResponseCustom.success(fridgeService.myFridge(loginStatus.getUserId()));
+    public ResponseCustom<GetFridgesMainRes> myFridge(@Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.myFridge(userId));
     }
 
     /**
@@ -286,8 +285,8 @@ public class FridgeController {
             @Parameter(description = "통계 타입(낭비/소비)") @RequestParam String deleteCategory,
             @Parameter(description = "연도") @RequestParam Integer year,
             @Parameter(description = "월") @RequestParam Integer month,
-            @Parameter(hidden = true) @IsLogin LoginStatus status) {
-        return ResponseCustom.success(fridgeService.getFridgeFoodStatistics(fridgeId, deleteCategory, status.getUserId(), year, month));
+            @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.getFridgeFoodStatistics(fridgeId, deleteCategory, userId, year, month));
     }
 
 

@@ -26,4 +26,9 @@ public class RedisTemplateServiceImpl implements RedisTemplateService {
     public void setUserRefreshToken(@NotNull String userId, String refreshToken) {
         redisTemplate.opsForValue().set(userId, refreshToken);
     }
+
+    @Override
+    public boolean hasKey(String key) {
+        return redisTemplate.hasKey(key) != null;
+    }
 }

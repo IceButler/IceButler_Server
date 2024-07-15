@@ -23,6 +23,7 @@ import static com.example.icebutler_server.global.exception.ReturnCode.EXPIRED_T
 public class TokenUtils {
   public static final String USER_ID = "userId";
   public static final String NICKNAME = "nickname";
+  public static final String AUTH_TYPE = "Bearer ";
 
   public static final String EMAIL = "email";
   public static final String ONE_BLOCK = " ";
@@ -162,6 +163,7 @@ public class TokenUtils {
     return tokenType + ONE_BLOCK + refreshToken;
   }
 
+  // TODO isTokenExists 까지 함께 검증하기
   public boolean isValidToken(String justToken) {
     if (justToken != null && justToken.split(ONE_BLOCK).length == 2)
       justToken = justToken.split(ONE_BLOCK)[1];
@@ -248,5 +250,17 @@ public class TokenUtils {
         //토큰이 만료되었을 경우.
         return createAccessToken(userId, refreshNickname);
     }
+
+  public String separateAuthType(String header) {
+    return header.substring(AUTH_TYPE.length());
+  }
+
+  public String getJwtContents(String accessToken) {
+    return String.valueOf(getJwtBodyFromJustToken(accessToken).get(USER_ID));
+  }
+
+  public boolean isTokenExists(String key) {
+    return redisTemplateService.hasKey(key);
+  }
 
 }

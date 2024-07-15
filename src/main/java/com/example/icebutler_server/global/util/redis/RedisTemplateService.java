@@ -6,4 +6,5 @@ public interface RedisTemplateService {
   public void deleteUserRefreshToken(@NotNull String userId);
   public String getUserRefreshToken(@NotNull String userId);
   public void setUserRefreshToken(@NotNull String userId, String refreshToken) ;
+  boolean hasKey(String key);
 }

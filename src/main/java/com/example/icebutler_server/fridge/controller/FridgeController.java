@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/fridges")
@@ -33,7 +34,6 @@ public class FridgeController {
         return ResponseCustom.success();
     }
 
-
     @Operation(summary = "냉장고 추가", description = "냉장고를 추가한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
@@ -43,10 +43,10 @@ public class FridgeController {
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @PostMapping("/register")
-    public ResponseCustom<Long> registerFridge(@RequestBody FridgeRegisterReq fridgeRegisterReq,
-                                               @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.registerFridge(fridgeRegisterReq, userId));
+    @PostMapping
+    public ResponseCustom<Long> addFridge(@Valid @RequestBody AddFridgeReq addFridgeReq,
+                                          @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.addFridge(addFridgeReq, userId));
     }
 
     @Operation(summary = "냉장고 정보 수정", description = "냉장고 정보를 수정한다.")

@@ -1,16 +1,15 @@
 package com.example.icebutler_server.fridge.entity;
 
-import com.example.icebutler_server.fridge.dto.request.FridgeRegisterReq;
+import com.example.icebutler_server.fridge.dto.request.AddFridgeReq;
 import com.example.icebutler_server.global.entity.BaseEntity;
 import com.example.icebutler_server.global.entityListener.FridgeEntityListener;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -28,27 +27,14 @@ public class Fridge extends BaseEntity {
 
     private String fridgeComment;
 
-    @Builder
-    public Fridge(
-            String fridgeName,
-            String fridgeComment) {
-        this.fridgeName = fridgeName;
-        this.fridgeComment = fridgeComment;
-    }
-
-    public void updateBasicFridgeInfo(String fridgeName, String fridgeComment) {
-        this.fridgeName = fridgeName;
-        this.fridgeComment = fridgeComment;
-    }
-
     public void remove() {
         this.setIsEnable(false);
     }
 
-    public static Fridge toEntity(FridgeRegisterReq fridgeRegisterReq) {
+    public static Fridge toEntity(AddFridgeReq addFridgeReq) {
         return Fridge.builder()
-                .fridgeName(fridgeRegisterReq.getFridgeName())
-                .fridgeComment(fridgeRegisterReq.getFridgeComment())
+                .fridgeName(addFridgeReq.getFridgeName())
+                .fridgeComment(addFridgeReq.getFridgeComment())
                 .build();
     }
 }

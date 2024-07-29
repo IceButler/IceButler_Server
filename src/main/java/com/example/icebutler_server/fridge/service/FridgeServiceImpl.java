@@ -19,7 +19,6 @@ import com.example.icebutler_server.fridge.repository.FridgeUserRepository;
 import com.example.icebutler_server.global.entity.FridgeRole;
 import com.example.icebutler_server.global.exception.BaseException;
 import com.example.icebutler_server.global.sqs.AmazonSQSSender;
-import com.example.icebutler_server.global.sqs.FoodData;
 import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.repository.UserRepository;
@@ -69,32 +68,38 @@ public class FridgeServiceImpl implements FridgeService {
 
     @Override
     @Transactional
-    public Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerId) {
-        if (!StringUtils.hasText(registerFridgeReq.getFridgeName())) throw new BaseException(INVALID_PARAM);
-        Fridge fridge = Fridge.toEntity(registerFridgeReq);
+    public Long addFridge(AddFridgeReq addFridgeReq, Long ownerId) {
+        Fridge fridge = Fridge.toEntity(addFridgeReq);
         fridgeRepository.save(fridge);
 
-        List<FridgeUser> fridgeUsers = new ArrayList<>();
-        List<User> users = registerFridgeReq.getMembers().stream().map(m -> userRepository.findByIdAndIsEnable(m.getUserId(), true).orElseThrow(() -> new BaseException(NOT_FOUND_USER))).collect(Collectors.toList());
-        User owner = userRepository.findByIdAndIsEnable(ownerId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+        List<FridgeUser> members = addFridgeReq.getMembers().stream()
+                .map(memberId -> {
+                    User user = userRepository.findByIdAndIsEnable(memberId, true)
+                            .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+                    return FridgeUser.builder()
+                            .fridge(fridge)
+                            .user(user)
+                            .role(FridgeRole.MEMBER)
+                            .build();
+                })
+                .collect(Collectors.toList());
 
-        // fridge - fridgeUser  연관관계 추가
-        for (User user : users) {
-            fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(user).role(FridgeRole.MEMBER).build());
-        }
-        fridgeUsers.add(FridgeUser.builder().fridge(fridge).user(owner).role(FridgeRole.OWNER).build());
-        fridgeUserRepository.saveAll(fridgeUsers);
+        User owner = userRepository.findById(ownerId).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+        members.add(FridgeUser.builder()
+                .fridge(fridge)
+                .user(owner)
+                .role(FridgeRole.OWNER)
+                .build());
 
-        // fridge - cart 연관관계 추가
+        fridgeUserRepository.saveAll(members);
         cartRepository.save(Cart.toEntity(fridge));
 
-        users.forEach(f -> {
-            try {
-                alarmService.sendJoinFridgeAlarm(f, fridge.getFridgeName());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            for (FridgeUser fridgeUser : members)
+                alarmService.sendJoinFridgeAlarm(fridgeUser.getUser(), fridge.getFridgeName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return fridge.getId();
     }

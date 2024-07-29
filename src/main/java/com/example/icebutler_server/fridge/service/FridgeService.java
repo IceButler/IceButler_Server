@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FridgeService {
   FridgeMainRes getFoods(Long fridgeId, Long userId, String category);
-  Long registerFridge(FridgeRegisterReq registerFridgeReq, Long ownerId);
+  Long addFridge(AddFridgeReq registerFridgeReq, Long ownerId);
   void modifyFridge(Long fridgeId, FridgeModifyReq updateFridgeReq, Long userId);
   Long removeFridge(Long fridgeId, Long userId);
   Long removeFridgeUser(Long fridgeId, Long userId) throws IOException;

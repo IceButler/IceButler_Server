@@ -9,7 +9,6 @@ import org.springframework.lang.Nullable;
 import java.time.LocalDateTime;
 
 @Getter
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class ResponseCustom<T>{
 
@@ -19,6 +18,15 @@ public class ResponseCustom<T>{
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
     private LocalDateTime timeStamp;
+
+    // 성공
+    public ResponseCustom() {
+        this.data = null;
+        this.timeStamp = LocalDateTime.now();
+        this.httpStatus = HttpStatus.OK.value();
+        this.message = ReturnCode.SUCCESS.getMessage();
+        this.code = ReturnCode.SUCCESS.getCode();
+    }
 
     // 성공
     public ResponseCustom(T data) {
@@ -39,7 +47,7 @@ public class ResponseCustom<T>{
     }
 
     public static <T> ResponseCustom<T> success() {
-        return new ResponseCustom<>(null);
+        return new ResponseCustom<>();
     }
 
     public static <T> ResponseCustom<T> success(@Nullable T data) {

@@ -16,13 +16,11 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Schema(name = "FridgeMainRes", description = "냉장고 식품 정보")
 public class FridgeMainRes {
-  @Schema(name = "fridgeDiscard", description = "냉장고 낭비된 식품 정보")
-  private FridgeDiscardRes fridgeDiscard;
   @Schema(name = "foodList", description = "냉장고 식품 정보")
   private List<FridgeFoodsRes> foodList = new ArrayList<>();
 
-  public static FridgeMainRes toFridgeDto(FridgeDiscardRes fridgeDiscard, List<FridgeFood> fridgeFoods) {
-    return new FridgeMainRes(isNullFoodDiscardRes(fridgeDiscard), fridgeFoods.stream()
+  public static FridgeMainRes toFridgeDto(List<FridgeFood> fridgeFoods) {
+    return new FridgeMainRes(fridgeFoods.stream()
             .map(ff -> new FridgeFoodsRes(ff.getId(), ff.getFood().getFoodName(), AwsS3ImageUrlUtil.toUrl(ff.getFood().getFoodImgKey()), FridgeUtils.calShelfLife(ff.getShelfLife())))
             .collect(Collectors.toList()));
   }

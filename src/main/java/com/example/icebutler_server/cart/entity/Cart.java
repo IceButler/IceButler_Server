@@ -18,7 +18,7 @@ import javax.persistence.*;
 @EntityListeners(CartEntityListener.class)
 public class Cart extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 

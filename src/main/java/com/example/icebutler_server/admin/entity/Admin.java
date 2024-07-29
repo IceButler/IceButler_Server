@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @EntityListeners(UserEntityListener.class)
 public class Admin extends BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     @Column(nullable = false)

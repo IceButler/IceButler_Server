@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @SQLDelete(sql = "UPDATE fridge_food SET is_enable = false, updated_at = current_timestamp WHERE id = ?")
 public class FridgeFood extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 

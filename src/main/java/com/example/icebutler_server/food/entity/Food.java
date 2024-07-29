@@ -27,7 +27,7 @@ import static com.example.icebutler_server.global.util.Constant.Food.IMG_FOLDER;
 @SQLDelete(sql = "UPDATE food SET is_enable = false, updated_at = current_timestamp WHERE id = ?")
 @EntityListeners(FoodEntityListener.class)
 public class Food extends BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     private String foodName;

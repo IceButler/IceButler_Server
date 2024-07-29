@@ -18,7 +18,7 @@ import javax.persistence.*;
 @SQLDelete(sql = "UPDATE fridge_user SET is_enable = false, updated_at = current_timestamp WHERE id = ?")
 @EntityListeners(FridgeUserEntityListener.class)
 public class FridgeUser extends BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 

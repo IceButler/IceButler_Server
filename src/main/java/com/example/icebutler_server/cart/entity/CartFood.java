@@ -16,7 +16,7 @@ import javax.persistence.*;
 @SQLDelete(sql = "UPDATE cart_food SET is_enable = false, updated_at = current_timestamp WHERE id = ?")
 public class CartFood extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 

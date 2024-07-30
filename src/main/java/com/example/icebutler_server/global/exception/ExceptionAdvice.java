@@ -4,7 +4,6 @@ import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -15,7 +14,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
-import java.util.Objects;
 
 @RestControllerAdvice
 public class ExceptionAdvice {
@@ -29,9 +27,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseCustom handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        FieldError fieldError = Objects.requireNonNull(e.getFieldError());
-        ReturnCode returnCode = ReturnCode.findByCode(fieldError.getDefaultMessage());
-        return ResponseCustom.error(returnCode);
+        return ResponseCustom.error(ReturnCode.INVALID_PARAM);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

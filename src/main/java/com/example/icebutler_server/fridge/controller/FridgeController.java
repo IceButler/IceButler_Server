@@ -63,10 +63,10 @@ public class FridgeController {
     })
     @Auth
     @PatchMapping("/{fridgeId}")
-    public ResponseCustom<?> modifyFridge(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-                                          @RequestBody FridgeModifyReq fridgeModifyReq,
+    public ResponseCustom<Void> modifyFridge(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
+                                          @Valid @RequestBody EditFridgeReq editFridgeReq,
                                           @Parameter(hidden = true) @IsLogin Long userId) {
-        fridgeService.modifyFridge(fridgeId, fridgeModifyReq, userId);
+        fridgeService.modifyFridge(fridgeId, editFridgeReq, userId);
         return ResponseCustom.success();
     }
 

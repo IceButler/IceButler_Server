@@ -13,25 +13,26 @@ import java.util.Optional;
 @Repository
 public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
 
-  Optional<Object> findByUserAndFridgeAndIsEnable(User user, Fridge fridge, Boolean isEnable);
+    Optional<FridgeUser> findByUserAndFridgeAndIsEnable(User user, Fridge fridge, Boolean isEnable);
 
-  Optional<FridgeUser> findByFridgeAndUserAndRoleAndIsEnable(Fridge fridge, User user, FridgeRole fridgeRole, Boolean status);
+    Optional<FridgeUser> findByFridgeAndUserIdAndRoleAndIsEnable(Fridge fridge, Long userId, FridgeRole fridgeRole, Boolean status);
 
-  Optional<FridgeUser> findByFridgeAndUser_IdAndRoleAndIsEnableAndUser_IsEnable(Fridge fridge, Long userId, FridgeRole fridgeRole, Boolean status, Boolean userStatus);
+    List<FridgeUser> findByFridgeAndIsEnable(Fridge fridge, Boolean isEnable);
 
-  List<FridgeUser> findByFridgeAndIsEnable(Fridge fridge, Boolean isEnable);
+    List<FridgeUser> findByFridgeAndIsEnableOrderByRoleDesc(Fridge fridge, Boolean isEnable);
 
-  List<FridgeUser> findByFridgeAndIsEnableOrderByRoleDesc(Fridge fridge, Boolean isEnable);
+    List<FridgeUser> findByUserAndIsEnable(User user, Boolean status);
 
-  List<FridgeUser> findByUserAndIsEnable(User user, Boolean status);
+    Optional<FridgeUser> findByFridgeAndUserAndIsEnable(Fridge fridge, User user, Boolean isEnable);
 
-  Optional<FridgeUser> findByFridgeAndUserAndIsEnable(Fridge fridge, User user, Boolean isEnable);
+    void deleteByFridge(Fridge fridge);
 
-  void deleteByFridge(Fridge fridge);
+    void deleteByUser(User user);
 
-  void deleteByUser(User user);
-  List<FridgeUser> findByUserAndRoleAndIsEnable(User user, FridgeRole role,Boolean isEnable);
-  List<FridgeUser> findByFridgeAndRoleAndIsEnable(Fridge fridge, FridgeRole role,Boolean isEnable);
+    void deleteByFridgeAndUserIn(Fridge fridge, List<User> user);
 
+    List<FridgeUser> findByUserAndRoleAndIsEnable(User user, FridgeRole role, Boolean isEnable);
+
+    List<FridgeUser> findByFridgeAndRoleAndIsEnable(Fridge fridge, FridgeRole role, Boolean isEnable);
 
 }

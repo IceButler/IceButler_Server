@@ -27,6 +27,11 @@ public class Fridge extends BaseEntity {
 
     private String fridgeComment;
 
+    public void edit(String fridgeName, String fridgeComment) {
+        this.fridgeName = fridgeName;
+        this.fridgeComment = fridgeComment;
+    }
+
     public void remove() {
         this.setIsEnable(false);
     }

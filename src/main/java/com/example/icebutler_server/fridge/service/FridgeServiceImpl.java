@@ -25,7 +25,6 @@ import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -106,86 +105,63 @@ public class FridgeServiceImpl implements FridgeService {
 
     @Override
     @Transactional
-    public void modifyFridge(Long fridgeId, FridgeModifyReq updateFridgeReq, Long userId) {
-        User user = this.userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+    public void modifyFridge(Long fridgeId, EditFridgeReq editFridgeReq, Long userId) {
         Fridge fridge = this.fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        FridgeUser owner = this.fridgeUserRepository.findByFridgeAndUserAndRoleAndIsEnable(fridge, user, FridgeRole.OWNER, true).orElseThrow(() -> new BaseException(NO_PERMISSION));
-
-        // 오너 업데이트
-        if (!owner.getUser().getId().equals(updateFridgeReq.getNewOwnerId())) {
-            FridgeUser newOwner = this.fridgeUserRepository.findByFridgeAndUser_IdAndRoleAndIsEnableAndUser_IsEnable(fridge, updateFridgeReq.getNewOwnerId(), FridgeRole.MEMBER, true, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
-            toUpdateFridgeOwner(owner, newOwner);
-        }
+        FridgeUser owner = this.fridgeUserRepository.findByFridgeAndUserIdAndRoleAndIsEnable(fridge, userId, FridgeRole.OWNER, true)
+                .orElseThrow(() -> new BaseException(NO_PERMISSION));
 
         // 냉장고 정보 (이름, 설명) 업데이트
-        if (!StringUtils.hasText(updateFridgeReq.getFridgeName())) throw new BaseException(INVALID_PARAM);
+        fridge.edit(editFridgeReq.getFridgeName(), editFridgeReq.getFridgeComment());
+
+        // 오너 업데이트
+        if (!userId.equals(editFridgeReq.getNewOwnerId())) {
+            FridgeUser newOwner = this.fridgeUserRepository.findByFridgeAndUserIdAndRoleAndIsEnable(fridge, editFridgeReq.getNewOwnerId(), FridgeRole.MEMBER, true)
+                    .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
+            exchangeFridgeOwner(owner, newOwner);
+        }
 
         // 멤버 업데이트
-        if (updateFridgeReq.getMembers() != null) {
-            List<FridgeUser> members = this.fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
-            List<User> newMembers = updateFridgeReq.getMembers().stream()
-                    .map(m -> this.userRepository.findByIdAndIsEnable(m.getUserId(), true).orElseThrow(() -> new BaseException(NOT_FOUND_USER))).collect(Collectors.toList());
-            UpdateMembersRes updateMembers = toUpdateFridgeMembers(newMembers, members);
+        updateFridgeUsers(editFridgeReq, fridge);
+    }
 
-            if (!updateMembers.getCheckNewMember().isEmpty()) {
-                this.fridgeUserRepository.saveAll(updateMembers.getCheckNewMember());
-            }
+    private void updateFridgeUsers(EditFridgeReq editFridgeReq, Fridge fridge) {
+        List<User> currentMembers = this.fridgeUserRepository.findByFridgeAndRoleAndIsEnable(fridge, FridgeRole.MEMBER, true).stream()
+                .map(FridgeUser::getUser).collect(Collectors.toList());
 
-            updateMembers.getWithDrawMember().forEach(f -> {
-                try {
-                    alarmService.sendWithdrawalAlarm(f.getUser(), f.getFridge().getFridgeName());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        List<User> newMembers = editFridgeReq.getMembers().stream()
+                .map(memberId -> this.userRepository.findByIdAndIsEnable(memberId, true)
+                        .orElseThrow(() -> new BaseException(NOT_FOUND_USER))).collect(Collectors.toList());
 
-            updateMembers.getCheckNewMember().forEach(f -> {
-                try {
-                    alarmService.sendJoinFridgeAlarm(f.getUser(), f.getFridge().getFridgeName());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        List<User> membersToDelete = currentMembers.stream()
+                .filter(memberId -> !newMembers.contains(memberId)).collect(Collectors.toList());
 
+        List<User> membersToAdd = newMembers.stream()
+                .filter(memberId -> !currentMembers.contains(memberId)).collect(Collectors.toList());
+
+        if (!membersToAdd.isEmpty()) {
+            List<FridgeUser> newFridgeUser = membersToAdd.stream()
+                    .map(user -> new FridgeUser(user, fridge, FridgeRole.MEMBER)).collect(Collectors.toList());
+            this.fridgeUserRepository.saveAll(newFridgeUser);
+        }
+
+        if (!membersToDelete.isEmpty()) {
+            this.fridgeUserRepository.deleteByFridgeAndUserIn(fridge, membersToDelete);
+        }
+
+        try {
+            for (User user : membersToAdd)
+                alarmService.sendJoinFridgeAlarm(user, fridge.getFridgeName());
+
+            for (User user : membersToDelete)
+                alarmService.sendWithdrawalAlarm(user, fridge.getFridgeName());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private UpdateMembersRes toUpdateFridgeMembers(List<User> newMembers, List<FridgeUser> fridgeUsers) {
-        for (FridgeUser member : fridgeUsers) {
-            member.setIsEnable(false);
-        }
-        List<FridgeUser> checkNewMember = new ArrayList<>();
-        List<FridgeUser> withDrawMember = new ArrayList<>();
-
-        for (User user : newMembers) {
-            boolean hasMember = false;
-
-            for (FridgeUser members : fridgeUsers) {
-                if (user.equals(members.getUser())) {
-                    members.setIsEnable(true);
-                    hasMember = true;
-                }
-                if (members.getRole().equals(FridgeRole.OWNER)) {
-                    members.setIsEnable(true);
-                }
-            }
-            if (!hasMember) {
-                checkNewMember.add(FridgeUser.builder()
-                        .user(user)
-                        .role(FridgeRole.MEMBER)
-                        .fridge(fridgeUsers.get(0).getFridge())
-                        .build());
-            }
-        }
-        for (FridgeUser f : fridgeUsers) {
-            if (!f.getIsEnable()) withDrawMember.add(f);
-        }
-        return UpdateMembersRes.toDto(withDrawMember, checkNewMember);
-    }
-
-    private void toUpdateFridgeOwner(FridgeUser owner, FridgeUser newOwner) {
-        owner.changeFridgeMember(owner.getUser());
-        newOwner.changeFridgeOwner(newOwner.getUser());
+    private void exchangeFridgeOwner(FridgeUser owner, FridgeUser newOwner) {
+        owner.changeRoleToMember();
+        newOwner.changeRoleToOwner();
     }
 
     // 냉장고 자체 삭제

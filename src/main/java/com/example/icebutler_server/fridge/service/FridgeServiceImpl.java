@@ -75,20 +75,12 @@ public class FridgeServiceImpl implements FridgeService {
                 .map(memberId -> {
                     User user = userRepository.findByIdAndIsEnable(memberId, true)
                             .orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-                    return FridgeUser.builder()
-                            .fridge(fridge)
-                            .user(user)
-                            .role(FridgeRole.MEMBER)
-                            .build();
+                    return FridgeUser.toEntity(user, fridge, FridgeRole.MEMBER);
                 })
                 .collect(Collectors.toList());
 
         User owner = userRepository.findById(ownerId).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-        members.add(FridgeUser.builder()
-                .fridge(fridge)
-                .user(owner)
-                .role(FridgeRole.OWNER)
-                .build());
+        members.add(FridgeUser.toEntity(owner,fridge, FridgeRole.OWNER));
 
         fridgeUserRepository.saveAll(members);
         cartRepository.save(Cart.toEntity(fridge));

@@ -41,6 +41,14 @@ public class FridgeUser extends BaseEntity {
         this.role = role;
     }
 
+    public static FridgeUser toEntity(User user, Fridge fridge, FridgeRole fridgeRole) {
+        return FridgeUser.builder()
+                .fridge(fridge)
+                .user(user)
+                .role(fridgeRole)
+                .build();
+    }
+
     public void changeRoleToOwner(){
         this.role = FridgeRole.OWNER;
     }

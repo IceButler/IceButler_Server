@@ -36,6 +36,12 @@ public class FoodServiceImpl implements FoodService{
 
     private final FoodRepository foodRepository;
 
+    @Override
+    public List<FoodRes> searchFood(String category, String word) {
+        List<Food> searchFoods = foodRepository.searchFood(category, word);
+        return searchFoods.stream().map(FoodRes::toDto).collect(Collectors.toList());
+    }
+
     @Transactional
     @Override
     public void addFood(FoodReq foodReq) {
@@ -43,34 +49,9 @@ public class FoodServiceImpl implements FoodService{
     }
 
     @Override
-    public List<FoodRes> getAllFood() {
-        return foodRepository.findAll().stream().map(FoodRes::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FoodRes> getAllFoodByCategory(String foodCategoryName) {
-        FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(foodCategoryName);
-        return foodRepository.findAllByFoodCategory(foodCategory)
-                .stream().map(FoodRes::toDto).collect(Collectors.toList());
-    }
-
-    @Override
     public BarcodeFoodRes searchByBarcode(String barcodeNum) throws IOException, org.json.simple.parser.ParseException {
         String foodDetailName = callBarcodeApi(barcodeNum);
         return BarcodeFoodRes.toDto(foodDetailName);
-    }
-
-    @Override
-    public List<FoodRes> getAllFoodByCategoryAndWord(String categoryName, String word) {
-        FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(categoryName);
-        return foodRepository.findByFoodNameContainsAndFoodCategory(word, foodCategory)
-                .stream().map(FoodRes::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FoodRes> getAllFoodByWord(String word) {
-        return foodRepository.findByFoodNameContains(word)
-                .stream().map(FoodRes::toDto).collect(Collectors.toList());
     }
 
     private String callBarcodeApi(String barcodeNum) throws IOException, ParseException {

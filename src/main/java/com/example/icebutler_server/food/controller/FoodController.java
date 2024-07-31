@@ -45,11 +45,7 @@ public class FoodController {
     @GetMapping("")
     public ResponseCustom<List<FoodRes>> searchFood(@Parameter(name = "category", description = "식품 카테고리") @RequestParam(required = false) String category,
                                                     @Parameter(name = "word", description = "검색어") @RequestParam(required = false) String word) {
-        if (category != null && word != null)
-            return ResponseCustom.success(foodService.getAllFoodByCategoryAndWord(category, word));
-        else if (category != null) return ResponseCustom.success(foodService.getAllFoodByCategory(category));
-        else if (word != null) return ResponseCustom.success(foodService.getAllFoodByWord(word));
-        else return ResponseCustom.success(foodService.getAllFood());
+        return ResponseCustom.success(foodService.searchFood(category, word));
     }
 
     @Operation(summary = "식품 바코드 조회", description = "바코드 번호로 식품을 조회한다.")

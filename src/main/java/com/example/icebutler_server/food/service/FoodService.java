@@ -11,11 +11,8 @@ import java.util.List;
 
 public interface FoodService {
     void addFood(FoodReq foodReq);
-    List<FoodRes> getAllFood();
-    List<FoodRes> getAllFoodByCategory(String categoryName);
 
     BarcodeFoodRes searchByBarcode(String barcodeNum) throws IOException, ParseException, org.json.simple.parser.ParseException;
 
-    List<FoodRes> getAllFoodByCategoryAndWord(String categoryName, String word);
-    List<FoodRes> getAllFoodByWord(String word);
+    List<FoodRes> searchFood(String category, String word);
 }

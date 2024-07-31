@@ -1,15 +1,10 @@
 package com.example.icebutler_server.food.controller;
 
-import com.example.icebutler_server.cart.dto.request.AddFoodRequest;
 import com.example.icebutler_server.food.dto.response.BarcodeFoodRes;
 import com.example.icebutler_server.food.dto.response.FoodRes;
-import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.food.service.FoodServiceImpl;
 import com.example.icebutler_server.global.dto.response.ResponseCustom;
 import com.example.icebutler_server.global.dto.response.SwaggerApiSuccess;
-import com.example.icebutler_server.global.sqs.AmazonSQSSender;
-import com.example.icebutler_server.global.sqs.FoodData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,9 +29,6 @@ import java.util.List;
 public class FoodController {
 
     private final FoodServiceImpl foodService;
-    private final AmazonSQSSender amazonSQSSender;
-
-    private final FoodRepository foodRepository;
 
     @Operation(summary = "식품 검색", description = "식품을 검색한다.")
     @SwaggerApiSuccess(implementation = FoodRes.class)
@@ -57,15 +49,4 @@ public class FoodController {
         return ResponseCustom.success(foodService.searchByBarcode(code_num));
     }
 
-    @GetMapping("/hihitest")
-    public void hihiTest() {
-
-        AddFoodRequest addFoodRequest = new AddFoodRequest();
-        addFoodRequest.setFoodName("맛없는 고기");
-        addFoodRequest.setFoodCategory("육류");
-
-        Food food = this.foodRepository.save(Food.toEntity(addFoodRequest));
-        FoodData foodData = FoodData.toDto(food);
-        amazonSQSSender.sendMessage(FoodData.toDto(food));
-    }
 }

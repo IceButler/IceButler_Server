@@ -7,7 +7,6 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.global.util.FoodBarcodeUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +17,6 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @Service
 public class FoodServiceImpl implements FoodService {
-    //TODO: 배포 설정 후 수정예정
-    @Value("${barcode-service-key}")
-    String serviceKey;
 
     private final FoodRepository foodRepository;
     private final FoodBarcodeUtils foodBarcodeUtils;

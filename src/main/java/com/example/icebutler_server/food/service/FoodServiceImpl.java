@@ -4,7 +4,6 @@ import com.example.icebutler_server.food.dto.request.FoodReq;
 import com.example.icebutler_server.food.dto.response.BarcodeFoodRes;
 import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class FoodServiceImpl implements FoodService{
+public class FoodServiceImpl implements FoodService {
     //TODO: 배포 설정 후 수정예정
     @Value("${barcode-service-key}")
     String serviceKey;
@@ -63,13 +62,13 @@ public class FoodServiceImpl implements FoodService{
         JSONObject result = (JSONObject) obj.get("I2570");
         JSONArray row = (JSONArray) result.get("row");
         if (row == null) throw new BaseException(NOT_FOUND_BARCODE_FOOD);
-        JSONObject data =  (JSONObject) row.get(0);
+        JSONObject data = (JSONObject) row.get(0);
         return (String) data.get("PRDT_NM");
     }
 
     private JSONObject getJsonObjectByParser(StringBuilder sb) throws ParseException {
         JSONParser parser = new JSONParser();
-        return (JSONObject)parser.parse(sb.toString());
+        return (JSONObject) parser.parse(sb.toString());
     }
 
     private StringBuilder callAPI(URL url) throws IOException {
@@ -78,7 +77,7 @@ public class FoodServiceImpl implements FoodService{
 
         BufferedReader rd;
         // 서비스코드가 정상이면 200~300
-        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300)
+        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300)
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         else
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));

@@ -1,6 +1,5 @@
 package com.example.icebutler_server.food.repository;
 
-import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -13,7 +12,7 @@ import java.util.List;
 import static com.example.icebutler_server.food.entity.QFood.food;
 
 @RequiredArgsConstructor
-public class FoodRepositoryImpl implements FoodCustom{
+public class FoodRepositoryImpl implements FoodCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
 
@@ -25,11 +24,11 @@ public class FoodRepositoryImpl implements FoodCustom{
                 .fetch();
     }
 
-    private BooleanExpression categoryEq(String category){
-        return StringUtils.isEmpty(category) ? null : food.foodCategory.eq( FoodCategory.getFoodCategoryByName(category));
+    private BooleanExpression categoryEq(String category) {
+        return StringUtils.isEmpty(category) ? null : food.foodCategory.eq(FoodCategory.getFoodCategoryByName(category));
     }
 
-    private BooleanExpression nameContains(String word){
+    private BooleanExpression nameContains(String word) {
         return StringUtils.isEmpty(word) ? null : food.foodName.contains(word);
     }
 }

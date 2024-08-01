@@ -4,7 +4,6 @@ import com.example.icebutler_server.food.dto.request.FoodReq;
 import com.example.icebutler_server.food.dto.response.BarcodeFoodRes;
 import com.example.icebutler_server.food.dto.response.FoodRes;
 import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.repository.FoodRepository;
 import com.example.icebutler_server.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +28,18 @@ import static com.example.icebutler_server.global.exception.ReturnCode.NOT_FOUND
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class FoodServiceImpl implements FoodService{
+public class FoodServiceImpl implements FoodService {
     //TODO: 배포 설정 후 수정예정
     @Value("${barcode-service-key}")
     String serviceKey;
 
     private final FoodRepository foodRepository;
+
+    @Override
+    public List<FoodRes> searchFood(String category, String word) {
+        List<Food> searchFoods = foodRepository.searchFood(category, word);
+        return searchFoods.stream().map(FoodRes::toDto).collect(Collectors.toList());
+    }
 
     @Transactional
     @Override
@@ -43,34 +48,9 @@ public class FoodServiceImpl implements FoodService{
     }
 
     @Override
-    public List<FoodRes> getAllFood() {
-        return foodRepository.findAll().stream().map(FoodRes::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FoodRes> getAllFoodByCategory(String foodCategoryName) {
-        FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(foodCategoryName);
-        return foodRepository.findAllByFoodCategory(foodCategory)
-                .stream().map(FoodRes::toDto).collect(Collectors.toList());
-    }
-
-    @Override
     public BarcodeFoodRes searchByBarcode(String barcodeNum) throws IOException, org.json.simple.parser.ParseException {
         String foodDetailName = callBarcodeApi(barcodeNum);
         return BarcodeFoodRes.toDto(foodDetailName);
-    }
-
-    @Override
-    public List<FoodRes> getAllFoodByCategoryAndWord(String categoryName, String word) {
-        FoodCategory foodCategory = FoodCategory.getFoodCategoryByName(categoryName);
-        return foodRepository.findByFoodNameContainsAndFoodCategory(word, foodCategory)
-                .stream().map(FoodRes::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FoodRes> getAllFoodByWord(String word) {
-        return foodRepository.findByFoodNameContains(word)
-                .stream().map(FoodRes::toDto).collect(Collectors.toList());
     }
 
     private String callBarcodeApi(String barcodeNum) throws IOException, ParseException {
@@ -82,13 +62,13 @@ public class FoodServiceImpl implements FoodService{
         JSONObject result = (JSONObject) obj.get("I2570");
         JSONArray row = (JSONArray) result.get("row");
         if (row == null) throw new BaseException(NOT_FOUND_BARCODE_FOOD);
-        JSONObject data =  (JSONObject) row.get(0);
+        JSONObject data = (JSONObject) row.get(0);
         return (String) data.get("PRDT_NM");
     }
 
     private JSONObject getJsonObjectByParser(StringBuilder sb) throws ParseException {
         JSONParser parser = new JSONParser();
-        return (JSONObject)parser.parse(sb.toString());
+        return (JSONObject) parser.parse(sb.toString());
     }
 
     private StringBuilder callAPI(URL url) throws IOException {
@@ -97,7 +77,7 @@ public class FoodServiceImpl implements FoodService{
 
         BufferedReader rd;
         // 서비스코드가 정상이면 200~300
-        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300)
+        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300)
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         else
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));

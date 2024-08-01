@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -45,7 +44,7 @@ public class FoodController {
     @ApiResponse(responseCode = "404", description = "(F0001)해당 바코드의 상품을 찾을 수 없습니다.",
             content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
     @GetMapping("/barcode")
-    public ResponseCustom<BarcodeFoodRes> searchByBarcode(@RequestParam String code_num) throws IOException, org.json.simple.parser.ParseException {
+    public ResponseCustom<BarcodeFoodRes> searchByBarcode(@RequestParam String code_num) {
         return ResponseCustom.success(foodService.searchByBarcode(code_num));
     }
 

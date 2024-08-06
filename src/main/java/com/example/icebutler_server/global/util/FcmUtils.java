@@ -8,6 +8,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -26,26 +27,35 @@ public class FcmUtils {
     public static final String MEDIA_TYPE_JSON_UTF_8 = "application/json; charset=utf-8";
     public static final String CONTENT_TYPE_JSON_UTF_8 = "application/json; UTF-8";
     private static final String API_URL = "https://fcm.googleapis.com/v1/projects/icebutler-46914/messages:send";
+    public static final String BEARER = "Bearer ";
 
     private final ObjectMapper objectMapper;
 
     public void sendMessage(String targetToken, String title, String body) {
         String message = makeMessage(targetToken, title, body);
-        try {
+
             OkHttpClient client = new OkHttpClient();
             RequestBody requestBody = RequestBody.create(message, MediaType.get(MEDIA_TYPE_JSON_UTF_8));
             Request request = new Request.Builder()
                     .url(API_URL)
                     .post(requestBody)
-                    .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                    .addHeader(HttpHeaders.AUTHORIZATION, BEARER + getAccessToken())
                     .addHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_JSON_UTF_8)
                     .build();
 
-            Response response = client.newCall(request).execute();
-            log.info("알림 발신: ", response.body().toString());
-        } catch (IOException e) {
-            throw new BaseException(FIREBASE_SERVER_ERROR);
-        }
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    log.info("알림 실패: ", e.toString());
+                    throw new BaseException(FIREBASE_SERVER_ERROR);
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) {
+                    log.info("알림 성공: ", response.body().toString());
+                }
+            });
+
     }
 
     public String makeMessage(String targetToken, String title, String body) {
@@ -57,12 +67,16 @@ public class FcmUtils {
         }
     }
 
-    private String getAccessToken() throws IOException {
-        GoogleCredentials googleCredentials = GoogleCredentials
-                .fromStream(new ClassPathResource(FIREBASE_CONFIG_PATH).getInputStream())
-                .createScoped(List.of(NOTIFICATION_SCOPE));
-        googleCredentials.refreshIfExpired();
-        return googleCredentials.getAccessToken().getTokenValue();
+    private String getAccessToken() {
+        try {
+            GoogleCredentials googleCredentials = GoogleCredentials
+                    .fromStream(new ClassPathResource(FIREBASE_CONFIG_PATH).getInputStream())
+                    .createScoped(List.of(NOTIFICATION_SCOPE));
+            googleCredentials.refreshIfExpired();
+            return googleCredentials.getAccessToken().getTokenValue();
+        } catch (IOException e) {
+            throw new BaseException(FIREBASE_SERVER_ERROR);
+        }
     }
 
 }

@@ -85,12 +85,10 @@ public class FridgeServiceImpl implements FridgeService {
         fridgeUserRepository.saveAll(members);
         cartRepository.save(Cart.toEntity(fridge));
 
-        try {
-            for (FridgeUser fridgeUser : members)
-                alarmService.sendJoinFridgeAlarm(fridgeUser.getUser(), fridge.getFridgeName());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        for (FridgeUser fridgeUser : members)
+            alarmService.sendJoinFridgeAlarm(fridgeUser.getUser(), fridge.getFridgeName());
+
 
         return fridge.getId();
     }
@@ -140,15 +138,13 @@ public class FridgeServiceImpl implements FridgeService {
             this.fridgeUserRepository.deleteByFridgeAndUserIn(fridge, membersToDelete);
         }
 
-        try {
-            for (User user : membersToAdd)
-                alarmService.sendJoinFridgeAlarm(user, fridge.getFridgeName());
 
-            for (User user : membersToDelete)
-                alarmService.sendWithdrawalAlarm(user, fridge.getFridgeName());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        for (User user : membersToAdd)
+            alarmService.sendJoinFridgeAlarm(user, fridge.getFridgeName());
+
+        for (User user : membersToDelete)
+            alarmService.sendWithdrawalAlarm(user, fridge.getFridgeName());
+
     }
 
     private void exchangeFridgeOwner(FridgeUser owner, FridgeUser newOwner) {

@@ -25,6 +25,7 @@ public enum ReturnCode {
 
     // 서버 에러
     INTERNAL_SERVER_ERROR("E0000", HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다."),
+    FIREBASE_SERVER_ERROR("E0001", HttpStatus.INTERNAL_SERVER_ERROR, "알림 발송에 실패했습니다."),
 
     // Food
     INVALID_FOOD_CATEGORY("F0000", HttpStatus.BAD_REQUEST, "존재하지 않는 카테고리입니다."),

@@ -23,27 +23,30 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     @Override
     public void sendWithdrawalAlarm(User user, String fridgeName) {
-        if (user.getFcmToken() == null) return;
         String messageBody = fridgeName + "에서 탈퇴되었습니다.";
-        fcmUtils.sendMessage((user.getFcmToken()), Constant.PushNotification.FRIDGE, messageBody);
+        if (user.getFcmToken() != null) {
+            fcmUtils.sendMessage((user.getFcmToken()), Constant.PushNotification.FRIDGE, messageBody);
+        }
         this.notificationRepository.save(PushNotification.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
     }
 
     @Transactional
     @Override
     public void sendJoinFridgeAlarm(User user, String fridgeName) {
-        if (user.getFcmToken() == null) return;
         String messageBody = fridgeName + "에서 초대되었습니다.";
-        fcmUtils.sendMessage((user.getFcmToken()), Constant.PushNotification.FRIDGE, messageBody);
+        if (user.getFcmToken() != null) {
+            fcmUtils.sendMessage((user.getFcmToken()), Constant.PushNotification.FRIDGE, messageBody);
+        }
         this.notificationRepository.save(PushNotification.toEntity(Constant.PushNotification.FRIDGE, messageBody, user));
     }
 
     @Transactional
     @Override
     public void sendShelfLifeAlarm(User user, String fridgeName, String foodName) throws IOException {
-        if (user.getFcmToken() == null) return;
         String messageBody = foodName + " 소비기한이 임박해요!";
-        fcmUtils.sendMessage((user.getFcmToken()), fridgeName, messageBody);
+        if (user.getFcmToken() != null) {
+            fcmUtils.sendMessage((user.getFcmToken()), fridgeName, messageBody);
+        }
         this.notificationRepository.save(PushNotification.toEntity(fridgeName, messageBody, user));
     }
 }

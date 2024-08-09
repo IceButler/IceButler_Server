@@ -15,11 +15,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RequestMapping("/fridges")
 @RestController
@@ -105,8 +106,8 @@ public class FridgeController {
         return ResponseCustom.success(fridgeService.removeFridgeUser(fridgeId, userId));
     }
 
-    @Operation(summary = "냉장고 식품 전체 조회(카테고리별)", description = "냉장고 내 식품을 카테고리 별로 전체조회한다.")
-    @SwaggerApiSuccess(implementation = FridgeMainRes.class)
+    @Operation(summary = "냉장고 식품 검색 조회", description = "냉장고 내 식품을 검색한다.")
+    @SwaggerApiSuccess(implementation = FridgeFoodsRes.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "(F0000)존재하지 않는 카테고리입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
@@ -116,25 +117,12 @@ public class FridgeController {
     })
     @Auth
     @GetMapping("/{fridgeId}/foods")
-    public ResponseCustom<FridgeMainRes> getFoods(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-                                                  @Parameter(description = "식품 카테고리") @RequestParam(required = false) String category,
-                                                  @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.getFoods(fridgeId, userId, category));
-    }
-
-
-    @Operation(summary = "냉장고 식품 검색 조회", description = "냉장고 내 식품을 검색한다.")
-    @SwaggerApiSuccess(implementation = FridgeFoodsRes.class)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "(R0000)존재하지 않는 냉장고입니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-    })
-    @Auth
-    @GetMapping("/{fridgeId}/search")
-    public ResponseCustom<List<FridgeFoodsRes>> searchFridgeFood(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-                                                                 @Parameter(description = "식품명") @RequestParam String keyword,
-                                                                 @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.searchFridgeFood(fridgeId, userId, keyword));
+    public ResponseCustom<Page<FridgeFoodsRes>> searchFridgeFood(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
+                                                                      @Parameter(description = "식품 카테고리") @RequestParam(required = false) String category,
+                                                                      @Parameter(description = "식품명") @RequestParam(required = false) String word,
+                                                                      Pageable pageable,
+                                                                      @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.searchFridgeFoods(fridgeId, userId, word, category, pageable));
     }
 
     @Operation(summary = "냉장고 식품 상세 조회", description = "냉장고 내 식품을 상세 조회한다.")

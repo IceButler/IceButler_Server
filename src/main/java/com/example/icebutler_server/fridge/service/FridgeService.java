@@ -2,17 +2,17 @@ package com.example.icebutler_server.fridge.service;
 
 import com.example.icebutler_server.fridge.dto.request.*;
 import com.example.icebutler_server.fridge.dto.response.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface FridgeService {
-  FridgeMainRes getFoods(Long fridgeId, Long userId, String category);
   Long addFridge(AddFridgeReq registerFridgeReq, Long ownerId);
   void modifyFridge(Long fridgeId, EditFridgeReq updateFridgeReq, Long userId);
   void removeFridge(Long fridgeId, Long userId);
   Long removeFridgeUser(Long fridgeId, Long userId) throws IOException;
-  List<FridgeFoodsRes> searchFridgeFood(Long fridgeId, Long ownerId, String foodName);
+  Page<FridgeFoodsRes> searchFridgeFoods(Long fridgeId, Long ownerId, String foodName, String category, Pageable pageable);
   FridgeFoodRes getFridgeFood(Long fridgeId, Long fridgeFoodId, Long userId);
   void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeId, Long userId);
   void modifyFridgeFood(Long fridgeId, Long fridgeFoodId, FridgeFoodReq fridgeFoodReq, Long userId);

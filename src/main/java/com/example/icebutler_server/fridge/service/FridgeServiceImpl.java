@@ -23,6 +23,8 @@ import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import com.example.icebutler_server.user.entity.User;
 import com.example.icebutler_server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,20 +54,6 @@ public class FridgeServiceImpl implements FridgeService {
     private final NotificationServiceImpl alarmService;
 
     @Override
-    public FridgeMainRes getFoods(Long fridgeId, Long userId, String category) {
-        User user = this.userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-        Fridge fridge = this.fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-
-        if (category == null) {
-            // 값이 없으면 전체 조회
-            return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByFridgeAndIsEnableOrderByShelfLife(fridge, true));
-        } else {
-            // 값이 있으면 특정 값을 불러온 조회
-            return FridgeMainRes.toFridgeDto(this.fridgeFoodRepository.findByFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(fridge, FoodCategory.getFoodCategoryByName(category), true));
-        }
-    }
-
-    @Override
     @Transactional
     public Long addFridge(AddFridgeReq addFridgeReq, Long ownerId) {
         Fridge fridge = Fridge.toEntity(addFridgeReq);
@@ -85,10 +73,8 @@ public class FridgeServiceImpl implements FridgeService {
         fridgeUserRepository.saveAll(members);
         cartRepository.save(Cart.toEntity(fridge));
 
-
         for (FridgeUser fridgeUser : members)
             alarmService.sendJoinFridgeAlarm(fridgeUser.getUser(), fridge.getFridgeName());
-
 
         return fridge.getId();
     }
@@ -134,9 +120,8 @@ public class FridgeServiceImpl implements FridgeService {
             this.fridgeUserRepository.saveAll(newFridgeUser);
         }
 
-        if (!membersToDelete.isEmpty()) {
+        if (!membersToDelete.isEmpty())
             this.fridgeUserRepository.deleteByFridgeAndUserIn(fridge, membersToDelete);
-        }
 
         for (User user : membersToAdd)
             alarmService.sendJoinFridgeAlarm(user, fridge.getFridgeName());
@@ -178,11 +163,11 @@ public class FridgeServiceImpl implements FridgeService {
         return fridge.getId();
     }
 
+    // 냉장고 식품 검색
     @Override
-    public List<FridgeFoodsRes> searchFridgeFood(Long fridgeId, Long ownerId, String keyword) {
-        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        List<FridgeFood> searchFoods = fridgeFoodRepository.findByFoodDetailNameContainingAndFridgeAndIsEnable(keyword, fridge, true);
-        return searchFoods.stream().map(FridgeFoodsRes::toDto).collect(Collectors.toList());
+    public Page<FridgeFoodsRes> searchFridgeFoods(Long fridgeId, Long userId, String word, String category, Pageable p) {
+        fridgeUserRepository.findByFridgeIdAndUserIdAndIsEnable(fridgeId, userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
+        return fridgeFoodRepository.searchFridgeFoods(fridgeId, word, category, p);
     }
 
     @Override
@@ -246,7 +231,7 @@ public class FridgeServiceImpl implements FridgeService {
         modifyFridgeFood.updateFridgeFoodInfo(
                 fridgeFoodReq.getFoodDetailName(),
                 fridgeFoodReq.getMemo(),
-                LocalDate.parse(fridgeFoodReq.getShelfLife()),
+                LocalDate.parse(fridgeFoodReq.getExpirationDate()),
                 fridgeFoodReq.getImgKey()
         );
 

@@ -4,12 +4,19 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.fridge.dto.response.FridgeDiscardRes;
+import com.example.icebutler_server.fridge.dto.response.FridgeFoodsRes;
 import com.example.icebutler_server.fridge.dto.response.QFridgeDiscardRes;
+import com.example.icebutler_server.fridge.dto.response.QFridgeFoodsRes;
 import com.example.icebutler_server.fridge.entity.Fridge;
 import com.example.icebutler_server.fridge.entity.FridgeFood;
 import com.example.icebutler_server.fridge.entity.FridgeUser;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,8 +27,41 @@ import static com.example.icebutler_server.fridge.entity.QFridgeFood.fridgeFood;
 import static com.example.icebutler_server.fridge.entity.QFridgeUser.fridgeUser;
 
 @RequiredArgsConstructor
-public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
+public class FridgeFoodRepositoryImpl implements FridgeFoodCustom {
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public Page<FridgeFoodsRes> searchFridgeFoods(Long fridgeId, String word, String category, Pageable p) {
+        List<FridgeFoodsRes> list = jpaQueryFactory.select(new QFridgeFoodsRes(
+                        fridgeFood.id,
+                        fridgeFood.food.foodName,
+                        fridgeFood.food.foodImgKey,
+                        fridgeFood.shelfLife))
+                .from(fridgeFood)
+                .where(eqCategory(category), containsWord(word), fridgeFood.isEnable.eq(true))
+                .orderBy(fridgeFood.shelfLife.asc())
+                .offset(p.getOffset())
+                .limit(p.getPageSize())
+                .fetch();
+
+        Long count = jpaQueryFactory.select(fridgeFood.count())
+                .from(fridgeFood)
+                .where(eqCategory(category), containsWord(word), fridgeFood.isEnable.eq(true))
+                .fetchOne();
+
+        return new PageImpl<>(list, p, count);
+    }
+
+    private BooleanExpression eqCategory(String category) {
+        return StringUtils.isEmpty(category) ? null :
+                fridgeFood.food.foodCategory.eq(FoodCategory.getFoodCategoryByName(category));
+    }
+
+    private BooleanExpression containsWord(String word) {
+        return StringUtils.isEmpty(word) ? null :
+                fridgeFood.foodDetailName.contains(word);
+    }
+
     @Override
     public Long findByDeleteCategoryForStatistics(FoodDeleteStatus deleteCategory, Fridge fridge, FoodCategory category, Integer year, Integer month) {
         return jpaQueryFactory.select(fridgeFood.count())
@@ -76,8 +116,6 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
                 .fetch();
     }
 
-
-
     @Override
     public void deleteOwnerByFridgeUser(FridgeUser fridgeUser) {
         jpaQueryFactory.update(fridgeFood)
@@ -90,10 +128,9 @@ public class FridgeFoodRepositoryImpl implements FridgeFoodCustom{
     public List<FridgeFood> findByActiveAndShelfLifeLimit3() {
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(3);
-       return jpaQueryFactory.selectFrom(fridgeFood)
+        return jpaQueryFactory.selectFrom(fridgeFood)
                 .where(fridgeFood.isEnable.eq(true)
-                        .and(fridgeFood.shelfLife.between(startDate, endDate)))
-               .fetch();
-
+                        .and(fridgeFood.expirationDate.between(startDate, endDate)))
+                .fetch();
     }
 }

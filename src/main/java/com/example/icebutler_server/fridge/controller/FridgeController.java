@@ -111,8 +111,7 @@ public class FridgeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "(F0000)존재하지 않는 카테고리입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
-                    "(R0000)존재하지 않는 냉장고입니다.",
+            @ApiResponse(responseCode = "404", description = "(R0003)해당 냉장고에 존재하지 않는 사용자입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth

@@ -15,21 +15,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Schema(name = "FridgeFoodsRes", description = "냉장고 식품 정보")
 public class FridgeFoodsRes {
-  @Schema(name = "fridgeFoodId", description = "냉장고 식품 ID")
-  private Long fridgeFoodId;
-  @Schema(name = "foodName", description = "냉장고 식품 이름")
-  private String foodName;
-  @Schema(name = "foodImgUrl", description = "냉장고 식품 이미지 URL")
-  private String foodImgUrl;
-  @Schema(name = "shelfLife", description = "식품 유효기한")
-  private int shelfLife;
+    @Schema(name = "fridgeFoodId", description = "냉장고 식품 ID")
+    private Long fridgeFoodId;
+    @Schema(name = "foodName", description = "냉장고 식품 이름")
+    private String foodName;
+    @Schema(name = "foodImgUrl", description = "냉장고 식품 이미지 URL")
+    private String foodImgUrl;
+    @Schema(name = "shelfLife", description = "남은 소비기간")
+    private int shelfLife;
 
-  public static FridgeFoodsRes toDto(FridgeFood fridgeFood) {
-    return FridgeFoodsRes.builder()
-            .fridgeFoodId(fridgeFood.getId())
-            .foodName(fridgeFood.getFood().getFoodName())
-            .foodImgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFood().getFoodImgKey()))
-            .shelfLife(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))
-            .build();
-  }
+    public static FridgeFoodsRes toDto(FridgeFood fridgeFood) {
+        return FridgeFoodsRes.builder()
+                .fridgeFoodId(fridgeFood.getId())
+                .foodName(fridgeFood.getFood().getFoodName())
+                .foodImgUrl(AwsS3ImageUrlUtil.toUrl(fridgeFood.getFood().getFoodImgKey()))
+                .shelfLife(FridgeUtils.calShelfLife(fridgeFood.getExpirationDate()))
+                .build();
+    }
 }

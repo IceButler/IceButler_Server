@@ -1,6 +1,5 @@
 package com.example.icebutler_server.fridge.dto.response;
 
-import com.example.icebutler_server.global.util.FridgeUtils;
 import com.example.icebutler_server.fridge.entity.FridgeFood;
 import com.example.icebutler_server.global.util.AwsS3ImageUrlUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,10 +26,10 @@ public class FridgeFoodRes {
   private String foodDetailName;
   @Schema(name = "foodCategory", description = "식품 카테고리")
   private String foodCategory;
-  @Schema(name = "shelfLife", description = "식품 소비기한")
-  private String shelfLife;
-  @Schema(name = "day", description = "식품 소비기한 디데이")
-  private int day;
+  @Schema(name = "expirationDate", description = "식품 소비기한")
+  private String expirationDate;
+  @Schema(name = "shelfLife", description = "남은 소비기간")
+  private int shelfLife;
   @Schema(name = "owner", description = "식품 소유자")
   private String owner;
   @Schema(name = "memo", description = "식품 메모")
@@ -45,8 +44,8 @@ public class FridgeFoodRes {
             .foodName(fridgeFood.getFood().getFoodName())
             .foodDetailName(fridgeFood.getFoodDetailName())
             .foodCategory(fridgeFood.getFood().getFoodCategory().getName())
-            .shelfLife(fridgeFood.getShelfLife().format(DateTimeFormatter.ISO_DATE))
-            .day(FridgeUtils.calShelfLife(fridgeFood.getShelfLife()))
+            .expirationDate(fridgeFood.getExpirationDate().format(DateTimeFormatter.ISO_DATE))
+            .shelfLife(fridgeFood.getShelfLife())
             .owner(fridgeFood.getOwner() == null ? null : fridgeFood.getOwner().getNickname())
             .memo(fridgeFood.getMemo())
             .imgUrl(fridgeFood.getFridgeFoodImgKey() == null ? null : AwsS3ImageUrlUtil.toUrl(fridgeFood.getFridgeFoodImgKey()))

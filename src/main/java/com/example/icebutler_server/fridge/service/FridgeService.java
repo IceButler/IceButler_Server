@@ -10,7 +10,7 @@ public interface FridgeService {
   FridgeMainRes getFoods(Long fridgeId, Long userId, String category);
   Long addFridge(AddFridgeReq registerFridgeReq, Long ownerId);
   void modifyFridge(Long fridgeId, EditFridgeReq updateFridgeReq, Long userId);
-  Long removeFridge(Long fridgeId, Long userId);
+  void removeFridge(Long fridgeId, Long userId);
   Long removeFridgeUser(Long fridgeId, Long userId) throws IOException;
   List<FridgeFoodsRes> searchFridgeFood(Long fridgeId, Long ownerId, String foodName);
   FridgeFoodRes getFridgeFood(Long fridgeId, Long fridgeFoodId, Long userId);

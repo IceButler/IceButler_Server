@@ -49,7 +49,7 @@ public class FridgeController {
         return ResponseCustom.success(fridgeService.addFridge(addFridgeReq, userId));
     }
 
-    @Operation(summary = "냉장고 정보 수정", description = "냉장고 정보를 수정한다.")
+    @Operation(summary = "냉장고 정보 수정", description = "주인이 냉장고 정보를 수정한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "(G0000)잘못된 파라미터입니다.",
@@ -70,24 +70,22 @@ public class FridgeController {
         return ResponseCustom.success();
     }
 
-    @Operation(summary = "냉장고 삭제", description = "냉장고를 삭제한다.")
+    @Operation(summary = "냉장고 삭제", description = "주인이 냉장고를 삭제한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "400", description = "(G0000)잘못된 파라미터입니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
             @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
-                    "(R0000)존재하지 않는 냉장고입니다.\t\n",
+            @ApiResponse(responseCode = "404", description = "(R0000)존재하지 않는 냉장고입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
             @ApiResponse(responseCode = "409", description = "(R0001)해당 냉장고에 사용자가 존재합니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @PatchMapping("/{fridgeId}/remove")
-    public ResponseCustom<Long> removeFridge(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
+    @DeleteMapping("/{fridgeId}")
+    public ResponseCustom<Void> removeFridge(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
                                              @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.removeFridge(fridgeId, userId));
+        fridgeService.removeFridge(fridgeId, userId);
+        return ResponseCustom.success();
     }
 
     @Operation(summary = "냉장고 사용자 삭제", description = "냉장고 사용자를 삭제한다.")

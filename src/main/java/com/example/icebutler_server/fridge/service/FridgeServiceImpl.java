@@ -138,13 +138,11 @@ public class FridgeServiceImpl implements FridgeService {
             this.fridgeUserRepository.deleteByFridgeAndUserIn(fridge, membersToDelete);
         }
 
-
         for (User user : membersToAdd)
             alarmService.sendJoinFridgeAlarm(user, fridge.getFridgeName());
 
         for (User user : membersToDelete)
             alarmService.sendWithdrawalAlarm(user, fridge.getFridgeName());
-
     }
 
     private void exchangeFridgeOwner(FridgeUser owner, FridgeUser newOwner) {
@@ -152,24 +150,18 @@ public class FridgeServiceImpl implements FridgeService {
         newOwner.changeRoleToOwner();
     }
 
-    // 냉장고 자체 삭제
+    // 주인이 냉장고 삭제
     @Transactional
-    public Long removeFridge(Long fridgeId, Long userId) {
-        User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        FridgeUser owner = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NO_PERMISSION));
-        List<FridgeUser> fridgeUsers = fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
-        List<FridgeFood> fridgeFoods = fridgeFoodRepository.findByFridgeAndIsEnableOrderByShelfLife(fridge, true);
+    public void removeFridge(Long fridgeId, Long userId) {
+        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
+        fridgeUserRepository.findByFridgeAndUserIdAndRoleAndIsEnable(fridge, userId, FridgeRole.OWNER, true)
+                .orElseThrow(() -> new BaseException(NO_PERMISSION));
 
-        if (owner.getRole() != FridgeRole.OWNER) throw new BaseException(NO_PERMISSION);
-        if (fridgeUsers.size() > 1) throw new BaseException(STILL_MEMBER_EXIST);
+        if (fridgeUserRepository.existsByFridgeAndRoleAndIsEnable(fridge, FridgeRole.MEMBER, true))
+            throw new BaseException(STILL_MEMBER_EXIST);
 
-        fridgeUsers.forEach(FridgeUser::remove);
-//        fridgeFoods.forEach(FridgeFood::remove);
-        fridge.remove();
-        fridgeFoodRepository.removeFridgeFoodByFridge(false, fridge);
-
-        return fridge.getId();
+        fridgeRepository.delete(fridge);
     }
 
     // 냉장고 개별

@@ -309,16 +309,15 @@ public class FridgeServiceImpl implements FridgeService {
         return MyFridgeRes.toDto(fridgeUser);
     }
 
-    public GetFridgesMainRes myFridge(Long userId) {
-        User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+    // 냉장고 정보 조회
+    public FridgeInfoRes getFridgeInfo(Long userId, Long fridgeId) {
+        fridgeUserRepository.findByFridgeIdAndUserIdAndIsEnable(fridgeId, userId, true)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
+        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
+        List<FridgeUser> fridgeUser = fridgeUserRepository.findByFridgeAndIsEnable(fridge, true);
 
-        // 가정용 냉장고 조회
-        List<FridgeUser> fridgeUsers = fridgeUserRepository.findByUserAndIsEnable(user, true);
-        List<Fridge> fridges = fridgeUsers.stream().map(m -> fridgeRepository.findByIdAndIsEnable(m.getFridge().getId(), true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE))).collect(Collectors.toList());
-        List<List<FridgeUser>> fridgeUserListList = fridges.stream().map(m -> fridgeUserRepository.findByFridgeAndIsEnableOrderByRoleDesc(m, true)).collect(Collectors.toList());
-
-        return GetFridgesMainRes.toDto(fridgeUserListList, userId);
-
+        return FridgeInfoRes.toDto(fridge, fridgeUser);
     }
 
     //  사용자가 속한 가정용/공용 냉장고 food list

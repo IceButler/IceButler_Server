@@ -219,18 +219,18 @@ public class FridgeController {
         return ResponseCustom.success(fridgeService.searchMembers(fridgeId, userId));
     }
 
-    @Operation(summary = "냉장고 선택목록 조회", description = "냉장고 선택목록을 조회한다.")
-    @SwaggerApiSuccess(implementation = SelectFridgesMainRes.class)
+    @Operation(summary = "내 냉장고 조회", description = "사용자의 냉장고를 조회한다.")
+    @SwaggerApiSuccess(implementation = MyFridgeRes.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @GetMapping("/select")
-    public ResponseCustom<SelectFridgesMainRes> selectFridges(
+    @GetMapping()
+    public ResponseCustom<MyFridgeRes> getMyFridge(
             @Parameter(hidden = true) @IsLogin Long userId
     ) {
-        return ResponseCustom.success(fridgeService.selectFridges(userId));
+        return ResponseCustom.success(fridgeService.getMyFridge(userId));
     }
 
     @Operation(summary = "냉장고 목록 조회", description = "냉장고 목록을 조회한다.")

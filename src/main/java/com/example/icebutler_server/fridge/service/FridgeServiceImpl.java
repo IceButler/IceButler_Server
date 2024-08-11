@@ -30,10 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.icebutler_server.global.exception.ReturnCode.*;
@@ -303,9 +300,13 @@ public class FridgeServiceImpl implements FridgeService {
         return FridgeFoodsStatistics.toDto(foodStatisticsList);
     }
 
-    public SelectFridgesMainRes selectFridges(Long userId) {
-        User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-        return SelectFridgesMainRes.toDto(fridgeUserRepository.findByUserAndIsEnable(user, true));
+    // 내 냉장고 조회
+    public MyFridgeRes getMyFridge(Long userId) {
+        userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
+
+        FridgeUser fridgeUser = fridgeUserRepository.findByUserIdAndIsEnable(userId, true).orElse(null);
+        if (fridgeUser == null) return null;
+        return MyFridgeRes.toDto(fridgeUser);
     }
 
     public GetFridgesMainRes myFridge(Long userId) {

@@ -18,5 +18,6 @@ public interface FridgeService {
   FridgeUserMainRes searchMembers(Long fridgeId, Long userId);
   FridgeFoodsStatistics getFridgeFoodStatistics(Long fridgeId, String deleteCategory, Long userId, Integer year, Integer month);
   RecipeFridgeFoodListsRes getFridgeUserFoodList(Long fridgeId, Long userId);
+  MyFridgeRes getMyFridge(Long userId);
   void notifyFridgeFood();
 }

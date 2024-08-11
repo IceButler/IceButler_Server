@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequestMapping("/fridges")
 @RestController
@@ -206,17 +207,17 @@ public class FridgeController {
     }
 
     @Operation(summary = "냉장고 멤버 조회", description = "냉장고의 멤버를 조회한다.")
-    @SwaggerApiSuccess(implementation = FridgeUserMainRes.class)
+    @SwaggerApiSuccess(implementation = FridgeUserRes.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "(R0000)존재하지 않는 냉장고입니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
     })
     @Auth
-    @GetMapping("{fridgeId}/members")
-    public ResponseCustom<FridgeUserMainRes> getMembers(
+    @GetMapping("/{fridgeId}/members")
+    public ResponseCustom<List<FridgeUserRes>> getFridgeMembers(
             @Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
             @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.searchMembers(fridgeId, userId));
+        return ResponseCustom.success(fridgeService.getFridgeMembers(fridgeId, userId));
     }
 
     @Operation(summary = "내 냉장고 조회", description = "사용자의 냉장고를 조회한다.")
@@ -237,7 +238,7 @@ public class FridgeController {
     @SwaggerApiSuccess(implementation = FridgeInfoRes.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "(R0000)존재하지 않는 냉장고입니다.\t\n" +
-                    "(R0002)해당 냉장고에 존재하지 않는 식품입니다.",
+                    "(R0003)해당 냉장고에 존재하지 않는 사용자입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth

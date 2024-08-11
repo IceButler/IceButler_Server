@@ -14,11 +14,13 @@ import java.util.Optional;
 public interface FridgeUserRepository extends JpaRepository<FridgeUser, Long> {
 
     Optional<FridgeUser> findByUserAndFridgeAndIsEnable(User user, Fridge fridge, Boolean isEnable);
+
     Optional<FridgeUser> findByUserIdAndFridgeIdAndIsEnable(Long userId, Long fridgeId, Boolean isEnable);
 
     Optional<FridgeUser> findByFridgeAndUserIdAndRoleAndIsEnable(Fridge fridge, Long userId, FridgeRole fridgeRole, Boolean status);
 
     List<FridgeUser> findByFridgeAndIsEnable(Fridge fridge, Boolean isEnable);
+    List<FridgeUser> findByFridgeIdAndIsEnable(Long fridgeId, Boolean isEnable);
 
     boolean existsByFridgeAndRoleAndIsEnable(Fridge fridge, FridgeRole role, boolean isEnable);
 

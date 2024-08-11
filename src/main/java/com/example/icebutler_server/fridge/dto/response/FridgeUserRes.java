@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-@Schema(name = "냉장고 유저 정보", description = "FridgeUserRe")
+@Schema(name = "냉장고 유저 정보", description = "FridgeUserRes")
 public class FridgeUserRes {
     @Schema(description = "유저 ID", example = "1")
     private Long userId;

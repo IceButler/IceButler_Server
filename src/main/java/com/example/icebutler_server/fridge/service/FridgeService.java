@@ -5,6 +5,8 @@ import com.example.icebutler_server.fridge.dto.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface FridgeService {
     Long addFridge(AddFridgeReq registerFridgeReq, Long ownerId);
 
@@ -24,7 +26,7 @@ public interface FridgeService {
 
     void deleteFridgeFood(DeleteFridgeFoodsReq deleteFridgeFoodsReq, String deleteType, Long fridgeId, Long userId);
 
-    FridgeUserMainRes searchMembers(Long fridgeId, Long userId);
+    List<FridgeUserRes> getFridgeMembers(Long fridgeId, Long userId);
 
     FridgeFoodsStatistics getFridgeFoodStatistics(Long fridgeId, String deleteCategory, Long userId, Integer year, Integer month);
 

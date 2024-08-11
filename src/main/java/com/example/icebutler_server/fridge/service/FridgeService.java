@@ -5,8 +5,6 @@ import com.example.icebutler_server.fridge.dto.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.io.IOException;
-
 public interface FridgeService {
   Long addFridge(AddFridgeReq registerFridgeReq, Long ownerId);
   void modifyFridge(Long fridgeId, EditFridgeReq updateFridgeReq, Long userId);

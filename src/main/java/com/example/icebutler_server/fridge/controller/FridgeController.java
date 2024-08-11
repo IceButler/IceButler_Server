@@ -94,9 +94,7 @@ public class FridgeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
-                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
-                    "(R0003)해당 냉장고에 존재하지 않는 사용자입니다.",
+            @ApiResponse(responseCode = "404", description = "(R0003)해당 냉장고에 존재하지 않는 사용자입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
@@ -130,9 +128,7 @@ public class FridgeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
-                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
-                    "(R0002)해당 냉장고에 존재하지 않는 식품입니다.",
+            @ApiResponse(responseCode = "404", description = "(R0002)해당 냉장고에 존재하지 않는 식품입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth

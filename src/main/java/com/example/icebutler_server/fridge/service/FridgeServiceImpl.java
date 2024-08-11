@@ -167,12 +167,13 @@ public class FridgeServiceImpl implements FridgeService {
         return fridgeFoodRepository.searchFridgeFoods(fridgeId, word, category, p);
     }
 
+    // 냉장고 식품 상세 조회
     @Override
     public FridgeFoodRes getFridgeFood(Long fridgeId, Long fridgeFoodId, Long userId) {
-        User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NO_PERMISSION));
-        FridgeFood fridgeFood = fridgeFoodRepository.findByIdAndFridgeAndIsEnable(fridgeFoodId, fridge, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_FOOD));
+        fridgeUserRepository.findByUserIdAndFridgeIdAndIsEnable(userId, fridgeId, true)
+                .orElseThrow(() -> new BaseException(NO_PERMISSION));
+        FridgeFood fridgeFood = fridgeFoodRepository.findByIdAndFridgeIdAndIsEnable(fridgeFoodId, fridgeId, true)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_FOOD));
 
         return FridgeFoodRes.toDto(fridgeFood);
     }

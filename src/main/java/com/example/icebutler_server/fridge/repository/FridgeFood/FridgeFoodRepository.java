@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface FridgeFoodRepository extends JpaRepository<FridgeFood, Long>, FridgeFoodCustom {
     Optional<FridgeFood> findByIdAndFridgeAndIsEnable(Long fridgeFoodId, Fridge fridge, Boolean status);
+    Optional<FridgeFood> findByIdAndFridgeIdAndIsEnable(Long fridgeFoodId, Long fridgeId, Boolean status);
     void deleteByFridge(Fridge fridge);
     void deleteByFood(Food food);
 }

@@ -89,7 +89,7 @@ public class FridgeController {
         return ResponseCustom.success();
     }
 
-    @Operation(summary = "냉장고 사용자 삭제", description = "냉장고 사용자를 삭제한다.")
+    @Operation(summary = "냉장고 탈퇴", description = "냉장고에서 스스로 탈퇴한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
@@ -100,10 +100,11 @@ public class FridgeController {
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @PatchMapping("/{fridgeId}/remove/each")
+    @PatchMapping("/{fridgeId}/withdraw")
     public ResponseCustom<Long> removeFridgeUser(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
                                                  @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.removeFridgeUser(fridgeId, userId));
+        fridgeService.removeFridgeUser(fridgeId, userId);
+        return ResponseCustom.success();
     }
 
     @Operation(summary = "냉장고 식품 검색 조회", description = "냉장고 내 식품을 검색한다.")

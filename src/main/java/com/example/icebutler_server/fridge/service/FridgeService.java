@@ -11,7 +11,7 @@ public interface FridgeService {
   Long addFridge(AddFridgeReq registerFridgeReq, Long ownerId);
   void modifyFridge(Long fridgeId, EditFridgeReq updateFridgeReq, Long userId);
   void removeFridge(Long fridgeId, Long userId);
-  Long removeFridgeUser(Long fridgeId, Long userId) throws IOException;
+  void removeFridgeUser(Long fridgeId, Long userId);
   Page<FridgeFoodsRes> searchFridgeFoods(Long fridgeId, Long ownerId, String foodName, String category, Pageable pageable);
   FridgeFoodRes getFridgeFood(Long fridgeId, Long fridgeFoodId, Long userId);
   void addFridgeFood(FridgeFoodsReq fridgeFoodsReq, Long fridgeId, Long userId);

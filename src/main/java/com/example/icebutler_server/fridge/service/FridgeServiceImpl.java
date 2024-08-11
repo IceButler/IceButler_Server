@@ -149,18 +149,15 @@ public class FridgeServiceImpl implements FridgeService {
         fridgeRepository.delete(fridge);
     }
 
-    // 냉장고 개별
+    // 냉장고 탈퇴
     @Override
     @Transactional
-    public Long removeFridgeUser(Long fridgeId, Long userId) {
-        User user = userRepository.findByIdAndIsEnable(userId, true).orElseThrow(() -> new BaseException(NOT_FOUND_USER));
-        Fridge fridge = fridgeRepository.findByIdAndIsEnable(fridgeId, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE));
-        FridgeUser fridgeUser = (FridgeUser) fridgeUserRepository.findByUserAndFridgeAndIsEnable(user, fridge, true).orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
-
+    public void removeFridgeUser(Long fridgeId, Long userId) {
+        FridgeUser fridgeUser = fridgeUserRepository.findByFridgeIdAndUserIdAndIsEnable(userId, fridgeId, true)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_FRIDGE_USER));
         if (fridgeUser.getRole() == FridgeRole.OWNER) throw new BaseException(NO_PERMISSION);
-        fridgeUser.remove();
 
-        return fridge.getId();
+        fridgeUserRepository.delete(fridgeUser);
     }
 
     // 냉장고 식품 검색

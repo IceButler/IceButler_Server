@@ -56,8 +56,4 @@ public class FridgeUser extends BaseEntity {
     public void changeRoleToMember(){
         this.role = FridgeRole.MEMBER;
     }
-
-    public void remove() {
-        this.setIsEnable(false);
-    }
 }

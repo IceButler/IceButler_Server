@@ -15,7 +15,7 @@ public class FridgeUserRes {
     private Long userId;
     @Schema(description = "유저 닉네임", example = "나야나")
     private String nickname;
-    @Schema(description = "냉장고 내 유저 역할", example = "OWNER/MEMBER")
+    @Schema(description = "냉장고 내 유저 역할", allowableValues = {"OWNER", "MEMBER"})
     private FridgeRole role;
     @Schema(description = "유저 프로필 이미지 URL", example = "https://~/asdfeg.jpg")
     private String profileImgUrl;

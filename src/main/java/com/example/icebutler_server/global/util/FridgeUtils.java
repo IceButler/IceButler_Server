@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public abstract class FridgeUtils {
-    public static int calShelfLife(LocalDate shelfLife) {
-        return (int) (-1 * ChronoUnit.DAYS.between(LocalDate.now(), shelfLife));
+    public static int calShelfLife(LocalDate expirationDate) {
+        return (int) (-1 * ChronoUnit.DAYS.between(LocalDate.now(), expirationDate));
     }
 
     public static double calPercentage(int val, int sum) {

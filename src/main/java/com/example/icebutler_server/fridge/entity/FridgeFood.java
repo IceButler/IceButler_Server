@@ -4,6 +4,7 @@ import com.example.icebutler_server.food.entity.Food;
 import com.example.icebutler_server.food.entity.FoodDeleteStatus;
 import com.example.icebutler_server.fridge.dto.request.FridgeFoodReq;
 import com.example.icebutler_server.global.entity.BaseEntity;
+import com.example.icebutler_server.global.util.FridgeUtils;
 import com.example.icebutler_server.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,7 +26,10 @@ public class FridgeFood extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate shelfLife;
+    private LocalDate expirationDate;
+
+    @Column(nullable = false)
+    private int shelfLife;
 
     private String fridgeFoodImgKey;
 
@@ -35,7 +39,7 @@ public class FridgeFood extends BaseEntity {
     private String foodDetailName;
 
     @Enumerated(EnumType.STRING)
-    private FoodDeleteStatus foodDeleteStatus;
+    private FoodDeleteStatus foodDeleteStatus = null;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "food_id")
@@ -50,34 +54,31 @@ public class FridgeFood extends BaseEntity {
     private Fridge fridge;
 
     @Builder
-    public FridgeFood(User owner, Food food, Fridge fridge, String foodDetailName, LocalDate shelfLife, String memo, String fridgeFoodImgKey) {
-        this.shelfLife = shelfLife;
+    public FridgeFood(User owner, Food food, Fridge fridge, String foodDetailName, LocalDate expirationDate, String memo, String fridgeFoodImgKey) {
+        this.expirationDate = expirationDate;
+        this.shelfLife = FridgeUtils.calShelfLife(expirationDate);
         this.fridgeFoodImgKey = fridgeFoodImgKey;
         this.memo = memo;
         this.foodDetailName = foodDetailName;
         this.owner = owner;
         this.food = food;
         this.fridge = fridge;
-        this.foodDeleteStatus = null;
     }
 
     public void updateFridgeFoodInfo(Food food) {
         this.food = food;
     }
 
-    public void updateFridgeFoodInfo(String foodDetailName, String memo, LocalDate shelfLife, String imgUrl) {
+    public void updateFridgeFoodInfo(String foodDetailName, String memo, LocalDate expirationDate, String imgUrl) {
         this.foodDetailName = foodDetailName;
         this.memo = memo;
-        this.shelfLife = shelfLife;
+        this.expirationDate = expirationDate;
+        this.shelfLife = FridgeUtils.calShelfLife(expirationDate);
         this.fridgeFoodImgKey = imgUrl;
     }
 
     public void updateFridgeFoodOwner(User newOwner) {
         this.owner = newOwner;
-    }
-
-    public void remove() {
-        this.setIsEnable(false);
     }
 
     public void removeWithStatus(FoodDeleteStatus deleteStatus) {
@@ -90,7 +91,7 @@ public class FridgeFood extends BaseEntity {
                 .fridge(fridge)
                 .food(food)
                 .foodDetailName(fridgeFoodReq.getFoodDetailName())
-                .shelfLife(LocalDate.parse(fridgeFoodReq.getShelfLife()))
+                .expirationDate(LocalDate.parse(fridgeFoodReq.getExpirationDate()))
                 .owner(owner)
                 .memo(fridgeFoodReq.getMemo())
                 .fridgeFoodImgKey(fridgeFoodReq.getImgKey())

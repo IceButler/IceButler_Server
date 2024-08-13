@@ -32,10 +32,6 @@ public class Fridge extends BaseEntity {
         this.fridgeComment = fridgeComment;
     }
 
-    public void remove() {
-        this.setIsEnable(false);
-    }
-
     public static Fridge toEntity(AddFridgeReq addFridgeReq) {
         return Fridge.builder()
                 .fridgeName(addFridgeReq.getFridgeName())

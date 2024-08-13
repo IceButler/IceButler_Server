@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +51,7 @@ public class FridgeController {
         return ResponseCustom.success(fridgeService.addFridge(addFridgeReq, userId));
     }
 
-    @Operation(summary = "냉장고 정보 수정", description = "냉장고 정보를 수정한다.")
+    @Operation(summary = "냉장고 정보 수정", description = "주인이 냉장고 정보를 수정한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "(G0000)잘못된 파라미터입니다.",
@@ -70,73 +72,56 @@ public class FridgeController {
         return ResponseCustom.success();
     }
 
-    @Operation(summary = "냉장고 삭제", description = "냉장고를 삭제한다.")
+    @Operation(summary = "냉장고 삭제", description = "주인이 냉장고를 삭제한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "400", description = "(G0000)잘못된 파라미터입니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
             @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
-                    "(R0000)존재하지 않는 냉장고입니다.\t\n",
+            @ApiResponse(responseCode = "404", description = "(R0000)존재하지 않는 냉장고입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
             @ApiResponse(responseCode = "409", description = "(R0001)해당 냉장고에 사용자가 존재합니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @PatchMapping("/{fridgeId}/remove")
-    public ResponseCustom<Long> removeFridge(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
+    @DeleteMapping("/{fridgeId}")
+    public ResponseCustom<Void> removeFridge(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
                                              @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.removeFridge(fridgeId, userId));
+        fridgeService.removeFridge(fridgeId, userId);
+        return ResponseCustom.success();
     }
 
-    @Operation(summary = "냉장고 사용자 삭제", description = "냉장고 사용자를 삭제한다.")
+    @Operation(summary = "냉장고 탈퇴", description = "냉장고에서 스스로 탈퇴한다.")
     @SwaggerApiSuccess(implementation = ResponseCustom.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
-                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
-                    "(R0003)해당 냉장고에 존재하지 않는 사용자입니다.",
+            @ApiResponse(responseCode = "404", description = "(R0003)해당 냉장고에 존재하지 않는 사용자입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @PatchMapping("/{fridgeId}/remove/each")
+    @PatchMapping("/{fridgeId}/withdraw")
     public ResponseCustom<Long> removeFridgeUser(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
                                                  @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.removeFridgeUser(fridgeId, userId));
+        fridgeService.removeFridgeUser(fridgeId, userId);
+        return ResponseCustom.success();
     }
-
-    @Operation(summary = "냉장고 식품 전체 조회(카테고리별)", description = "냉장고 내 식품을 카테고리 별로 전체조회한다.")
-    @SwaggerApiSuccess(implementation = FridgeMainRes.class)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "400", description = "(F0000)존재하지 않는 카테고리입니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
-                    "(R0000)존재하지 않는 냉장고입니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-    })
-    @Auth
-    @GetMapping("/{fridgeId}/foods")
-    public ResponseCustom<FridgeMainRes> getFoods(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-                                                  @Parameter(description = "식품 카테고리") @RequestParam(required = false) String category,
-                                                  @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.getFoods(fridgeId, userId, category));
-    }
-
 
     @Operation(summary = "냉장고 식품 검색 조회", description = "냉장고 내 식품을 검색한다.")
     @SwaggerApiSuccess(implementation = FridgeFoodsRes.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "(R0000)존재하지 않는 냉장고입니다.",
+            @ApiResponse(responseCode = "400", description = "(F0000)존재하지 않는 카테고리입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "404", description = "(R0003)해당 냉장고에 존재하지 않는 사용자입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @GetMapping("/{fridgeId}/search")
-    public ResponseCustom<List<FridgeFoodsRes>> searchFridgeFood(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
-                                                                 @Parameter(description = "식품명") @RequestParam String keyword,
-                                                                 @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.searchFridgeFood(fridgeId, userId, keyword));
+    @GetMapping("/{fridgeId}/foods")
+    public ResponseCustom<Page<FridgeFoodsRes>> searchFridgeFood(@Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
+                                                                      @Parameter(description = "식품 카테고리") @RequestParam(required = false) String category,
+                                                                      @Parameter(description = "식품명") @RequestParam(required = false) String word,
+                                                                      Pageable pageable,
+                                                                      @Parameter(hidden = true) @IsLogin Long userId) {
+        return ResponseCustom.success(fridgeService.searchFridgeFoods(fridgeId, userId, word, category, pageable));
     }
 
     @Operation(summary = "냉장고 식품 상세 조회", description = "냉장고 내 식품을 상세 조회한다.")
@@ -144,9 +129,7 @@ public class FridgeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
-            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
-                    "(R0000)존재하지 않는 냉장고입니다.\t\n" +
-                    "(R0002)해당 냉장고에 존재하지 않는 식품입니다.",
+            @ApiResponse(responseCode = "404", description = "(R0002)해당 냉장고에 존재하지 않는 식품입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
@@ -224,51 +207,54 @@ public class FridgeController {
     }
 
     @Operation(summary = "냉장고 멤버 조회", description = "냉장고의 멤버를 조회한다.")
-    @SwaggerApiSuccess(implementation = FridgeUserMainRes.class)
+    @SwaggerApiSuccess(implementation = FridgeUserRes.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "(R0000)존재하지 않는 냉장고입니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
+            @ApiResponse(responseCode = "403", description = "(G0001)권한이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseCustom.class)))
     })
     @Auth
-    @GetMapping("{fridgeId}/members")
-    public ResponseCustom<FridgeUserMainRes> getMembers(
+    @GetMapping("/{fridgeId}/members")
+    public ResponseCustom<List<FridgeUserRes>> getFridgeMembers(
             @Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
             @Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.searchMembers(fridgeId, userId));
+        return ResponseCustom.success(fridgeService.getFridgeMembers(fridgeId, userId));
     }
 
-    @Operation(summary = "냉장고 선택목록 조회", description = "냉장고 선택목록을 조회한다.")
-    @SwaggerApiSuccess(implementation = SelectFridgesMainRes.class)
+    @Operation(summary = "내 냉장고 조회", description = "사용자의 냉장고를 조회한다.")
+    @SwaggerApiSuccess(implementation = MyFridgeRes.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @GetMapping("/select")
-    public ResponseCustom<SelectFridgesMainRes> selectFridges(
+    @GetMapping
+    public ResponseCustom<MyFridgeRes> getMyFridge(
             @Parameter(hidden = true) @IsLogin Long userId
     ) {
-        return ResponseCustom.success(fridgeService.selectFridges(userId));
+        return ResponseCustom.success(fridgeService.getMyFridge(userId));
     }
 
-    @Operation(summary = "냉장고 목록 조회", description = "냉장고 목록을 조회한다.")
-    @SwaggerApiSuccess(implementation = GetFridgesMainRes.class)
+    @Operation(summary = "냉장고 정보 조회", description = "냉장고 정보를 조회한다.")
+    @SwaggerApiSuccess(implementation = FridgeInfoRes.class)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "(U0000)존재하지 않는 사용자입니다.\t\n" +
-                    "(R0000)존재하지 않는 냉장고입니다.",
+            @ApiResponse(responseCode = "404", description = "(R0000)존재하지 않는 냉장고입니다.\t\n" +
+                    "(R0003)해당 냉장고에 존재하지 않는 사용자입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),
     })
     @Auth
-    @GetMapping("")
-    public ResponseCustom<GetFridgesMainRes> myFridge(@Parameter(hidden = true) @IsLogin Long userId) {
-        return ResponseCustom.success(fridgeService.myFridge(userId));
+    @GetMapping("/{fridgeId}")
+    public ResponseCustom<FridgeInfoRes> getFridgeInfo(
+            @Parameter(description = "냉장고 ID") @PathVariable Long fridgeId,
+            @Parameter(hidden = true) @IsLogin Long userId
+    ) {
+        return ResponseCustom.success(fridgeService.getFridgeInfo(userId, fridgeId));
     }
 
     /**
      * [Get] 냉장고 통계 (낭비/소비)
      */
     @Operation(summary = "냉장고 식품 삭제 통계 조회", description = "냉장고 식품의 삭제 타입별 통계를 조회한다.")
-    @SwaggerApiSuccess(implementation = GetFridgesMainRes.class)
+    @SwaggerApiSuccess(implementation = FridgeFoodsStatistics.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "(F0003)존재하지 않는 식품삭제 타입입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseCustom.class))),

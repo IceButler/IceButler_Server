@@ -1,29 +1,17 @@
 package com.example.icebutler_server.fridge.repository.FridgeFood;
 
 import com.example.icebutler_server.food.entity.Food;
-import com.example.icebutler_server.food.entity.FoodCategory;
 import com.example.icebutler_server.fridge.entity.Fridge;
 import com.example.icebutler_server.fridge.entity.FridgeFood;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface FridgeFoodRepository extends JpaRepository<FridgeFood, Long>, FridgeFoodCustom {
     Optional<FridgeFood> findByIdAndFridgeAndIsEnable(Long fridgeFoodId, Fridge fridge, Boolean status);
-    List<FridgeFood> findByFridgeAndFood_FoodCategoryAndIsEnableOrderByShelfLife(Fridge fridge, FoodCategory foodCategory, Boolean status);
-    List<FridgeFood> findByFridgeAndIsEnableOrderByShelfLife(Fridge fridge, Boolean status);
-    List<FridgeFood> findByFoodDetailNameContainingAndFridgeAndIsEnable(String keyword, Fridge fridge, Boolean isEnable);
+    Optional<FridgeFood> findByIdAndFridgeIdAndIsEnable(Long fridgeFoodId, Long fridgeId, Boolean status);
     void deleteByFridge(Fridge fridge);
     void deleteByFood(Food food);
-
-    //TODO: cascade 처리하면 이거 지우기
-    @Modifying
-    @Query("update FridgeFood f set f.isEnable = :status where f.fridge = :fridge")
-    void removeFridgeFoodByFridge(@Param("status") Boolean status, @Param("fridge") Fridge fridge);
 }
